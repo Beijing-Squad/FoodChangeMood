@@ -1,6 +1,5 @@
 package org.beijing
 
-import di.uiModule
 import org.beijing.di.appModule
 import org.beijing.presentation.FoodConsoleUi
 import org.koin.core.context.startKoin

@@ -41,5 +41,4 @@ class FoodConsoleUi(
         return readlnOrNull()?.toIntOrNull()
     }
 
-
 }
