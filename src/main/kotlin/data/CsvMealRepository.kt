@@ -7,8 +7,16 @@ class CsvMealRepository(
     private val reader: CsvFileReader,
     private val parser: CsvFileParser
 ) : MealRepository {
+
     override fun getAllMeals(): List<Meal> {
-        TODO("Not yet implemented")
+        val allMeals : MutableList<Meal> = mutableListOf()
+
+        val csvLines = reader.readLinesFromFile()
+        val csvContent = csvLines.joinToString("\n")
+        val mealList = parser.parseCsvFileContent(csvContent)
+
+        allMeals.addAll(mealList)
+        return allMeals
     }
 
 }
