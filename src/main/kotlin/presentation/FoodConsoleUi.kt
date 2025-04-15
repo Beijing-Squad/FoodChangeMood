@@ -15,15 +15,10 @@ class FoodConsoleUi(
 
 
     private fun presentFeatures(startIndex: Int = 0) {
-
-        // Show the current page
-        println("\n\n ===Please enter one of the numbers listed below===\n")
-
-
-        print("here: ")
+        showOptions()
         val input = getUserInput()
 
-        when(input) {
+        when (input) {
             0 -> return
             //write here your feature
             else -> {
@@ -32,6 +27,13 @@ class FoodConsoleUi(
         }
 
         presentFeatures(startIndex)
+    }
+
+    private fun showOptions() {
+        println("\n\n ===Please enter one of the numbers listed below===\n")
+        //write here your feature as string with number
+
+        print("here: ")
     }
 
 
