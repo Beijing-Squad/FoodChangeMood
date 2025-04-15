@@ -1,6 +1,6 @@
 package org.beijing.data
 
-object ColumnIndex {
+object ColumnIndexMeal {
     const val NAME: Int = 0
     const val ID: Int = 1
     const val MINUTES: Int = 2
