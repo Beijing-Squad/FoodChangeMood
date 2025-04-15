@@ -18,21 +18,21 @@ class CsvFileParser {
 
         val hasDescription = fields.size == 12
 
-        val description = if (hasDescription) fields[9] else null
-        val ingredients = if (hasDescription) fields[10] else fields[9]
-        val ingredientsCount = if (hasDescription) fields[11] else fields[10]
-        val submittedDate = LocalDate.parse(fields[4])
+        val description = if (hasDescription) fields[ColumnIndex.DESCRIPTION] else null
+        val ingredients = if (hasDescription) fields[ColumnIndex.INGREDIENTS] else fields[9]
+        val ingredientsCount = if (hasDescription) fields[ColumnIndex.N_INGREDIENTS] else fields[10]
+        val submittedDate = LocalDate.parse(fields[ColumnIndex.SUBMITTED])
 
         return Meal(
-            name = fields[0],
-            id = fields[1].toInt(),
-            minutes = fields[2].toInt(),
-            contributorId = fields[3].toInt(),
+            name = fields[ColumnIndex.NAME],
+            id = fields[ColumnIndex.ID].toInt(),
+            minutes = fields[ColumnIndex.MINUTES].toInt(),
+            contributorId = fields[ColumnIndex.CONTRIBUTOR_ID].toInt(),
             submitted = submittedDate,
-            tags = parseListOfStrings(fields[5]),
-            nutrition = parseNutritionList(fields[6]),
-            nSteps = fields[7].toInt(),
-            steps = parseListOfStrings(fields[8]),
+            tags = parseListOfStrings(fields[ColumnIndex.TAGS]),
+            nutrition = parseNutritionList(fields[ColumnIndex.NUTRITION]),
+            nSteps = fields[ColumnIndex.N_STEPS].toInt(),
+            steps = parseListOfStrings(fields[ColumnIndex.STEPS]),
             description = description,
             ingredients = parseListOfStrings(ingredients),
             nIngredients = ingredientsCount.toInt()
