@@ -91,13 +91,13 @@ class CsvFileParser {
             .map { it.trim().toDouble() }
 
         return Nutrition(
-            calories = values[0],
-            totalFat = values[1],
-            sugar = values[2],
-            sodium = values[3],
-            protein = values[4],
-            saturatedFat = values[5],
-            carbohydrates = values[6]
+            calories = values[NutritionIndex.CALORIES],
+            totalFat = values[NutritionIndex.TOTAL_FAT],
+            sugar = values[NutritionIndex.SUGAR],
+            sodium = values[NutritionIndex.SODIUM],
+            protein = values[NutritionIndex.PROTEIN],
+            saturatedFat = values[NutritionIndex.SATURATED_FAT],
+            carbohydrates = values[NutritionIndex.CARBOHYDRATES]
         )
     }
 
