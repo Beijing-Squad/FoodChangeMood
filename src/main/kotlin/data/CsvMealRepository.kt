@@ -9,7 +9,7 @@ class CsvMealRepository(
 ) : MealRepository {
 
     override fun getAllMeals(): List<Meal> {
-        val allMeals : MutableList<Meal> = mutableListOf()
+        val allMeals: MutableList<Meal> = mutableListOf()
 
         val csvLines = reader.readLinesFromFile()
         val csvContent = csvLines.joinToString("\n")

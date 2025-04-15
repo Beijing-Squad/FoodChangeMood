@@ -55,6 +55,7 @@ class CsvFileParser {
                     lines.add(currentLine)
                     currentLine = ""
                 }
+
                 else -> {
                     currentLine += char
                 }
