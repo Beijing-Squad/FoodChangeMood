@@ -22,7 +22,7 @@ class FoodConsoleUi(
             0 -> return
             //write here your feature
             else -> {
-                println("Invalid input.")
+                throw Exception("Invalid input: $input, Please enter between 0 to 15")
             }
         }
 
