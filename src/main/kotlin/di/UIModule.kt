@@ -8,10 +8,5 @@ import org.koin.dsl.module
 
 val uiModule = module {
     single { MealUseCases() }
-    single {
-        IngredientGameUseCase(
-            mealRepository = get()
-        )
-    }
     single { FoodConsoleUi(get(), get()) }
 }
