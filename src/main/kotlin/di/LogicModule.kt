@@ -1,8 +1,8 @@
 package di
 
+import org.beijing.logic.usecases.GetSeaFoodWithProteinUseCase
 import org.koin.dsl.module
 
 val logicModule = module {
-    // put features classes here
-
+    single { GetSeaFoodWithProteinUseCase(get()) }
 }
