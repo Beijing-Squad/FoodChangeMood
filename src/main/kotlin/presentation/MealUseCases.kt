@@ -1,5 +1,7 @@
 package org.beijing.presentation
 
+import org.beijing.logic.usecases.GetSeaFoodWithProteinUseCase
+
 data class MealUseCases(
-    val testUseCases: String = "here add your class use cases"
+    val seaFoodWithProtein: GetSeaFoodWithProteinUseCase
 )

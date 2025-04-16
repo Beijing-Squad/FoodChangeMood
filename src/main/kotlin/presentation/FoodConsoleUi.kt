@@ -23,7 +23,7 @@ class FoodConsoleUi(
         showOptions()
         when (val input = getUserInput()) {
             0 -> return
-            //write here your feature
+            14 ->mealUseCases.seaFoodWithProtein.showSeaFoodWithProtein()
 
             else -> {
                 println("Invalid input: $input")
@@ -36,7 +36,7 @@ class FoodConsoleUi(
     private fun showOptions() {
         println("\n\n ===Please enter one of the numbers listed below===\n")
         println("0. Exit")
-        //write here your feature as string with number
+        println("14. SeaFood Meals Sorted By Protein Content")
 
         print("\nhere: ")
     }
