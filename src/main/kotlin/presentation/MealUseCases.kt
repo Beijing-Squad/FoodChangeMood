@@ -1,7 +1,7 @@
 package org.beijing.presentation
 
-import org.beijing.logic.usecases.GetSeaFoodSortedByProteinUseCase
+import org.beijing.logic.usecases.GetSortedSeaFoodByProteinUseCase
 
 data class MealUseCases(
-    val seaFoodWithProtein: GetSeaFoodSortedByProteinUseCase
+    val seaFoodWithProtein: GetSortedSeaFoodByProteinUseCase
 )

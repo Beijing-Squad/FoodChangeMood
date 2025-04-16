@@ -23,7 +23,7 @@ class FoodConsoleUi(
         showOptions()
         when (val input = getUserInput()) {
             0 -> return
-            14 ->mealUseCases.seaFoodWithProtein.showSeaFoodSortedByProtein()
+            14 -> mealUseCases.seaFoodWithProtein.showSortedSeaFoodByProtein()
 
             else -> {
                 println("Invalid input: $input")
