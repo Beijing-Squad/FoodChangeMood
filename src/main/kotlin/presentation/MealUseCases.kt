@@ -1,5 +1,7 @@
 package org.beijing.presentation
 
+import logic.usecases.GetMealsByCaloriesAndProteinUseCases
+
 data class MealUseCases(
-    val testUseCases: String = "here add your class use cases"
+    val getMealsByCaloriesAndProteinUseCases: GetMealsByCaloriesAndProteinUseCases
 )
