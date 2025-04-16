@@ -6,7 +6,12 @@ class FoodConsoleUi(
 
     fun start() {
         showWelcome()
-        presentFeatures()
+
+        try {
+            presentFeatures()
+        } catch (e: Exception) {
+            println(e.message)
+        }
     }
 
     private fun showWelcome() {
@@ -16,13 +21,12 @@ class FoodConsoleUi(
 
     private fun presentFeatures() {
         showOptions()
-        val input = getUserInput()
-
-        when (input) {
+        when (val input = getUserInput()) {
             0 -> return
             //write here your feature
+
             else -> {
-                throw Exception("Invalid input: $input, Please enter between 0 to 15")
+                println("Invalid input: $input")
             }
         }
 
@@ -31,9 +35,10 @@ class FoodConsoleUi(
 
     private fun showOptions() {
         println("\n\n ===Please enter one of the numbers listed below===\n")
+        println("0. Exit")
         //write here your feature as string with number
 
-        print("here: ")
+        print("\nhere: ")
     }
 
 
