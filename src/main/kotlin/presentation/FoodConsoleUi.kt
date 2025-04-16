@@ -1,7 +1,7 @@
 package org.beijing.presentation
 
 class FoodConsoleUi(
-    //here inject use cases objects
+    val foodUseCases: FoodUseCases
 ) {
 
     fun start() {
@@ -14,7 +14,7 @@ class FoodConsoleUi(
     }
 
 
-    private fun presentFeatures(startIndex: Int = 0) {
+    private fun presentFeatures() {
         showOptions()
         val input = getUserInput()
 
@@ -26,7 +26,7 @@ class FoodConsoleUi(
             }
         }
 
-        presentFeatures(startIndex)
+        presentFeatures()
     }
 
     private fun showOptions() {
