@@ -4,18 +4,18 @@ import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
 
 
-class GetSeaFoodWithProteinUseCase(
+class GetSeaFoodSortedByProteinUseCase(
     private val mealRepository: MealRepository
 ) {
-     fun getSeaFoodWithProtein():List<Meal> {
+     private fun getSeaFoodSortedByProteinContent():List<Meal> {
        return mealRepository.getAllMeals()
             .filter {it.tags.contains("seafood")}
             .sortedByDescending{it.nutrition.protein}
     }
-    fun showSeaFoodWithProtein() {
+    fun showSeaFoodSortedByProtein() {
         println("List Of Sea Food With Protein:")
         println("Rank ---- Meal Name ---- Protein Amount")
-        getSeaFoodWithProtein().forEachIndexed { index, meal ->
+        getSeaFoodSortedByProteinContent().forEachIndexed { index, meal ->
             println("${index+1} ---- ${meal.name} ---- ${meal.nutrition.protein.toInt()}")
         }
     }
