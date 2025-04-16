@@ -1,7 +1,7 @@
 package org.beijing.presentation
 
 class FoodConsoleUi(
-    val foodUseCases: FoodUseCases
+    val mealUseCases: MealUseCases
 ) {
 
     fun start() {
