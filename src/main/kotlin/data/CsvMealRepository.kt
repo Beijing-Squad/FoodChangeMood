@@ -18,5 +18,4 @@ class CsvMealRepository(
         allMeals.addAll(mealList)
         return allMeals
     }
-
 }
