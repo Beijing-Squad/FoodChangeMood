@@ -15,10 +15,12 @@ class GetSortedSeaFoodByProteinUseCase(
     }
 
     fun showSortedSeaFoodByProtein() {
-        println("List Of Sea Food With Protein:")
-        println("Rank ---- Meal Name ---- Protein Amount")
+        println("List Of SeaFood Sorted By Protein:")
+
+        println(String.format("%-6s| %-70s | %-14s", "Rank", "Meal Name", "Protein Content"))
+        println("----------------------------------------------------------------------------------------------------")
         getSortedSeaFoodByProtein().forEachIndexed { index, meal ->
-            println("${index + 1} ---- ${meal.name} ---- ${meal.nutrition.protein.toInt()}")
+            println(String.format("%-6d| %-70s | %-14d", index + 1, meal.name, meal.nutrition.protein.toInt()))
         }
     }
 
