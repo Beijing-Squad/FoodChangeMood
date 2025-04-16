@@ -8,13 +8,31 @@ class GetMealsByCaloriesAndProteinUseCases(
     private val mealRepository: MealRepository
 ) {
     fun getMealsByCaloriesAndProtein(targetCalories: Double, targetProtein: Double): List<Meal> {
-        if (targetCalories <= 0 || targetProtein <= 0) throw Exception("\nPlease ensure that both Calories and Protein inputs are positive values.")
+        checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
 
-        val matchPercentage = 0.5
-        val ratio = 0.15
         return mealRepository.getAllMeals().filter { currentMeal ->
-            abs(currentMeal.nutrition.calories - targetCalories) * ratio <= matchPercentage && abs(currentMeal.nutrition.protein - targetProtein) * ratio <= matchPercentage
+            isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
         }
 
+    }
+
+    private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
+        if (targetCalories <= 0 || targetProtein <= 0) throw Exception(ERROR_MESSAGE)
+    }
+
+    private fun isMealWithinNutritionTargets(meal: Meal, targetCalories: Double, targetProtein: Double): Boolean {
+        return calculateNutrition(meal.nutrition.calories, targetCalories) <= MATCH_PERCENTAGE &&
+                calculateNutrition(meal.nutrition.protein, targetProtein) <= MATCH_PERCENTAGE
+    }
+
+    private fun calculateNutrition(currentNutrition: Double, targetNutrition: Double): Double {
+        return abs(currentNutrition - targetNutrition) * RATIO
+    }
+
+    companion object {
+        const val MATCH_PERCENTAGE = 0.5
+        const val RATIO = 0.15
+        const val ERROR_MESSAGE = "\nPlease ensure that both Calories " +
+                "and Protein inputs are positive values."
     }
 }
