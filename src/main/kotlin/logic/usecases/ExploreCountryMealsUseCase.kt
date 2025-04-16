@@ -9,12 +9,12 @@ class ExploreCountryMealsUseCase(
     fun exploreCountryMeals(countryQuery: String): List<Meal> {
         val meals = mealRepository.getAllMeals()
         val query = countryQuery.lowercase()
-        return meals?.filter { meal ->
+        return meals.filter { meal ->
             meal.name.lowercase().contains(query) ||
                     meal.tags.joinToString(" ").lowercase().contains(query) ||
                     (meal.description?.lowercase()?.contains(query) ?: false) ||
                     meal.ingredients.joinToString(" ").lowercase().contains(query)
-        }?.shuffled()?.take(20) ?: emptyList()
+        }.shuffled().take(20)
     }
 }
 
