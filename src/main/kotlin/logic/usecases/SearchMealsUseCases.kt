@@ -1,13 +1,16 @@
-package logic.usecases
+package org.beijing.logic.usecases
 
 import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
 import kotlin.math.abs
 
-class GetMealsByCaloriesAndProteinUseCases(
+class SearchMealsUseCases(
     private val mealRepository: MealRepository
 ) {
-    fun getMealsByCaloriesAndProtein(targetCalories: Double, targetProtein: Double): List<Meal> {
+
+
+    //region gym helper
+    fun getGymHelperMeals(targetCalories: Double, targetProtein: Double): List<Meal> {
         checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
 
         return mealRepository.getAllMeals().filter { currentMeal ->
@@ -28,6 +31,8 @@ class GetMealsByCaloriesAndProteinUseCases(
     private fun calculateNutrition(currentNutrition: Double, targetNutrition: Double): Double {
         return abs(currentNutrition - targetNutrition) * RATIO
     }
+
+    //endregion
 
     companion object {
         const val MATCH_PERCENTAGE = 0.5
