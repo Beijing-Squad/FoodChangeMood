@@ -28,11 +28,10 @@ class SearchMealsUseCases(
         if (meal != null) {
             return meal
         } else {
-            throw Exception("No meal found with ID [$id] on the date $date.")
+            throw Exception("❌ No Meal Found With ID [$id] On The Date $date.")
         }
     }
     // endregion
-
 
     //region gym helper
     fun getGymHelperMeals(targetCalories: Double, targetProtein: Double): List<Meal> {
