@@ -1,10 +1,13 @@
 package org.beijing.presentation
 
+import org.beijing.logic.usecases.ViewMealsUseCase
 import org.beijing.presentation.service.gameMealService
 import org.beijing.presentation.service.searchMealService
 import org.beijing.presentation.service.suggestionMealService
+import org.beijing.presentation.service.viewMealsService
 
 class FoodConsoleUi(
+    private val viewMealsUseCase: ViewMealsUseCase,
 ) {
 
     fun start() {
@@ -29,6 +32,7 @@ class FoodConsoleUi(
             1 -> onSuggestionMealClick()
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
+            4 -> onViewMealClick()
 
             0 -> return
 
@@ -51,6 +55,9 @@ class FoodConsoleUi(
     private fun onSuggestionMealClick() {
         suggestionMealService()
     }
+    private fun onViewMealClick() {
+        viewMealsService(viewMealsUseCase)
+    }
 
     private fun showOptions() {
         println("\n\n ===Please enter one of the numbers listed below===\n")
@@ -58,6 +65,7 @@ class FoodConsoleUi(
         println("1. Suggestion Meal")
         println("2. Search Meal")
         println("3. Game Meal")
+        println("4. View Meal")
 
         println("0. Exit")
         print("\nhere: ")
