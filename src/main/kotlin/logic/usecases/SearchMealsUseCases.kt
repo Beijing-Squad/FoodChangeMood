@@ -8,6 +8,18 @@ class SearchMealsUseCases(
     private val mealRepository: MealRepository
 ) {
 
+    //region iraqi meals
+    fun getIraqiMeals(): List<Meal> {
+        val allMeals = mealRepository.getAllMeals()
+
+        // Filter meals that are tagged with "Iraqi" or have "Iraq" in the description
+        return allMeals.filter { meal ->
+            (meal.tags?.any { tag -> tag.equals("Iraqi", ignoreCase = true) } == true) ||
+                    meal.description?.contains("Iraq", ignoreCase = true) == true
+        }
+    }
+//endregion
+
     //region gym helper
     fun getGymHelperMeals(targetCalories: Double, targetProtein: Double): List<Meal> {
         checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
