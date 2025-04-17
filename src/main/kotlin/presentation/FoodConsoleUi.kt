@@ -41,7 +41,7 @@ class FoodConsoleUi(
         println("\n\n ===Please enter one of the numbers listed below===\n")
         println("0. Exit")
         //write here your feature as string with number
-
+        println("1.🌍 Explore meals from a specific country")
         print("\nhere: ")
     }
 
