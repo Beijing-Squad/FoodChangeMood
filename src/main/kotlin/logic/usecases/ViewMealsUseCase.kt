@@ -8,9 +8,10 @@ class ViewMealsUseCase(
     private val mealRepository: MealRepository
 ) {
     fun getSortedSeaFoodByProtein(): List<Meal> {
-        return mealRepository.getAllMeals()
+        val sortedSeaFood= mealRepository.getAllMeals()
             .filter { it.tags.contains("seafood") }
             .sortedByDescending { it.nutrition.protein }
+        return sortedSeaFood
     }
 
 }
