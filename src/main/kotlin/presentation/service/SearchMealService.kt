@@ -5,26 +5,22 @@ import org.beijing.model.Meal
 
 fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
 
-    showOptions()
+    showOptionsForSearchMealService()
     print("\nhere: \n")
     when (val input = getUserInput()) {
-
+        1 -> launchGymHelper(searchMealsUseCases)
         2 -> launchSearchByName(searchMealsUseCases)
-
         0 -> return
-
         else -> println("Invalid input: $input")
     }
     searchMealService(searchMealsUseCases)
 
 }
 
-fun showOptions() {
+fun showOptionsForSearchMealService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Gym Helper")
     println("2. Search by name of meal")
-
-
     println("0. Exit")
 }
 
@@ -59,6 +55,23 @@ private fun displaySearchResults(results: List<Meal>, query: String) {
 }
 //endregion
 
+// region gym helper
+private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
+    print("enter target of Calories: ")
+    val targetCalories = readlnOrNull()?.toDoubleOrNull()
+    print("enter target of Protein:")
+    val targetProtein = readlnOrNull()?.toDoubleOrNull()
+    if (targetProtein != null && targetCalories != null) {
+        println(
+            searchMealsUseCases.getGymHelperMeals(
+                targetCalories,
+                targetProtein
+            )
+        )
+    }
+
+}
+//endregion
 
 private fun getUserInput(): Int? {
     return readlnOrNull()?.toIntOrNull()

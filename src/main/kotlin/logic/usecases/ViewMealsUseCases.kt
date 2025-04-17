@@ -2,7 +2,9 @@ package org.beijing.logic.usecases
 
 import org.beijing.logic.MealRepository
 
-class GamesMealsUseCases (
+class ViewMealsUseCases(
     private val mealRepository: MealRepository
-){
+) {
+    // add feature function here
+
 }
