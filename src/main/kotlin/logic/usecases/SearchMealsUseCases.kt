@@ -10,7 +10,6 @@ class SearchMealsUseCases(
     private val kmpSubstringSearch: KmpSubstringSearch
 ) {
 
-
     //region gym helper
     fun getGymHelperMeals(targetCalories: Double, targetProtein: Double): List<Meal> {
         checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)

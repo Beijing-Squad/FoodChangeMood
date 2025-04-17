@@ -14,7 +14,6 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
         else -> println("Invalid input: $input")
     }
     searchMealService(searchMealsUseCases)
-
 }
 
 fun showOptionsForSearchMealService() {
@@ -41,6 +40,7 @@ private fun readMealNameFromInput(): String {
     }
 
     return input
+    println("0. Exit")
 }
 
 private fun displaySearchResults(results: List<Meal>, query: String) {
@@ -69,7 +69,6 @@ private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
             )
         )
     }
-
 }
 //endregion
 
