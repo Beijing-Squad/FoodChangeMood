@@ -10,7 +10,7 @@ fun suggestionMealService(suggestionMealsUseCases: SuggestionMealsUseCases) {
     showSuggestionOptions()
     print("\nhere: ")
     when (val input = getUserInput()) {
-        1 -> suggestMealWithMoreThanSevenHundredCalories(suggestionMealsUseCases)
+        13 -> suggestMealWithMoreThanSevenHundredCalories(suggestionMealsUseCases)
 
         0 -> return
 
@@ -22,7 +22,7 @@ fun suggestionMealService(suggestionMealsUseCases: SuggestionMealsUseCases) {
 
 fun showSuggestionOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
-    println("1.Suggest Meal With More Than 700 Calories ") // add feature name here
+    println("13.Suggest Meal With More Than 700 Calories ") // add feature name here
 
 
     println("0. Exit")
