@@ -5,7 +5,7 @@ import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 
-fun searchMealService() {
+fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
 
 }
 
