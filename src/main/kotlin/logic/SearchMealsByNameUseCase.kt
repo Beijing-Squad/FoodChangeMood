@@ -1,10 +1,11 @@
 package logic
 
-import org.beijing.data.CsvMealRepository
+
+import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
 
 class SearchMealsByNameUseCase(
-    private val csvMealRepository: CsvMealRepository,
+    private val mealRepository: MealRepository,
     private val substringSearch: KmpSubstringSearch
 ) {
 
@@ -17,7 +18,7 @@ class SearchMealsByNameUseCase(
             throw IllegalArgumentException("Search query must not be blank.")
         }
 
-        val allMeals = csvMealRepository.getAllMeals()
+        val allMeals = mealRepository.getAllMeals()
         if (allMeals.isEmpty()) {
             throw IllegalStateException("No food data available to search.")
         }
