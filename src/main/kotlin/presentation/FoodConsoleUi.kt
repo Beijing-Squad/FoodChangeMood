@@ -1,7 +1,10 @@
 package org.beijing.presentation
 
+import org.beijing.presentation.service.gameMealService
+import org.beijing.presentation.service.searchMealService
+import org.beijing.presentation.service.suggestionMealService
+
 class FoodConsoleUi(
-    private val mealUseCases: MealUseCases
 ) {
 
     fun start() {
@@ -22,9 +25,12 @@ class FoodConsoleUi(
     private fun presentFeatures() {
         showOptions()
         when (val input = getUserInput()) {
-            0 -> return
             //write here your feature
-            9 -> launchGymHelper()
+            1 -> onSuggestionMealClick()
+            2 -> onSearchMealClick()
+            3 -> onGameMealClick()
+
+            0 -> return
 
             else -> {
                 println("Invalid input: $input")
@@ -34,12 +40,26 @@ class FoodConsoleUi(
         presentFeatures()
     }
 
+    private fun onGameMealClick() {
+        gameMealService()
+    }
+
+    private fun onSearchMealClick() {
+        searchMealService()
+    }
+
+    private fun onSuggestionMealClick() {
+        suggestionMealService()
+    }
+
     private fun showOptions() {
         println("\n\n ===Please enter one of the numbers listed below===\n")
-        println("0. Exit")
         //write here your feature as string with number
-        println("9. Gym Helper")
+        println("1. Suggestion Meal")
+        println("2. Search Meal")
+        println("3. Game Meal")
 
+        println("0. Exit")
         print("\nhere: ")
     }
 
