@@ -1,4 +1,8 @@
 package org.beijing.logic.usecases
 
-class GamesMealsUseCases {
+import org.beijing.logic.MealRepository
+
+class GamesMealsUseCases (
+    private val mealRepository: MealRepository
+){
 }
