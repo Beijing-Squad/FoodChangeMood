@@ -1,13 +1,12 @@
 package org.beijing.presentation
 
 import org.beijing.logic.usecases.MealUseCases
-
-
 import org.beijing.presentation.service.gameMealService
 import org.beijing.presentation.service.searchMealService
 import org.beijing.presentation.service.suggestionMealService
 
 class FoodConsoleUi(
+    private val mealUseCases: MealUseCases
 ) {
 
     fun start() {
