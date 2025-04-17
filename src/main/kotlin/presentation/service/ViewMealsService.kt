@@ -5,7 +5,7 @@ import org.beijing.logic.usecases.ViewMealsUseCases
 
 fun viewMealsService(viewMealsUseCases: ViewMealsUseCases) {
 
-    showOptions()
+    showOptionsForViewMealsService()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         // add number of feature here as ( 1-> featureOne() )
@@ -18,7 +18,7 @@ fun viewMealsService(viewMealsUseCases: ViewMealsUseCases) {
 
 }
 
-fun showOptions() {
+fun showOptionsForViewMealsService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. ") // add feature name here
 
