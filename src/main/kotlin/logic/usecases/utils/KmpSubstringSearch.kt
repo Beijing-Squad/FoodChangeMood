@@ -1,4 +1,4 @@
-package logic
+package org.beijing.logic.usecases.utils
 
 class KmpSubstringSearch {
 
