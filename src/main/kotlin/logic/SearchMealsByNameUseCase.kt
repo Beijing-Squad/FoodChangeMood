@@ -13,7 +13,7 @@ class SearchMealsByNameUseCase(
      * Executes the search for meals that contain the query string in their name.
      * Throws exception if query is blank or data is not available.
      */
-    fun execute(searchQuery: String): List<Meal> {
+    fun executeSearchMealsByName(searchQuery: String): List<Meal> {
         if (searchQuery.isBlank()) {
             throw IllegalArgumentException("Search query must not be blank.")
         }
