@@ -3,14 +3,14 @@ package org.beijing.presentation
 import org.beijing.logic.usecases.GamesMealsUseCases
 import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.logic.usecases.SuggestionMealsUseCases
-import org.beijing.logic.usecases.ViewMealsUseCase
+import org.beijing.logic.usecases.ViewMealsUseCases
 import org.beijing.presentation.service.gameMealService
 import org.beijing.presentation.service.searchMealService
 import org.beijing.presentation.service.suggestionMealService
 import org.beijing.presentation.service.viewMealsService
 
 class FoodConsoleUi(
-    private val viewMealsUseCase: ViewMealsUseCase,
+    private val viewMealsUseCases: ViewMealsUseCases,
     private val gamesMealsUseCases: GamesMealsUseCases,
     private val searchMealsUseCases: SearchMealsUseCases,
     private val suggestionMealsUseCases: SuggestionMealsUseCases
@@ -63,7 +63,7 @@ class FoodConsoleUi(
     }
 
     private fun onViewMealClick() {
-        viewMealsService(viewMealsUseCase)
+        viewMealsService(viewMealsUseCases)
     }
 
     private fun showOptions() {

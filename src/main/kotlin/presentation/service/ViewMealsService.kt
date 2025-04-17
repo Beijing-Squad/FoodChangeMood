@@ -1,9 +1,9 @@
 package org.beijing.presentation.service
 
-import org.beijing.logic.usecases.ViewMealsUseCase
+import org.beijing.logic.usecases.ViewMealsUseCases
 
 
-fun viewMealsService(viewMealsUseCase: ViewMealsUseCase) {
+fun viewMealsService(viewMealsUseCases: ViewMealsUseCases) {
 
     showOptions()
     print("\nhere: \n")
@@ -14,7 +14,7 @@ fun viewMealsService(viewMealsUseCase: ViewMealsUseCase) {
 
         else -> println("Invalid input: $input")
     }
-    viewMealsService(viewMealsUseCase)
+    viewMealsService(viewMealsUseCases)
 
 }
 
