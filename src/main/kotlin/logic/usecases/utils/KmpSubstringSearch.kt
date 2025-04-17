@@ -2,11 +2,9 @@ package org.beijing.logic.usecases.utils
 
 class KmpSubstringSearch {
 
-    /**
-     * Returns true if the pattern exists within the text using the KMP algorithm.
-     */
+
     fun doesTextContainPattern(text: String, pattern: String): Boolean {
-        if (pattern.isEmpty()) return true // Empty pattern is always considered found
+        if (pattern.isEmpty()) return true
 
         val longestPrefixSuffix = buildLpsArray(pattern)
         var textIndex = 0
@@ -19,7 +17,7 @@ class KmpSubstringSearch {
             }
 
             if (patternIndex == pattern.length) {
-                return true // Full pattern matched in text
+                return true
             } else if (textIndex < text.length && pattern[patternIndex] != text[textIndex]) {
                 if (patternIndex != 0) {
                     // Use LPS array to avoid redundant comparisons
@@ -30,15 +28,13 @@ class KmpSubstringSearch {
             }
         }
 
-        return false // Pattern not found
+        return false
     }
 
-    /**
-     * Builds the LPS (Longest Prefix which is also Suffix) array used by KMP algorithm
-     */
+
     private fun buildLpsArray(pattern: String): IntArray {
-        val lps = IntArray(pattern.length) // LPS array
-        var length = 0 // Length of the previous longest prefix suffix
+        val lps = IntArray(pattern.length)
+        var length = 0
         var i = 1
 
         while (i < pattern.length) {
