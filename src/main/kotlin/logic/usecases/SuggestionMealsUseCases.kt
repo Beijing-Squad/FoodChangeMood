@@ -7,7 +7,7 @@ class SuggestionMealsUseCases(
     private val mealRepository: MealRepository
 ) {
 
-    fun getMealsHaveMoreThanSevenHundredCalories(): List<Meal> {
+    fun suggestMealHaveMoreThanSevenHundredCalories(): List<Meal> {
         val caloriesContentNeeded = 700
         val filteredMeals = mealRepository.getAllMeals().filter { meal ->
             meal.nutrition.calories >= caloriesContentNeeded
