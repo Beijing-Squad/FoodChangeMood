@@ -10,7 +10,7 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
     print("\nhere: \n")
     when (val input = getUserInput()) {
         1 -> launchGymHelper(searchMealsUseCases)
-
+        12 -> launchMealsByDate(searchMealsUseCases)
         0 -> return
 
         else -> println("Invalid input: $input")
@@ -19,7 +19,17 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
 
 }
 
+fun showOptionsForSearchMealService() {
+    println("\n\n ===Please enter one of the numbers listed below===\n")
+    println("1. Gym Helper")
+    println("12. Search by Date and See Meal Details")
 
+    println("0. Exit")
+}
+
+private fun getUserInput(): Int? {
+    return readlnOrNull()?.toIntOrNull()
+}
 
 // region search by add date && see details by id feature (8)
 private fun launchMealsByDate(searchMealsUseCases: SearchMealsUseCases) {
@@ -113,18 +123,6 @@ private fun displayNutrition(nutrition: Nutrition) {
     )
 }
 // endregion
-
-fun showOptionsForSearchMealService() {
-    println("\n\n ===Please enter one of the numbers listed below===\n")
-    println("1. Gym Helper")
-
-
-    println("0. Exit")
-}
-
-private fun getUserInput(): Int? {
-    return readlnOrNull()?.toIntOrNull()
-}
 
 // region gym helper
 private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
