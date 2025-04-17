@@ -25,6 +25,9 @@ fun showOptions() {
     println("0. Exit")
 }
 
+private fun getUserInput(): Int? {
+    return readlnOrNull()?.toIntOrNull()
+}
 
 // region gym helper
 private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
@@ -43,8 +46,3 @@ private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
 
 }
 //endregion
-
-
-private fun getUserInput(): Int? {
-    return readlnOrNull()?.toIntOrNull()
-}
