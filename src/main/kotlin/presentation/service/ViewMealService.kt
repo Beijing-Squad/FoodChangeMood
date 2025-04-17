@@ -8,7 +8,7 @@ fun viewMealService(viewMealsUseCase: ViewMealsUseCase) {
     showViewOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
-        1 -> showSortedSeaFoodByProtein(viewMealsUseCase)
+        14 -> showSortedSeaFoodByProtein(viewMealsUseCase)
 
         0 -> return
 
@@ -20,7 +20,7 @@ fun viewMealService(viewMealsUseCase: ViewMealsUseCase) {
 
 fun showViewOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
-    println("1. Show Sorted SeaFood By Protein")
+    println("14. Show Sorted SeaFood By Protein")
 
 
     println("0. Exit")
