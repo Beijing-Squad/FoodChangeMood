@@ -12,7 +12,7 @@ class SuggestionMealsUseCases(
         return meals
             .filter { meal ->
                 meal.nutrition.carbohydrates < 20 &&
-                        meal.nutrition.totalFat > meal.nutrition.protein
+                meal.nutrition.totalFat > meal.nutrition.protein
             }
             .filterNot { it.id in usedMealIds }
             .shuffled()
