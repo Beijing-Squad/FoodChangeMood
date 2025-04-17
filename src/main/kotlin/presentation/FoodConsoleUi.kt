@@ -1,10 +1,12 @@
 package org.beijing.presentation
 
+import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.presentation.service.gameMealService
 import org.beijing.presentation.service.searchMealService
 import org.beijing.presentation.service.suggestionMealService
 
 class FoodConsoleUi(
+    private val searchMealsUseCases: SearchMealsUseCases
 ) {
 
     fun start() {
@@ -45,7 +47,7 @@ class FoodConsoleUi(
     }
 
     private fun onSearchMealClick() {
-        searchMealService()
+        searchMealService(searchMealsUseCases)
     }
 
     private fun onSuggestionMealClick() {
@@ -61,21 +63,6 @@ class FoodConsoleUi(
 
         println("0. Exit")
         print("\nhere: ")
-    }
-
-    private fun launchGymHelper() {
-        print("enter target of Calories: ")
-        val targetCalories = readlnOrNull()?.toDoubleOrNull()
-        print("enter target of Protein:")
-        val targetProtein = readlnOrNull()?.toDoubleOrNull()
-        if (targetProtein != null && targetCalories != null) {
-            println(
-                mealUseCases.getMealsByCaloriesAndProteinUseCases.getMealsByCaloriesAndProtein(
-                    targetCalories,
-                    targetProtein
-                )
-            )
-        }
     }
 
 
