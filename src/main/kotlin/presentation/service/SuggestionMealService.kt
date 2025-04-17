@@ -14,7 +14,7 @@ fun suggestionMealService(ketoMealUseCase: SuggestionMealsUseCases) {
 }
 
 private fun showSuggestionsOptions() {
-    println("\n=== Keto Meal Helper ===")
+    println("\n=== suggestion meals ===")
     println("1. Suggest a Keto Meal 🥑")
     println("0. Return to Main Menu")
 }
@@ -37,17 +37,18 @@ private fun launchKetoMealHelper(ketoMealUseCase: SuggestionMealsUseCases) {
         println("\n🥑 Keto Meal: ${meal.name}")
         println("Short Description: ${meal.description}")
 
-        print("Do you like it?❤ (y = see full details, n = suggest another): ")
+        println("Do you like it? ❤")
+        print("write 'yes' to get details or 'no' to get another meal:")
         when (readlnOrNull()?.lowercase()) {
-            "y" -> {
+            "yes" -> {
                 println("\uD83D\uDCCC Full Nutritional Info:")
-                println("Carbohydrates: ${meal.nutrition.carbohydrates}")
-                println("Fat: ${meal.nutrition.totalFat}")
-                println("Protein: ${meal.nutrition.protein}")
+                println("•Carbohydrates: ${meal.nutrition.carbohydrates}")
+                println("•Fat: ${meal.nutrition.totalFat}")
+                println("•Protein: ${meal.nutrition.protein}")
                 break
             }
 
-            "n" -> {
+            "no" -> {
                 continue
             }
 
