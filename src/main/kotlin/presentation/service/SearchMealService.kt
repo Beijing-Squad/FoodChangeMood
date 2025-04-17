@@ -16,7 +16,6 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
         else -> println("Invalid input: $input")
     }
     searchMealService(searchMealsUseCases)
-
 }
 
 fun showOptionsForSearchMealService() {
@@ -138,6 +137,5 @@ private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
             )
         )
     }
-
 }
 //endregion
