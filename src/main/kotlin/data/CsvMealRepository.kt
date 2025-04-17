@@ -7,15 +7,13 @@ class CsvMealRepository(
     private val reader: CsvFileReader,
     private val parser: CsvFileParser
 ) : MealRepository {
-
-    override fun getAllMeals(): List<Meal> {
-        val allMeals: MutableList<Meal> = mutableListOf()
-
+    private val cachedMeals: List<Meal> by lazy {
         val csvLines = reader.readLinesFromFile()
         val csvContent = csvLines.joinToString("\n")
-        val mealList = parser.parseCsvFileContent(csvContent)
+        parser.parseCsvFileContent(csvContent)
+    }
 
-        allMeals.addAll(mealList)
-        return allMeals
+    override fun getAllMeals(): List<Meal> {
+        return cachedMeals
     }
 }
