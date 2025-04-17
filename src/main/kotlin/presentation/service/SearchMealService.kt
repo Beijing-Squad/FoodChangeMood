@@ -22,7 +22,7 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
 fun showOptionsForSearchMealService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Gym Helper")
-    println("12. Search by Date and See Meal Details")
+    println("12. Search By Date And See Meal Details")
 
     println("0. Exit")
 }
@@ -62,40 +62,40 @@ private fun launchMealsByDate(searchMealsUseCases: SearchMealsUseCases) {
 
 private fun getDateInput(): LocalDate {
     while (true) {
-        println("Please enter the date in format YYYY-MM-DD")
+        println("Please Enter The Date In Format YYYY-MM-DD")
         print("Enter Date (YYYY-MM-DD): ")
         val input = readln()
         try {
             return LocalDate.parse(input)
         } catch (e: Exception) {
-            println("Invalid date format. Please use YYYY-MM-DD.")
+            println("Invalid Date Format, Please Use (YYYY-MM-DD).")
         }
     }
 }
 
 private fun viewMealsOnDate(date: LocalDate, meals: List<Pair<Int, String>>) {
-    println("=== Meals on $date ===")
+    println("=== Meals On [$date] ===")
     meals.forEach { meal ->
         println("- ID: ${meal.first}, Name: ${meal.second}")
     }
 }
 
 private fun getSeeDetailsAnswer(): Boolean {
-    println("Do you want to see details of a specific meal? (yes/no)")
-    print("Enter your answer: ")
+    println("Do You Want To See Details Of A Specific Meal? (yes/no)")
+    print("Enter Your Answer: ")
     val answer = readln().trim().lowercase()
     return answer[0] == 'y'
 }
 
 private fun getIdInput(): Int {
     while (true) {
-        println("Please enter the meal ID")
+        println("Please Enter The Meal ID")
         print("Enter Meal ID: ")
         val input = readln()
         try {
             return input.toInt()
         } catch (e: Exception) {
-            println("Invalid ID format. Please use a number.")
+            println("Invalid ID Format, Please Use A Number.")
         }
     }
 }
@@ -108,7 +108,7 @@ private fun viewMealDetails(meal: Meal) {
     displayNutrition(meal.nutrition)
     println("Steps: ${meal.steps.joinToString(", ")}")
     if (meal.description == null) {
-        println("Description: No description available.")
+        println("Description: No Description Available.")
     } else {
         println("Description: ${meal.description}")
     }
