@@ -1,10 +1,19 @@
 package org.beijing.presentation
 
+import org.beijing.logic.usecases.GamesMealsUseCases
+import org.beijing.logic.usecases.SearchMealsUseCases
+import org.beijing.logic.usecases.SuggestionMealsUseCases
+import org.beijing.logic.usecases.ViewMealsUseCases
 import org.beijing.presentation.service.gameMealService
 import org.beijing.presentation.service.searchMealService
 import org.beijing.presentation.service.suggestionMealService
+import org.beijing.presentation.service.viewMealsService
 
 class FoodConsoleUi(
+    private val viewMealsUseCases: ViewMealsUseCases,
+    private val gamesMealsUseCases: GamesMealsUseCases,
+    private val searchMealsUseCases: SearchMealsUseCases,
+    private val suggestionMealsUseCases: SuggestionMealsUseCases
 ) {
 
     fun start() {
@@ -29,6 +38,7 @@ class FoodConsoleUi(
             1 -> onSuggestionMealClick()
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
+            4 -> onViewMealClick()
 
             0 -> return
 
@@ -41,15 +51,19 @@ class FoodConsoleUi(
     }
 
     private fun onGameMealClick() {
-        gameMealService()
+        gameMealService(gamesMealsUseCases)
     }
 
     private fun onSearchMealClick() {
-        searchMealService()
+        searchMealService(searchMealsUseCases)
     }
 
     private fun onSuggestionMealClick() {
-        suggestionMealService()
+        suggestionMealService(suggestionMealsUseCases)
+    }
+
+    private fun onViewMealClick() {
+        viewMealsService(viewMealsUseCases)
     }
 
     private fun showOptions() {
@@ -58,6 +72,7 @@ class FoodConsoleUi(
         println("1. Suggestion Meal")
         println("2. Search Meal")
         println("3. Game Meal")
+        println("4. View Meal")
 
         println("0. Exit")
         print("\nhere: ")
