@@ -1,5 +1,8 @@
 package org.beijing.presentation
 
+import org.beijing.logic.usecases.GamesMealsUseCases
+import org.beijing.logic.usecases.SearchMealsUseCases
+import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.beijing.logic.usecases.ViewMealsUseCase
 import org.beijing.presentation.service.gameMealService
 import org.beijing.presentation.service.searchMealService
@@ -8,6 +11,9 @@ import org.beijing.presentation.service.viewMealsService
 
 class FoodConsoleUi(
     private val viewMealsUseCase: ViewMealsUseCase,
+    private val gamesMealsUseCases: GamesMealsUseCases,
+    private val searchMealsUseCases: SearchMealsUseCases,
+    private val suggestionMealsUseCases: SuggestionMealsUseCases
 ) {
 
     fun start() {
@@ -45,16 +51,17 @@ class FoodConsoleUi(
     }
 
     private fun onGameMealClick() {
-        gameMealService()
+        gameMealService(gamesMealsUseCases)
     }
 
     private fun onSearchMealClick() {
-        searchMealService()
+        searchMealService(searchMealsUseCases)
     }
 
     private fun onSuggestionMealClick() {
-        suggestionMealService()
+        suggestionMealService(suggestionMealsUseCases)
     }
+
     private fun onViewMealClick() {
         viewMealsService(viewMealsUseCase)
     }
