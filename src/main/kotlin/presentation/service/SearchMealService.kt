@@ -4,7 +4,7 @@ import org.beijing.logic.usecases.SearchMealsUseCases
 
 fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
 
-    showOptions()
+    showSearchOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         1 -> launchGymHelper(searchMealsUseCases)
@@ -17,7 +17,7 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
 
 }
 
-fun showOptions() {
+fun showSearchOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Gym Helper")
 

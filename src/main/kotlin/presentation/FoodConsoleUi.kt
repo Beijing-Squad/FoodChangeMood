@@ -8,7 +8,7 @@ import org.beijing.presentation.service.suggestionMealService
 import org.beijing.presentation.service.viewMealService
 
 class FoodConsoleUi(
-    private val searchMealsUseCases: SearchMealsUseCases
+    private val searchMealsUseCases: SearchMealsUseCases,
     private val viewMealsUseCase: ViewMealsUseCase
 ) {
 

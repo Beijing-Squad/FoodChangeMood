@@ -5,7 +5,7 @@ import org.beijing.logic.usecases.ViewMealsUseCase
 
 fun viewMealService(viewMealsUseCase: ViewMealsUseCase) {
 
-    showOptions()
+    showViewOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         1 -> showSortedSeaFoodByProtein(viewMealsUseCase)
@@ -18,7 +18,7 @@ fun viewMealService(viewMealsUseCase: ViewMealsUseCase) {
 
 }
 
-fun showOptions() {
+fun showViewOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Show Sorted SeaFood By Protein")
 
