@@ -6,8 +6,7 @@ import org.beijing.model.Meal
 import kotlin.math.abs
 
 class SearchMealsUseCases(
-    private val mealRepository: MealRepository,
-    private val kmpSubstringSearch: KmpSubstringSearch
+    private val mealRepository: MealRepository
 ) {
 
     //region gym helper
@@ -60,7 +59,7 @@ class SearchMealsUseCases(
 
     private fun filterMealsByName(meals: List<Meal>, query: String): List<Meal> {
         return meals.filter { meal ->
-            kmpSubstringSearch.doesTextContainPattern(
+            KmpSubstringSearch.doesTextContainPattern(
                 meal.name.lowercase(),
                 query.lowercase()
             )

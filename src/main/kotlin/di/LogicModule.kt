@@ -12,6 +12,5 @@ val logicModule = module {
     single { ViewMealsUseCases(get()) }
     single { GamesMealsUseCases(get()) }
     single { SuggestionMealsUseCases(get()) }
-    single { KmpSubstringSearch() }
-    single { SearchMealsUseCases(get(),get())}
+    single { SearchMealsUseCases(get())}
 }

@@ -2,8 +2,10 @@ package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.model.Meal
+import org.koin.java.KoinJavaComponent.getKoin
 
-fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
+fun searchMealService() {
+    val searchMealsUseCases: SearchMealsUseCases = getKoin().get()
 
     showOptionsForSearchMealService()
     print("\nhere: \n")
@@ -13,7 +15,7 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
         0 -> return
         else -> println("Invalid input: $input")
     }
-    searchMealService(searchMealsUseCases)
+    searchMealService()
 }
 
 fun showOptionsForSearchMealService() {
@@ -44,7 +46,6 @@ private fun readMealNameFromInput(): String {
     }
 
     return input
-    println("0. Exit")
 }
 
 private fun displaySearchResults(results: List<Meal>, query: String) {

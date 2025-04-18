@@ -1,6 +1,6 @@
 package org.beijing.logic.usecases.utils
 
-class KmpSubstringSearch {
+object KmpSubstringSearch {
 
 
     fun doesTextContainPattern(text: String, pattern: String): Boolean {
