@@ -13,6 +13,7 @@ fun suggestionMealService() {
         22 -> sweetsWithNoEggsUi()
 
         1 -> launchItalianLargeGroupMeals()
+        2 -> launchTenRandomPotatoMeals()
         0 -> return
 
         else -> println("Invalid input: $input")
@@ -25,6 +26,7 @@ fun showSuggestionOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("22. Sweets with No Eggs") // add feature name here
     println("1. Suggest Italian Meals for Large Groups") // add feature name here
+    println("2. Suggest Ten Meals Contains Potato In Ingredients")
 
 
     println("0. Exit")
@@ -40,6 +42,31 @@ private fun getUserInput(): Int? {
 
 
 // endregion
+
+//region ten random meals contains potato
+
+fun launchTenRandomPotatoMeals() {
+    val tenRandomPotatoMeals = suggestionMeals.getTenRandomMealsContainsPotato()
+
+    if (tenRandomPotatoMeals.isEmpty()) {
+        println("There is no meals contains potato in their ingredients")
+    } else {
+        println("-".repeat(70))
+        println("\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57List of ten random Meals with potato in their ingredients\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57")
+        println("-".repeat(70))
+        println(
+            "Rank".padEnd(5) + "| " + "Meal Name".padEnd(70)
+        )
+
+        tenRandomPotatoMeals.forEachIndexed { index, meal ->
+            println(
+                "${index + 1}".padEnd(5) + "| " + meal.name
+            )
+        }
+    }
+}
+//endregion
+
 
 
 //region sweets with no eggs

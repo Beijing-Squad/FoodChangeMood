@@ -9,5 +9,4 @@ class CsvFileReader(
     fun readLinesFromFile(): List<String> {
         return file.readLines()
     }
-
 }
