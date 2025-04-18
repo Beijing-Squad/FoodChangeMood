@@ -1,6 +1,7 @@
 package org.beijing.presentation
 
 import org.beijing.logic.IngredientGameUseCase
+import org.beijing.model.GameState
 
 class FoodConsoleUi(
     private val mealUseCases: MealUseCases,
@@ -51,58 +52,66 @@ class FoodConsoleUi(
     private fun getUserInput(): Int? {
         return readlnOrNull()?.toIntOrNull()
     }
-    fun startIngredientGame() {
+    private fun startIngredientGame() {
         println("\uD83D\uDC69\u200D\uD83C\uDF73 Welcome to the Ingredient Game!")
         println("Guess the correct ingredient for each meal. One wrong answer ends the game!")
 
+        var state = GameState()
         var shouldExit = false
 
-        while (!shouldExit) {
-            val roundResult = ingredientGameUseCase.playRound()
+        while (!shouldExit && !ingredientGameUseCase.isGameOver(state)) {
+            val result = ingredientGameUseCase.playRound(state)
 
-            val round = roundResult?.getOrNull()
-            if (round == null) {
-                println("⚠️ Error occurred while starting the round.")
-                break
-            }
+            result.fold(
+                onSuccess = { (round, updatedState) ->
+                    state = updatedState
+                    println("\n🍽 Meal: ${round.mealName}")
+                    println("Which of the following is one of its ingredients? 🤔")
 
-            println("\n\uD83C\uDF7D Meal: ${round.mealName} \uD83C\uDF7D")
-            println("Which of the following is one of its ingredients?🤔")
-
-            round.options.forEachIndexed { index, option ->
-                println("${index + 1}. $option")
-            }
-            print("Select an option (1-3): ")
-            val userChoice = readlnOrNull()?.toIntOrNull()
-
-            val inputResult = if (userChoice != null && userChoice in 1..3) {
-                Result.success(userChoice)
-            } else {
-                Result.failure(Exception(" invalid input: Please enter a number between 1 and 3"))
-            }
-            inputResult.fold(
-                onSuccess = { choice ->
-                    val isCorrect = ingredientGameUseCase.checkAnswer(choice, round)
-                    if (isCorrect) {
-                        println("✅ Correct! Score: ${ingredientGameUseCase.getScore()}")
-                    } else {
-                        println("❌ Wrong! The correct answer was: ${round.correctAnswer}")
-                        shouldExit = true
+                    round.options.forEachIndexed { index, option ->
+                        println("${index + 1}. $option")
                     }
+
+                    print("Select an option (1-3): ")
+                    val userChoice = readlnOrNull()?.toIntOrNull()
+
+                    val inputResult = if (userChoice != null && userChoice in 1..3) {
+                        Result.success(userChoice)
+                    } else {
+                        Result.failure(Exception("Invalid input: Please enter a number between 1 and 3"))
+                    }
+
+                    inputResult.fold(
+                        onSuccess = { choice ->
+                            val (isCorrect, newState) = ingredientGameUseCase.checkAnswer(choice, round, state)
+                            state = newState
+
+                            if (isCorrect) {
+                                println("✅ Correct!")
+                                println("\uD83C\uDFAF Score: ${state.score}")
+                            } else {
+                                println("❌ Wrong! The correct answer was: ${round.correctAnswer}")
+                                shouldExit = true
+                            }
+                        },
+                        onFailure = { error ->
+                            println("⚠️ ${error.message}. Game over.")
+                            shouldExit = true
+                        }
+                    )
                 },
                 onFailure = { error ->
-                    println("⚠️ ${error.message}. Game over.")
+                    println("⚠️ ${error.message}")
                     shouldExit = true
                 }
             )
-
         }
 
-        println("\n\uD83C\uDFAF Final Score: ${ingredientGameUseCase.getScore()}")
-        if (ingredientGameUseCase.isGameOver()) {
-            println("\uD83C\uDFC6 Congratulations! You win\uD83C\uDF89")
+        println("\n\uD83C\uDFAF Final Score: ${state.score}")
+        if (ingredientGameUseCase.isGameOver(state)) {
+            println("\uD83C\uDFC6 Congratulations! You win 🎉")
         } else {
-            println("\uD83D\uDE08 Game Over!")
+            println("👿 Game Over!")
         }
     }
 }
