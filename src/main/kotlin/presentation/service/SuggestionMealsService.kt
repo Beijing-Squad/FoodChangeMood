@@ -12,6 +12,7 @@ fun suggestionMealService() {
         // add number of feature here as ( 1-> featureOne() )
         22 -> sweetsWithNoEggsUi()
 
+        1 -> launchItalianLargeGroupMeals(suggestionMealsUseCases)
         0 -> return
 
         else -> println("Invalid input: $input")
@@ -23,6 +24,7 @@ fun suggestionMealService() {
 fun showSuggestionOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("22. Sweets with No Eggs") // add feature name here
+    println("1. Suggest Italian Meals for Large Groups") // add feature name here
 
 
     println("0. Exit")
@@ -91,3 +93,17 @@ fun sweetsWithNoEggsUi() {
     }
 }
 //endregion
+// region Italian Large Group Meals
+fun launchItalianLargeGroupMeals(suggestionMealsUseCases: SuggestionMealsUseCases) {
+    val meals = suggestionMealsUseCases.getItalianLargeGroupsMeals()
+
+    if (meals.isEmpty()) {
+        println("❌ No Italian meals found for large groups.")
+    } else {
+        println("🍝 Meals from Italy suitable for large groups:\n")
+        meals.forEachIndexed { index, meal ->
+            println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} mins |")
+        }
+    }
+}
+// endregion

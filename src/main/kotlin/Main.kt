@@ -1,15 +1,14 @@
 package org.beijing
 
-import org.beijing.di.appModule
+import di.dataModule
+import di.logicModule
+import di.uiModule
 import org.beijing.presentation.FoodConsoleUi
 import org.koin.core.context.startKoin
 import org.koin.mp.KoinPlatform.getKoin
 
 fun main() {
-
-    startKoin { modules(appModule) }
-
+    startKoin { modules(dataModule, logicModule, uiModule) }
     val ui: FoodConsoleUi = getKoin().get()
     ui.start()
-
 }
