@@ -1,6 +1,5 @@
 package di
 
-
 import org.beijing.logic.usecases.GamesMealsUseCases
 import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.logic.usecases.SuggestionMealsUseCases

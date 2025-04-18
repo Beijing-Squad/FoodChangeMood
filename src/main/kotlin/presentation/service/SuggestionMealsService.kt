@@ -2,10 +2,10 @@ package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SuggestionMealsUseCases
 
-fun suggestionMealService(suggestionMealsUseCases: SuggestionMealsUseCases){
+fun suggestionMealService(){
 
     showSuggestionOptions()
-    print("\nhere: \n")
+    print("\nhere: ")
     when (val input = getUserInput()) {
         // add number of feature here as ( 1-> featureOne() )
 
@@ -13,7 +13,7 @@ fun suggestionMealService(suggestionMealsUseCases: SuggestionMealsUseCases){
 
         else -> println("Invalid input: $input")
     }
-    suggestionMealService(suggestionMealsUseCases)
+    suggestionMealService()
 
 }
 
