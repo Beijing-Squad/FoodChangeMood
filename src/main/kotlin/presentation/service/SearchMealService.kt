@@ -1,12 +1,12 @@
 package org.beijing.presentation.service
 
 import kotlinx.datetime.LocalDate
-import org.beijing.logic.usecases.SearchMealsUseCases
+import org.beijing.logic.usecases.ManageMealsSearchUseCases
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 import org.koin.mp.KoinPlatform.getKoin
 
-private val searchMeals: SearchMealsUseCases = getKoin().get()
+private val searchMeals: ManageMealsSearchUseCases = getKoin().get()
 fun searchMealService() {
     showOptionsForSearchMealService()
     print("\nhere: \n")
@@ -14,6 +14,7 @@ fun searchMealService() {
         1 -> launchGymHelper()
         2 -> launchSearchByName()
         3 -> launchMealsByDate()
+        4 -> exploreCountryGameService()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -25,6 +26,7 @@ fun showOptionsForSearchMealService() {
     println("1. Gym Helper")
     println("2. Search by name of meal")
     println("3. Search By Date And See Meal Details")
+    println("4. Explore Country Meals")
     println("0. Exit")
 }
 
@@ -196,6 +198,47 @@ private fun launchGymHelper() {
                 targetProtein
             )
         )
+    }
+}
+//endregion
+fun exploreCountryGameService() {
+    println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
+    println("------------------------------------------------------")
+    println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
+    println("🌍 For example, try entering 'Italy', 'India', or 'Mexico'.")
+
+    while (true) {
+        println("\n🔎 Enter a country name (or type 'exit' to quit):")
+        val country = readlnOrNull()?.trim()
+
+        when {
+            country.equals("exit", ignoreCase = true) -> {
+                println("👋 Thanks for playing! Come back soon!")
+                break
+            }
+
+            country.isNullOrBlank() || country.length < 4 -> {
+                println("⚠️ Please enter a country name with at least 4 characters.")
+                continue
+            }
+
+            country.all { it.isDigit() } -> {
+                println("🚫 Please enter a valid name, not just numbers.")
+                continue
+            }
+
+            else -> {
+                val meals = searchMeals.exploreCountryMeals(country)
+                if (meals.isEmpty()) {
+                    println("😔 Sorry, no meals found for '$country'. Try another country!")
+                } else {
+                    println("\n🍽️ Found ${meals.size} meal(s) related to '$country':\n")
+                    meals.forEachIndexed { index, meal ->
+                        println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mins • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
+                    }
+                }
+            }
+        }
     }
 }
 //endregion
