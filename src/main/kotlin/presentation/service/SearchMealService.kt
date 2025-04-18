@@ -1,6 +1,7 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SearchMealsUseCases
+import org.koin.java.KoinJavaComponent.getKoin
 import org.beijing.model.Meal
 import org.koin.java.KoinJavaComponent.getKoin
 
@@ -76,5 +77,3 @@ private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
     }
 }
 //endregion
-
-

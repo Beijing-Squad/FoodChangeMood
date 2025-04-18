@@ -48,7 +48,7 @@ class FoodConsoleUi(
     }
 
     private fun onGameMealClick() {
-        gameMealService(gamesMealsUseCases)
+        gameMealService()
     }
 
     private fun onSearchMealClick() {
@@ -56,7 +56,7 @@ class FoodConsoleUi(
     }
 
     private fun onSuggestionMealClick() {
-        suggestionMealService(suggestionMealsUseCases)
+        suggestionMealService()
     }
 
     private fun onViewMealClick() {
@@ -74,6 +74,7 @@ class FoodConsoleUi(
         println("6. Easy Food Suggestion")
         print("\nhere: ")
     }
+
 
     private fun getUserInput(): Int? {
         return readlnOrNull()?.toIntOrNull()
