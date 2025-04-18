@@ -2,9 +2,20 @@ package org.beijing.presentation
 
 import org.beijing.logic.usecases.MealUseCases
 import org.beijing.presentation.service.*
+import org.beijing.logic.usecases.GamesMealsUseCases
+import org.beijing.logic.usecases.SearchMealsUseCases
+import org.beijing.logic.usecases.SuggestionMealsUseCases
+import org.beijing.logic.usecases.ViewMealsUseCases
+import org.beijing.presentation.service.gameMealService
+import org.beijing.presentation.service.searchMealService
+import org.beijing.presentation.service.suggestionMealService
+import org.beijing.presentation.service.viewMealsService
 
 class FoodConsoleUi(
-    private val mealUseCases: MealUseCases
+    private val viewMealsUseCases: ViewMealsUseCases,
+    private val gamesMealsUseCases: GamesMealsUseCases,
+    private val searchMealsUseCases: SearchMealsUseCases,
+    private val suggestionMealsUseCases: SuggestionMealsUseCases
 ) {
 
     fun start() {
@@ -29,8 +40,9 @@ class FoodConsoleUi(
             1 -> onSuggestionMealClick()
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
-            4 -> runExploreCountryGame()
-            5 -> easyMealSuggestion(mealUseCases)
+            4 -> onViewMealClick()
+            5 -> runExploreCountryGame()
+            6 -> easyMealSuggestion(mealUseCases)
 
             else -> {
                 println("Invalid input: $input")
@@ -41,15 +53,19 @@ class FoodConsoleUi(
     }
 
     private fun onGameMealClick() {
-        gameMealService()
+        gameMealService(gamesMealsUseCases)
     }
 
     private fun onSearchMealClick() {
-        searchMealService()
+        searchMealService(searchMealsUseCases)
     }
 
     private fun onSuggestionMealClick() {
-        suggestionMealService()
+        suggestionMealService(suggestionMealsUseCases)
+    }
+
+    private fun onViewMealClick() {
+        viewMealsService(viewMealsUseCases)
     }
 
     private fun showOptions() {
@@ -58,8 +74,9 @@ class FoodConsoleUi(
         println("1. Suggestion Meal")
         println("2. Search Meal")
         println("3. Game Meal")
-        println("4. Explore meals from a specific country")
-        println("5. Easy Food Suggestion")
+        println("4. View Meal")
+        println("5. Explore meals from a specific country")
+        println("6. Easy Food Suggestion")
         print("\nhere: ")
     }
 
@@ -67,36 +84,4 @@ class FoodConsoleUi(
         return readlnOrNull()?.toIntOrNull()
     }
 
-    private fun runExploreCountryGame() {
-        println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
-        println("------------------------------------------------------")
-        println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
-        println("🌍 For example, try entering 'Italy', 'India', or 'Mexico'.")
-
-        while (true) {
-            println("\n🔎 Enter a country name (or type 'exit' to quit):")
-            val country = readlnOrNull()?.trim()
-
-            if (country.equals("exit", ignoreCase = true)) {
-                println("👋 Thanks for playing! Come back soon!")
-                break
-            }
-
-            if (country.isNullOrBlank()) {
-                println("⚠️ Please enter a valid country name.")
-                continue
-            }
-
-            val meals = mealUseCases.exploreCountryMealsUseCase.exploreCountryMeals(country)
-
-            if (meals.isEmpty()) {
-                println("😔 Sorry, no meals found for '$country'. Try another country!")
-            } else {
-                println("\n🍽️ Found ${meals.size} meal(s) related to '$country':\n")
-                meals.forEachIndexed { index, meal ->
-                    println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mins • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
-                }
-            }
-        }
-    }
 }
