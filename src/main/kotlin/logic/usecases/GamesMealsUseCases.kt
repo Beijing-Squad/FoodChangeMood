@@ -1,7 +1,7 @@
 package org.beijing.logic.usecases
 
+import model.GameRound
 import org.beijing.logic.MealRepository
-import org.beijing.model.Meal
 import kotlin.random.Random
 
 class GamesMealsUseCases(
@@ -69,11 +69,4 @@ class GamesMealsUseCases(
             lastFeedBack = finalFeedBack
         )
     }
-
-    data class GameRound(
-        val meal: Meal,
-        val attemptsLeft: Int,
-        val isCompleted: Boolean,
-        val lastFeedBack: String?
-    )
 }
