@@ -2,7 +2,11 @@ package org.beijing.logic.usecases
 
 import model.GameRound
 import org.beijing.logic.MealRepository
+import org.beijing.model.IngredientGameRound
+import org.beijing.model.IngredientGameState
 import kotlin.random.Random
+import org.beijing.model.FeedbackStatus
+import org.beijing.model.GuessStatus
 
 class ManageMealsGamesUseCases(
     private val mealRepository: MealRepository,
@@ -28,29 +32,26 @@ class ManageMealsGamesUseCases(
 
     fun makeGuess(round: GameRound, guessedMinutes: Int): GameRound {
         if (round.isCompleted) {
-            return round.copy(lastFeedBack = "This round is already Completed, Start A new Round.")
+            return round.copy(lastFeedBack = FeedbackStatus.ROUND_ALREADY_COMPLETED.message)
         }
 
         if (round.attemptsLeft <= 0) {
             return round.copy(
                 isCompleted = true,
-                lastFeedBack = "No Attempts Left, The Actual Preparation Time is: ${round.meal.minutes} minutes."
+                lastFeedBack = FeedbackStatus.NO_ATTEMPTS_LEFT.message.format(round.meal.minutes)
             )
         }
 
         val actualMinutes = round.meal.minutes
-        val feedback = when {
-            guessedMinutes == actualMinutes -> {
-                "Correct!! The Preparation Time is indeed $actualMinutes minutes."
-            }
-
-            guessedMinutes < actualMinutes -> {
-                "Too low!! Try a higher number."
-            }
-
-            else -> {
-                "Too high! Try a lower number."
-            }
+        val status = when {
+            guessedMinutes == actualMinutes -> GuessStatus.CORRECT
+            guessedMinutes < actualMinutes -> GuessStatus.TOO_LOW
+            else -> GuessStatus.TOO_HIGH
+        }
+        val feedback = if (status == GuessStatus.CORRECT) {
+            status.message.format(actualMinutes)
+        } else {
+            status.message
         }
 
         val newAttemptsLeft = round.attemptsLeft - 1
@@ -58,7 +59,7 @@ class ManageMealsGamesUseCases(
         val isCompleted = isCorrect || newAttemptsLeft <= 0
 
         val finalFeedBack = if (isCompleted && !isCorrect) {
-            "$feedback\nGameOver! The actual preparation time is $actualMinutes minutes."
+            "$feedback\n" + FeedbackStatus.GAME_OVER.message.format(actualMinutes)
         } else {
             feedback
         }
@@ -69,4 +70,57 @@ class ManageMealsGamesUseCases(
             lastFeedBack = finalFeedBack
         )
     }
+
+    fun isGameOver(state: IngredientGameState): Boolean = state.correctAnswers >= MAX_CORRECT_ANSWERS
+
+    fun startIngredientGame(state: IngredientGameState): Result<Pair<IngredientGameRound, IngredientGameState>> {
+        val meals = mealRepository.getAllMeals()
+
+        if (isGameOver(state)) return Result.failure(Exception("Game Over"))
+
+        val availableMeals = meals.filter { it.id !in state.usedMeals && it.ingredients.isNotEmpty() }
+
+        val meal = availableMeals.shuffled().firstOrNull()
+            ?: return Result.failure(Exception("No meals available 😔"))
+
+        val correct = meal.ingredients.randomOrNull()
+            ?: return Result.failure(Exception("No ingredients in meal 😔"))
+
+        val options = generateOptions(correct)
+        val updatedState = state.copy(usedMeals = state.usedMeals + meal.id)
+
+        return Result.success(IngredientGameRound(meal.name, correct, options) to updatedState)
+    }
+
+    fun checkAnswer(userChoice: Int, round: IngredientGameRound, state: IngredientGameState): Pair<Boolean, IngredientGameState> {
+        val isCorrect = round.options.getOrNull(userChoice - 1) == round.correctAnswer
+
+        return if (isCorrect) {
+            true to state.copy(
+                score = state.score + SCORE_INCREMENT,
+                correctAnswers = state.correctAnswers + 1
+            )
+        } else {
+            false to state
+        }
+    }
+
+    private fun generateOptions(correct: String): List<String> {
+        val meals = mealRepository.getAllMeals()
+        val incorrectOptions = meals
+            .flatMap { it.ingredients }
+            .distinct()
+            .filter { it != correct }
+            .shuffled()
+            .take(INCORRECT_OPTION_COUNT)
+
+        return (incorrectOptions + correct).shuffled()
+    }
+
+    companion object {
+        private const val MAX_CORRECT_ANSWERS = 15
+        private const val SCORE_INCREMENT = 1000
+        private const val INCORRECT_OPTION_COUNT = 2
+    }
+
 }

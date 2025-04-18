@@ -1,5 +1,6 @@
 package org.beijing.presentation
 
+
 import org.beijing.presentation.service.*
 
 class FoodConsoleUi {
@@ -20,11 +21,11 @@ class FoodConsoleUi {
     private fun presentFeatures() {
         showOptions()
         when (val input = getUserInput()) {
-            0 -> return
             1 -> onSuggestionMealClick()
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
             4 -> onViewMealClick()
+            0 -> return
 
             else -> {
                 println("Invalid input: $input")
@@ -59,7 +60,9 @@ class FoodConsoleUi {
         print("\nhere: ")
     }
 
+
     private fun getUserInput(): Int? {
         return readlnOrNull()?.toIntOrNull()
     }
+
 }

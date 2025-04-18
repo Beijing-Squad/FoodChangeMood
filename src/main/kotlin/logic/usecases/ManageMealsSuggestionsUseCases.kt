@@ -65,13 +65,32 @@ class ManageMealsSuggestionsUseCases(
     }
     //end region
 
-    //region Easy Meal Suggestion
-    fun easyFoodSuggestion(): List<Meal> {
+    // region easy food suggestions
+    fun getEasyFoodSuggestion(): List<Meal> {
         return mealRepository.getAllMeals().asSequence()
             .filter { it.nSteps <= Constant.N_STEP && it.nIngredients <= Constant.N_INGREDIENTS && it.minutes <= Constant.MINUTES }
             .shuffled()
             .take(Constant.N_EASY_MEAL)
             .toList()
     }
-    //endregion
+    // end region easy food suggestions
+
+
+    // region Meals have more than seven hundred calories
+
+    fun getMealHaveMoreThanSevenHundredCalories(): List<Meal> {
+
+        val filteredMeals = mealRepository.getAllMeals().filter(::checkMealCaloriesContent)
+        return filteredMeals
+    }
+
+    fun checkMealCaloriesContent(meal: Meal): Boolean {
+        return meal.nutrition.calories >= CALORIES_CONTENT_NEEDED
+    }
+    //end region
+
+    private companion object {
+        val CALORIES_CONTENT_NEEDED = 700
+
+    }
 }
