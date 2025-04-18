@@ -10,7 +10,7 @@ class SearchMealsUseCases(
     private val mealRepository: MealRepository
 ) {
 
-    // region search by add date and see meal details by id use case feature (8)
+    // region search by add date and see meal details by id
     fun getMealsByDate(date: LocalDate): List<Pair<Int, String>> {
         val mealsOnDate = mealRepository.getAllMeals()
             .filter { it.submitted == date }
@@ -48,7 +48,6 @@ class SearchMealsUseCases(
     private fun calculateNutrition(currentNutrition: Double, targetNutrition: Double): Double {
         return abs(currentNutrition - targetNutrition) * RATIO
     }
-
     //endregion
 
     //region search by name
@@ -81,6 +80,23 @@ class SearchMealsUseCases(
                 query.lowercase()
             )
         }
+    }
+    //endregion
+
+    //region Explore Country Meals
+    fun exploreCountryMeals(countryQuery: String): List<Meal> {
+        val query = countryQuery.lowercase()
+        return mealRepository.getAllMeals()
+            .asSequence()
+            .filter { meal ->
+                meal.tags.any {
+                    it.lowercase().contains(query)
+                    meal.tags.joinToString(" ").lowercase().contains(query)
+                }
+            }
+            .shuffled()
+            .take(20)
+            .toList()
     }
     //endregion
 
