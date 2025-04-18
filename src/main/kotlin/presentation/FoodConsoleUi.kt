@@ -1,15 +1,10 @@
 package org.beijing.presentation
 
-import org.beijing.logic.usecases.SearchMealsUseCases
-import org.beijing.logic.usecases.GamesMealsUseCases
-import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.beijing.logic.usecases.ViewMealsUseCases
 import org.beijing.presentation.service.*
 
 class FoodConsoleUi(
     private val viewMealsUseCases: ViewMealsUseCases,
-    private val gamesMealsUseCases: GamesMealsUseCases,
-    private val searchMealsUseCases: SearchMealsUseCases,
 ) {
 
     fun start() {
@@ -26,7 +21,6 @@ class FoodConsoleUi(
         println("Welcome to Food Change Mood App")
     }
 
-
     private fun presentFeatures() {
         showOptions()
         when (val input = getUserInput()) {
@@ -35,14 +29,11 @@ class FoodConsoleUi(
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
             4 -> onViewMealClick()
-            5 -> exploreCountryGameService()
-            6 -> easyMealService()
 
             else -> {
                 println("Invalid input: $input")
             }
         }
-
         presentFeatures()
     }
 
@@ -69,14 +60,10 @@ class FoodConsoleUi(
         println("2. Search Meal")
         println("3. Game Meal")
         println("4. View Meal")
-        println("5. Explore meals from a specific country")
-        println("6. Easy Food Suggestion")
         print("\nhere: ")
     }
-
 
     private fun getUserInput(): Int? {
         return readlnOrNull()?.toIntOrNull()
     }
-
 }
