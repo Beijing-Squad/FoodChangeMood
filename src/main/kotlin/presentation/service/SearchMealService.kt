@@ -4,18 +4,21 @@ import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
-fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
+import org.koin.mp.KoinPlatform.getKoin
+
+private val searchMealsUseCases: SearchMealsUseCases = getKoin().get()
+fun searchMealService() {
 
     showOptionsForSearchMealService()
     print("\nhere: \n")
     when (val input = getUserInput()) {
-        1 -> launchGymHelper(searchMealsUseCases)
-        12 -> launchMealsByDate(searchMealsUseCases)
+        1 -> launchGymHelper()
+        12 -> launchMealsByDate()
         0 -> return
 
         else -> println("Invalid input: $input")
     }
-    searchMealService(searchMealsUseCases)
+    searchMealService()
 }
 
 fun showOptionsForSearchMealService() {
@@ -31,20 +34,21 @@ private fun getUserInput(): Int? {
 }
 
 // region search by add date && see details by id feature (8)
-private fun launchMealsByDate(searchMealsUseCases: SearchMealsUseCases) {
+private fun launchMealsByDate() {
     val date = getDateInput()
+
     val meals = try {
         searchMealsUseCases.getMealsByDate(date)
     } catch (exception: Exception) {
         println(exception.message)
         return
     }
+
     viewMealsOnDate(date, meals)
 
     val seeDetailsAnswer = getSeeDetailsAnswer()
     if (seeDetailsAnswer) {
         val mealId = getIdInput()
-
         try {
             val meal = searchMealsUseCases.getMealOnDateById(date, mealId)
             viewMealDetails(meal)
@@ -52,11 +56,9 @@ private fun launchMealsByDate(searchMealsUseCases: SearchMealsUseCases) {
             println(exception.message)
             return
         }
-
     } else {
         println("Exiting...")
     }
-
 }
 
 private fun getDateInput(): LocalDate {
@@ -100,31 +102,59 @@ private fun getIdInput(): Int {
 }
 
 private fun viewMealDetails(meal: Meal) {
-    println("==== Meal Details ====")
-    println("Name: ${meal.name}")
-    println("Minutes: ${meal.minutes}")
-    print("Nutrition: ")
+    println("╔════════════════════════════════════╗")
+    println("║          🍽️ Meal Details           ║")
+    println("╚════════════════════════════════════╝")
+
+    println("🟢 Name : ${meal.name}")
+    println("⏱️ Preparation Time : ${meal.minutes} minutes")
+
+    println("\n📊 Nutrition Facts:")
     displayNutrition(meal.nutrition)
-    println("Steps: ${meal.steps.joinToString(", ")}")
-    if (meal.description == null) {
-        println("Description: No Description Available.")
+
+    println()
+    displaySteps(meal.steps)
+
+    println("\n📄 Description:")
+    if (meal.description.isNullOrBlank()) {
+        println("   No Description Available.")
     } else {
-        println("Description: ${meal.description}")
+        println("   ${meal.description}")
     }
-    println("Ingredients: ${meal.ingredients.joinToString(", ")}")
+
+    println()
+    displayIngredients(meal.ingredients)
+
+    println("══════════════════════════════════════")
 }
 
 private fun displayNutrition(nutrition: Nutrition) {
-    println(
-        "Calories: ${nutrition.calories}, Fat: ${nutrition.totalFat}, Sugar: ${nutrition.sugar}, " +
-                "Sodium: ${nutrition.sodium}, Protein: ${nutrition.protein}, Saturated Fat: ${nutrition.saturatedFat}, " +
-                "Carbohydrates: ${nutrition.carbohydrates}"
-    )
+    println("   - Calories       : ${nutrition.calories} kcal")
+    println("   - Total Fat      : ${nutrition.totalFat} g")
+    println("   - Sugar          : ${nutrition.sugar} g")
+    println("   - Sodium         : ${nutrition.sodium} mg")
+    println("   - Protein        : ${nutrition.protein} g")
+    println("   - Saturated Fat  : ${nutrition.saturatedFat} g")
+    println("   - Carbohydrates  : ${nutrition.carbohydrates} g")
+}
+
+private fun displaySteps(steps: List<String>) {
+    println("📝 Steps (${steps.size}):")
+    steps.forEachIndexed { index, step ->
+        println("   ${index + 1}. $step")
+    }
+}
+
+private fun displayIngredients(ingredients: List<String>) {
+    println("🧂 Ingredients (${ingredients.size}):")
+    ingredients.forEach { ingredient ->
+        println("   - $ingredient")
+    }
 }
 // endregion
 
 // region gym helper
-private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
+private fun launchGymHelper() {
     print("enter target of Calories: ")
     val targetCalories = readlnOrNull()?.toDoubleOrNull()
     print("enter target of Protein:")
