@@ -36,8 +36,8 @@ class FoodConsoleUi(
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
             4 -> onViewMealClick()
-            5 -> runExploreCountryGame()
-            6 -> easyMealSuggestion(mealUseCases)
+            5 -> exploreCountryGameService()
+            6 -> easyMealService()
 
             else -> {
                 println("Invalid input: $input")
