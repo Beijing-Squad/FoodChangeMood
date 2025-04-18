@@ -12,7 +12,7 @@ fun suggestionMealService() {
         // add number of feature here as ( 1-> featureOne() )
         22 -> sweetsWithNoEggsUi()
 
-        1 -> launchItalianLargeGroupMeals(suggestionMealsUseCases)
+        1 -> launchItalianLargeGroupMeals()
         0 -> return
 
         else -> println("Invalid input: $input")
