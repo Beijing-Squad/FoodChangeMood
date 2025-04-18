@@ -6,7 +6,6 @@ import org.beijing.model.Meal
 class ViewMealsUseCases(
     private val mealRepository: MealRepository
 ) {
-    // add feature function here
     // region get a list of healthy fast food meals
     fun getHealthyQuickPreparedMeals(): List<Meal> {
         val (fatAvg, saturatedFatAvg, carbsAvg) = calculateNutritionAverages(mealRepository.getAllMeals())
@@ -39,6 +38,4 @@ class ViewMealsUseCases(
         )
     }
     //endregion
-
-
 }
