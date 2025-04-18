@@ -3,7 +3,7 @@ package org.beijing.logic.usecases
 import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
 
-class ViewMealsUseCases(
+class ManageMealsViewsUseCases(
     private val mealRepository: MealRepository
 ) {
     // region get a list of healthy fast food meals

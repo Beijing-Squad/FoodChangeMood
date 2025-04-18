@@ -4,7 +4,7 @@ import model.GameRound
 import org.beijing.logic.MealRepository
 import kotlin.random.Random
 
-class GamesMealsUseCases(
+class ManageMealsGamesUseCases(
     private val mealRepository: MealRepository,
 ) {
     private val maxAttempts = 3

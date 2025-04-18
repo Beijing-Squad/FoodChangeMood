@@ -6,7 +6,7 @@ import org.beijing.logic.usecases.utils.KmpSubstringSearch
 import org.beijing.model.Meal
 import kotlin.math.abs
 
-class SearchMealsUseCases(
+class ManageMealsSearchUseCases(
     private val mealRepository: MealRepository
 ) {
 
