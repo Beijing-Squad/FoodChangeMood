@@ -1,9 +1,9 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SearchMealsUseCases
-import org.koin.java.KoinJavaComponent.getKoin
+import org.koin.mp.KoinPlatform.getKoin
 import org.beijing.model.Meal
-import org.koin.java.KoinJavaComponent.getKoin
+
 
 fun searchMealService() {
     val searchMealsUseCases: SearchMealsUseCases = getKoin().get()
