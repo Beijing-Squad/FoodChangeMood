@@ -14,8 +14,8 @@ fun searchMealService() {
     when (val input = getUserInput()) {
         1 -> launchGymHelper()
         12 -> launchMealsByDate()
+        2 -> launchSearchByName(searchMealsUseCases)
         0 -> return
-
         else -> println("Invalid input: $input")
     }
     searchMealService()
@@ -26,12 +26,44 @@ fun showOptionsForSearchMealService() {
     println("1. Gym Helper")
     println("12. Search By Date And See Meal Details")
 
+    println("2. Search by name of meal")
     println("0. Exit")
 }
 
 private fun getUserInput(): Int? {
     return readlnOrNull()?.toIntOrNull()
 }
+
+// region search by name
+private fun launchSearchByName(searchMealsUseCases: SearchMealsUseCases) {
+    val mealNameQuery = readMealNameFromInput()
+    val searchResults = searchMealsUseCases.getSearchMealsByName(mealNameQuery)
+    displaySearchResults(searchResults, mealNameQuery)
+}
+
+private fun readMealNameFromInput(): String {
+    print("Enter meal name to search: ")
+    val input = readlnOrNull()?.trim()
+        ?: throw IllegalArgumentException("Meal name input cannot be null.")
+
+    if (input.isEmpty()) {
+        throw IllegalArgumentException("Meal name input cannot be empty.")
+    }
+
+    return input
+}
+
+private fun displaySearchResults(results: List<Meal>, query: String) {
+    if (results.isEmpty()) {
+        println("No meals found matching \"$query\".")
+    } else {
+        println("Meals found:")
+        results.forEach { meal ->
+            println(meal.name)
+        }
+    }
+}
+//endregion
 
 // region search by add date && see details by id feature (8)
 private fun launchMealsByDate() {
