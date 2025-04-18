@@ -1,10 +1,10 @@
 package org.beijing.presentation.service
 
-import org.beijing.logic.usecases.MealUseCases
+import org.beijing.logic.usecases.ExploreCountryMealsUseCase
+import org.koin.mp.KoinPlatform.getKoin
 
-fun runExploreCountryGame(
-    mealUseCases : MealUseCases
-) {
+fun exploreCountryGameService() {
+    val exploreCountryMealsUseCase: ExploreCountryMealsUseCase = getKoin().get()
     println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
     println("------------------------------------------------------")
     println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
@@ -14,25 +14,35 @@ fun runExploreCountryGame(
         println("\n🔎 Enter a country name (or type 'exit' to quit):")
         val country = readlnOrNull()?.trim()
 
-        if (country.equals("exit", ignoreCase = true)) {
-            println("👋 Thanks for playing! Come back soon!")
-            break
-        }
+        when {
+            country.equals("exit", ignoreCase = true) -> {
+                println("👋 Thanks for playing! Come back soon!")
+                break
+            }
 
-        if (country.isNullOrBlank()) {
-            println("⚠️ Please enter a valid country name.")
-            continue
-        }
+            country.isNullOrBlank() || country.length < 4 -> {
+                println("⚠️ Please enter a country name with at least 4 characters.")
+                continue
+            }
 
-        val meals = mealUseCases.exploreCountryMealsUseCase.exploreCountryMeals(country)
+            country.all { it.isDigit() } -> {
+                println("🚫 Please enter a valid name, not just numbers.")
+                continue
+            }
 
-        if (meals.isEmpty()) {
-            println("😔 Sorry, no meals found for '$country'. Try another country!")
-        } else {
-            println("\n🍽️ Found ${meals.size} meal(s) related to '$country':\n")
-            meals.forEachIndexed { index, meal ->
-                println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mins • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
+            else -> {
+                val meals = exploreCountryMealsUseCase.exploreCountryMeals(country)
+                if (meals.isEmpty()) {
+                    println("😔 Sorry, no meals found for '$country'. Try another country!")
+                } else {
+                    println("\n🍽️ Found ${meals.size} meal(s) related to '$country':\n")
+                    meals.forEachIndexed { index, meal ->
+                        println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mins • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
+                    }
+                }
             }
         }
     }
 }
+
+
