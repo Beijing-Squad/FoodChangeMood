@@ -2,6 +2,7 @@ package org.beijing.logic.usecases
 
 import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
+import org.beijing.util.Constant
 
 class SuggestionMealsUseCases(
     private val mealRepository: MealRepository
@@ -47,7 +48,7 @@ class SuggestionMealsUseCases(
             }
     }//endregion
 
-    //region keti diet meal
+    //region keto diet meal
     fun suggestKetoMeal(usedMealIds: MutableSet<Int>): Meal? {
         val meals = mealRepository.getAllMeals()
         val maxCarbs = 20
@@ -55,7 +56,7 @@ class SuggestionMealsUseCases(
             .asSequence()
             .filter { meal ->
                 meal.nutrition.carbohydrates < maxCarbs &&
-                meal.nutrition.totalFat > meal.nutrition.protein
+                        meal.nutrition.totalFat > meal.nutrition.protein
             }
             .filterNot { it.id in usedMealIds }
             .shuffled()
@@ -63,4 +64,14 @@ class SuggestionMealsUseCases(
             ?.also { usedMealIds.add(it.id) }
     }
     //end region
+
+    //region Easy Meal Suggestion
+    fun easyFoodSuggestion(): List<Meal> {
+        return mealRepository.getAllMeals().asSequence()
+            .filter { it.nSteps <= Constant.N_STEP && it.nIngredients <= Constant.N_INGREDIENTS && it.minutes <= Constant.MINUTES }
+            .shuffled()
+            .take(Constant.N_EASY_MEAL)
+            .toList()
+    }
+    //endregion
 }
