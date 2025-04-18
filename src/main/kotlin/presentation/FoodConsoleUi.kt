@@ -51,15 +51,15 @@ class FoodConsoleUi(
     }
 
     private fun onGameMealClick() {
-        gameMealService(gamesMealsUseCases)
+        gameMealService()
     }
 
     private fun onSearchMealClick() {
-        searchMealService(searchMealsUseCases)
+        searchMealService()
     }
 
     private fun onSuggestionMealClick() {
-        suggestionMealService(suggestionMealsUseCases)
+        suggestionMealService()
     }
 
     private fun onViewMealClick() {
