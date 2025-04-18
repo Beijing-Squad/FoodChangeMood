@@ -41,7 +41,6 @@ class SearchMealsUseCases(
         return mealRepository.getAllMeals().filter { currentMeal ->
             isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
         }
-
     }
 
     private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {

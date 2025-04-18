@@ -6,15 +6,14 @@ import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 import org.koin.mp.KoinPlatform.getKoin
 
-private val searchMealsUseCases: SearchMealsUseCases = getKoin().get()
+private val searchMeals: SearchMealsUseCases = getKoin().get()
 fun searchMealService() {
-
     showOptionsForSearchMealService()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         1 -> launchGymHelper()
-        12 -> launchMealsByDate()
-        2 -> launchSearchByName(searchMealsUseCases)
+        2 -> launchSearchByName()
+        3 -> launchMealsByDate()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -24,9 +23,8 @@ fun searchMealService() {
 fun showOptionsForSearchMealService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Gym Helper")
-    println("12. Search By Date And See Meal Details")
-
     println("2. Search by name of meal")
+    println("3. Search By Date And See Meal Details")
     println("0. Exit")
 }
 
@@ -35,9 +33,9 @@ private fun getUserInput(): Int? {
 }
 
 // region search by name
-private fun launchSearchByName(searchMealsUseCases: SearchMealsUseCases) {
+private fun launchSearchByName() {
     val mealNameQuery = readMealNameFromInput()
-    val searchResults = searchMealsUseCases.getSearchMealsByName(mealNameQuery)
+    val searchResults = searchMeals.getSearchMealsByName(mealNameQuery)
     displaySearchResults(searchResults, mealNameQuery)
 }
 
@@ -70,7 +68,7 @@ private fun launchMealsByDate() {
     val date = getDateInput()
 
     val meals = try {
-        searchMealsUseCases.getMealsByDate(date)
+        searchMeals.getMealsByDate(date)
     } catch (exception: Exception) {
         println(exception.message)
         return
@@ -82,7 +80,7 @@ private fun launchMealsByDate() {
     if (seeDetailsAnswer) {
         val mealId = getIdInput()
         try {
-            val meal = searchMealsUseCases.getMealOnDateById(date, mealId)
+            val meal = searchMeals.getMealOnDateById(date, mealId)
             viewMealDetails(meal)
         } catch (exception: Exception) {
             println(exception.message)
@@ -193,7 +191,7 @@ private fun launchGymHelper() {
     val targetProtein = readlnOrNull()?.toDoubleOrNull()
     if (targetProtein != null && targetCalories != null) {
         println(
-            searchMealsUseCases.getGymHelperMeals(
+            searchMeals.getGymHelperMeals(
                 targetCalories,
                 targetProtein
             )
