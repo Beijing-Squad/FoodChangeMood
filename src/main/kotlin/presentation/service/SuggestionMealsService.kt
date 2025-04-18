@@ -4,8 +4,8 @@ import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
 private val suggestionMeals: SuggestionMealsUseCases = getKoin().get()
-
 fun suggestionMealService() {
+
     showSuggestionOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
@@ -94,15 +94,15 @@ fun sweetsWithNoEggsUi() {
 }
 //endregion
 // region Italian Large Group Meals
-fun launchItalianLargeGroupMeals(suggestionMealsUseCases: SuggestionMealsUseCases) {
-    val meals = suggestionMealsUseCases.getItalianLargeGroupsMeals()
+fun launchItalianLargeGroupMeals() {
+    val meals = suggestionMeals.getItalianLargeGroupsMeals()
 
     if (meals.isEmpty()) {
         println("❌ No Italian meals found for large groups.")
     } else {
         println("🍝 Meals from Italy suitable for large groups:\n")
         meals.forEachIndexed { index, meal ->
-            println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} mins |")
+            println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} minutes |")
         }
     }
 }
