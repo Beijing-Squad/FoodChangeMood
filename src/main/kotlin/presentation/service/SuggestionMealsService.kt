@@ -1,25 +1,32 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SuggestionMealsUseCases
+import org.koin.mp.KoinPlatform.getKoin
 
-fun suggestionMealService(suggestionMealsUseCases: SuggestionMealsUseCases){
+private val suggestionMeals: SuggestionMealsUseCases = getKoin().get()
+fun suggestionMealService() {
 
     showSuggestionOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         // add number of feature here as ( 1-> featureOne() )
+        22 -> sweetsWithNoEggsUi()
 
+        1 -> launchItalianLargeGroupMeals()
+        2 -> launchTenRandomPotatoMeals()
         0 -> return
 
         else -> println("Invalid input: $input")
     }
-    suggestionMealService(suggestionMealsUseCases)
+    suggestionMealService()
 
 }
 
 fun showSuggestionOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
-    println("1. ") // add feature name here
+    println("22. Sweets with No Eggs") // add feature name here
+    println("1. Suggest Italian Meals for Large Groups") // add feature name here
+    println("2. Suggest Ten Meals Contains Potato In Ingredients")
 
 
     println("0. Exit")
@@ -34,4 +41,96 @@ private fun getUserInput(): Int? {
 // region Sorted SeaFood
 
 
+// endregion
+
+//region ten random meals contains potato
+
+fun launchTenRandomPotatoMeals() {
+    val tenRandomPotatoMeals = suggestionMeals.getTenRandomMealsContainsPotato()
+
+    if (tenRandomPotatoMeals.isEmpty()) {
+        println("There is no meals contains potato in their ingredients")
+    } else {
+        println("-".repeat(70))
+        println("\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57List of ten random Meals with potato in their ingredients\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57")
+        println("-".repeat(70))
+        println(
+            "Rank".padEnd(5) + "| " + "Meal Name".padEnd(70)
+        )
+
+        tenRandomPotatoMeals.forEachIndexed { index, meal ->
+            println(
+                "${index + 1}".padEnd(5) + "| " + meal.name
+            )
+        }
+    }
+}
+//endregion
+
+
+
+//region sweets with no eggs
+fun sweetsWithNoEggsUi() {
+    println("🍬 Welcome to the Egg-Free Sweets Suggester!")
+
+    while (true) {
+        val sweet = suggestionMeals.getSweetWithNoEggs()
+
+        if (sweet == null) {
+            println("🚫 No more unique sweets without eggs found.")
+            break
+        }
+
+        println("Try this sweet: ${sweet.name}")
+        println("Description: ${sweet.description ?: "No description"}")
+        print("Do you like it? (yes to view details / no to see another / exit): ")
+
+        when (readlnOrNull()?.lowercase()) {
+            "yes" -> {
+                println("\n✅ Name: ${sweet.name}")
+                println("🕒 Prep Time: ${sweet.minutes} minutes")
+
+                println("📊 Nutrition:")
+                println("   • Calories: ${sweet.nutrition.calories}")
+                println("   • Total Fat: ${sweet.nutrition.totalFat}")
+                println("   • Sugar: ${sweet.nutrition.sugar}")
+                println("   • Sodium: ${sweet.nutrition.sodium}")
+                println("   • Protein: ${sweet.nutrition.protein}")
+                println("   • Saturated Fat: ${sweet.nutrition.saturatedFat}")
+                println("   • Carbohydrates: ${sweet.nutrition.carbohydrates}")
+
+                println("\n🧾 Ingredients:")
+                sweet.ingredients.forEach { ingredient ->
+                    println("   • $ingredient")
+                }
+
+                println("\n🍽 Steps (${sweet.nSteps} total):")
+                sweet.steps.forEachIndexed { index, step ->
+                    println("   ${index + 1}. $step")
+                }
+
+                println()
+                break
+            }
+
+            "no" -> continue
+            "exit" -> break
+            else -> println("Unknown input.")
+        }
+    }
+}
+//endregion
+// region Italian Large Group Meals
+fun launchItalianLargeGroupMeals() {
+    val meals = suggestionMeals.getItalianLargeGroupsMeals()
+
+    if (meals.isEmpty()) {
+        println("❌ No Italian meals found for large groups.")
+    } else {
+        println("🍝 Meals from Italy suitable for large groups:\n")
+        meals.forEachIndexed { index, meal ->
+            println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} minutes |")
+        }
+    }
+}
 // endregion

@@ -4,8 +4,9 @@ import org.beijing.logic.usecases.GamesMealsUseCases
 import org.beijing.logic.usecases.GamesMealsUseCases.GameState
 import org.koin.mp.KoinPlatform.getKoin
 
+
 private var currentRound: GamesMealsUseCases.GameRound? = null
-private val gameMealsUseCases: GamesMealsUseCases =getKoin().get()
+private val gamesMealsUseCases: GamesMealsUseCases = getKoin().get()
 
 fun gameMealService() {
     while (true) {
@@ -31,7 +32,7 @@ private fun getUserInput(): Int? = readlnOrNull()?.toIntOrNull()
 // region Guess Game Preparation Time
 
 private fun launchGuessGame() {
-    currentRound = gameMealsUseCases.startNewRound()
+    currentRound = gamesMealsUseCases.startNewRound()
     val mealName = currentRound?.meal?.name ?: "Unknown"
 
     println("\n🎯 Guess the Preparation Time for: **$mealName** (in minutes)")
@@ -46,7 +47,7 @@ private fun launchGuessGame() {
             continue
         }
 
-        currentRound = gameMealsUseCases.makeGuess(currentRound!!, guess)
+        currentRound = gamesMealsUseCases.makeGuess(currentRound!!, guess)
         println(currentRound?.lastFeedBack)
     }
 
