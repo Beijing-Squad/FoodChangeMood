@@ -1,4 +1,4 @@
-package org.beijing.data
+package org.beijing.data.utils
 
 object NutritionIndex {
     const val CALORIES: Int = 0
