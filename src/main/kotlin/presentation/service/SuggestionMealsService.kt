@@ -1,7 +1,6 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCases
-import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.beijing.model.Meal
 import org.koin.mp.KoinPlatform.getKoin
 
@@ -15,6 +14,7 @@ fun suggestionMealService() {
         3 -> launchEasyMeal()
         4 -> launchItalianLargeGroupMeals()
         5 -> launchTenRandomPotatoMeals()
+        6 -> suggestMealWithMoreThanSevenHundredCalories()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -28,14 +28,13 @@ fun showSuggestionOptions() {
     println("3. Easy Food Suggestion")
     println("4. Suggest Italian Meals for Large Groups")
     println("5. Suggest Ten Meals Contains Potato In Ingredients")
+    println("6. Suggest Meal With more than 700 calories")
     println("0. Exit")
 }
 
 private fun getUserInput(): Int? {
     return readlnOrNull()?.toIntOrNull()
 }
-
-
 
 
 // region Keto Diet
@@ -55,7 +54,7 @@ private fun launchKetoMealHelper() {
 
         println("Do you like it? ❤")
         print("write 'yes' to get details or 'no' to get another meal:")
-        when (readlnOrNull()?.trim()?.lowercase()){
+        when (readlnOrNull()?.trim()?.lowercase()) {
             "yes" -> {
                 println("\n📋 Full Meal Details:")
                 println("🍽 Name: ${meal.name}")
@@ -204,15 +203,15 @@ fun launchEasyMeal() {
 
 // region Suggest Meal With more than 700 calories
 
-private fun suggestMealWithMoreThanSevenHundredCalories(suggestionMealsUseCases: SuggestionMealsUseCases) {
+private fun suggestMealWithMoreThanSevenHundredCalories() {
     val suggestedMeals = mutableListOf<Meal>()
-    var meal = suggestionMealsUseCases.suggestMealHaveMoreThanSevenHundredCalories().random()
+    var meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
     var choice: Int?
 
     while (true) {
 
         if (suggestedMeals.contains(meal)) {
-            meal = suggestionMealsUseCases.suggestMealHaveMoreThanSevenHundredCalories().random()
+            meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
         }
         suggestedMeals.add(meal)
         showMeal(meal)
@@ -240,6 +239,7 @@ private fun suggestMealWithMoreThanSevenHundredCalories(suggestionMealsUseCases:
 
 
 }
+
 
 private fun showMeal(meal: Meal) {
     println("Below Meal With More Than 700 Calories")

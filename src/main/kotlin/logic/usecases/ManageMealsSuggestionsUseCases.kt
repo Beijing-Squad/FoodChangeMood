@@ -74,4 +74,16 @@ class ManageMealsSuggestionsUseCases(
             .toList()
     }
     // end region easy food suggestions
+
+
+    // region Meals have more than seven hundred calories
+
+    fun suggestMealHaveMoreThanSevenHundredCalories(): List<Meal> {
+        val caloriesContentNeeded = 700
+        val filteredMeals = mealRepository.getAllMeals().filter { meal ->
+            meal.nutrition.calories >= caloriesContentNeeded
+        }
+        return filteredMeals
+    }
+    //end region
 }
