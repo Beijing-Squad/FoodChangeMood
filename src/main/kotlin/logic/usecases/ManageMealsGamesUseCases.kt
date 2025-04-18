@@ -3,6 +3,8 @@ package org.beijing.logic.usecases
 import model.GameRound
 import org.beijing.logic.MealRepository
 import kotlin.random.Random
+import org.beijing.model.FeedbackStatus
+import org.beijing.model.GuessStatus
 
 class ManageMealsGamesUseCases(
     private val mealRepository: MealRepository,
@@ -28,29 +30,26 @@ class ManageMealsGamesUseCases(
 
     fun makeGuess(round: GameRound, guessedMinutes: Int): GameRound {
         if (round.isCompleted) {
-            return round.copy(lastFeedBack = "This round is already Completed, Start A new Round.")
+            return round.copy(lastFeedBack = FeedbackStatus.ROUND_ALREADY_COMPLETED.message)
         }
 
         if (round.attemptsLeft <= 0) {
             return round.copy(
                 isCompleted = true,
-                lastFeedBack = "No Attempts Left, The Actual Preparation Time is: ${round.meal.minutes} minutes."
+                lastFeedBack = FeedbackStatus.NO_ATTEMPTS_LEFT.message.format(round.meal.minutes)
             )
         }
 
         val actualMinutes = round.meal.minutes
-        val feedback = when {
-            guessedMinutes == actualMinutes -> {
-                "Correct!! The Preparation Time is indeed $actualMinutes minutes."
-            }
-
-            guessedMinutes < actualMinutes -> {
-                "Too low!! Try a higher number."
-            }
-
-            else -> {
-                "Too high! Try a lower number."
-            }
+        val status = when {
+            guessedMinutes == actualMinutes -> GuessStatus.CORRECT
+            guessedMinutes < actualMinutes -> GuessStatus.TOO_LOW
+            else -> GuessStatus.TOO_HIGH
+        }
+        val feedback = if (status == GuessStatus.CORRECT) {
+            status.message.format(actualMinutes)
+        } else {
+            status.message
         }
 
         val newAttemptsLeft = round.attemptsLeft - 1
@@ -58,7 +57,7 @@ class ManageMealsGamesUseCases(
         val isCompleted = isCorrect || newAttemptsLeft <= 0
 
         val finalFeedBack = if (isCompleted && !isCorrect) {
-            "$feedback\nGameOver! The actual preparation time is $actualMinutes minutes."
+            "$feedback\n"+ FeedbackStatus.GAME_OVER.message.format(actualMinutes)
         } else {
             feedback
         }
