@@ -14,7 +14,7 @@ fun searchMealService() {
         1 -> launchGymHelper()
         2 -> launchSearchByName()
         3 -> launchMealsByDate()
-        4 -> exploreCountryGameService()
+        4 -> searchMealByCountryService()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -201,7 +201,9 @@ private fun launchGymHelper() {
     }
 }
 //endregion
-fun exploreCountryGameService() {
+
+// region search meal by country
+fun searchMealByCountryService() {
     println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
     println("------------------------------------------------------")
     println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
@@ -228,7 +230,7 @@ fun exploreCountryGameService() {
             }
 
             else -> {
-                val meals = searchMeals.exploreCountryMeals(country)
+                val meals = searchMeals.searchMealByCountry(country)
                 if (meals.isEmpty()) {
                     println("😔 Sorry, no meals found for '$country'. Try another country!")
                 } else {
@@ -241,4 +243,4 @@ fun exploreCountryGameService() {
         }
     }
 }
-//endregion
+// end region search meal by country

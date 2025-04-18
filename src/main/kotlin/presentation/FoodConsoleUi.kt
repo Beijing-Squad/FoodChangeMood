@@ -1,5 +1,6 @@
 package org.beijing.presentation
 
+
 import org.beijing.presentation.service.*
 
 class FoodConsoleUi {
@@ -25,6 +26,8 @@ class FoodConsoleUi {
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
             4 -> onViewMealClick()
+            5 -> searchMealByCountryService()
+            6 -> launchEasyMeal()
 
             else -> {
                 println("Invalid input: $input")
@@ -55,11 +58,15 @@ class FoodConsoleUi {
         println("2. Search Meal")
         println("3. Game Meal")
         println("4. View Meal")
+        println("5. Explore meals from a specific country")
+        println("6. Easy Food Suggestion")
         println("0. Exit")
         print("\nhere: ")
     }
 
+
     private fun getUserInput(): Int? {
         return readlnOrNull()?.toIntOrNull()
     }
+
 }
