@@ -1,15 +1,10 @@
 package org.beijing.presentation
 
-import org.beijing.logic.usecases.MealUseCases
-import org.beijing.presentation.service.*
 import org.beijing.logic.usecases.GamesMealsUseCases
 import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.beijing.logic.usecases.ViewMealsUseCases
-import org.beijing.presentation.service.gameMealService
-import org.beijing.presentation.service.searchMealService
-import org.beijing.presentation.service.suggestionMealService
-import org.beijing.presentation.service.viewMealsService
+import org.beijing.presentation.service.*
 
 class FoodConsoleUi(
     private val viewMealsUseCases: ViewMealsUseCases,

@@ -13,9 +13,7 @@ class ExploreCountryMealsUseCase(
             .filter { meal ->
                 meal.tags.any {
                     it.lowercase().contains(query)
-                    meal.tags.joinToString(" ").lowercase().contains(query) ||
-                            (meal.description?.lowercase()?.contains(query) ?: false) ||
-                            meal.ingredients.joinToString(" ").lowercase().contains(query)
+                    meal.tags.joinToString(" ").lowercase().contains(query)
                 }
             }
             .shuffled()
