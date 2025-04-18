@@ -1,6 +1,5 @@
 package di
 
-
 import org.beijing.logic.usecases.GamesMealsUseCases
 import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.logic.usecases.SuggestionMealsUseCases
@@ -12,5 +11,4 @@ val logicModule = module {
     single { GamesMealsUseCases(get()) }
     single { SearchMealsUseCases(get()) }
     single { SuggestionMealsUseCases(get()) }
-
 }

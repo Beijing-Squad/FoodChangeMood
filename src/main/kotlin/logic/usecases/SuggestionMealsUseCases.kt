@@ -2,7 +2,6 @@ package org.beijing.logic.usecases
 
 import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
-import org.beijing.model.Nutrition
 
 class SuggestionMealsUseCases(
     private val mealRepository: MealRepository
