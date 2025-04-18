@@ -1,4 +1,4 @@
-package org.beijing.data
+package org.beijing.data.utils
 
 object ColumnIndex {
     const val NAME: Int = 0

@@ -1,9 +1,10 @@
 package org.beijing.data
 
 import kotlinx.datetime.LocalDate
+import org.beijing.data.utils.ColumnIndex
+import org.beijing.data.utils.NutritionIndex
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
-
 
 class CsvFileParser {
 

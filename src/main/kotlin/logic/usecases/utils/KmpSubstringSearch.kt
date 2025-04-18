@@ -2,7 +2,6 @@ package org.beijing.logic.usecases.utils
 
 object KmpSubstringSearch {
 
-
     fun doesTextContainPattern(text: String, pattern: String): Boolean {
         if (pattern.isEmpty()) return true
 
@@ -30,7 +29,6 @@ object KmpSubstringSearch {
 
         return false
     }
-
 
     private fun buildLpsArray(pattern: String): IntArray {
         val lps = IntArray(pattern.length)
