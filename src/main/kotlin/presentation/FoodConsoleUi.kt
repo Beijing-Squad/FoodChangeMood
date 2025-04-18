@@ -51,7 +51,7 @@ class FoodConsoleUi(
     }
 
     private fun onGameMealClick() {
-        gameMealService(gamesMealsUseCases)
+        gameMealService()
     }
 
     private fun onSearchMealClick() {

@@ -2,11 +2,13 @@ package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.GamesMealsUseCases
 import org.beijing.model.GameState
+import org.koin.mp.KoinPlatform.getKoin
 
 
 private var currentRound: GamesMealsUseCases.GameRound? = null
 
-fun gameMealService(gamesMealsUseCases: GamesMealsUseCases) {
+fun gameMealService() {
+    val gamesMealsUseCases: GamesMealsUseCases =getKoin().get()
     while (true) {
         showGameMealOptions()
         when (val input = getUserInput()) {
