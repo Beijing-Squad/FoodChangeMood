@@ -3,6 +3,8 @@ package org.beijing.presentation.service
 import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
+private val suggestionMealsUseCases: SuggestionMealsUseCases = getKoin().get()
+
 fun suggestionMealService() {
     showSuggestionOptions()
     print("\nhere: \n")
@@ -30,7 +32,6 @@ private fun getUserInput(): Int? {
 // add ui feature function inside region block
 // region Keto Diet
 private fun launchKetoMealHelper() {
-    val suggestionMealsUseCases: SuggestionMealsUseCases = getKoin().get()
     val usedKetoMealIds = mutableSetOf<Int>()
 
     while (true) {
