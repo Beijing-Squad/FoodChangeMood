@@ -39,6 +39,4 @@ class ViewMealsUseCases(
         )
     }
     //endregion
-
-
 }

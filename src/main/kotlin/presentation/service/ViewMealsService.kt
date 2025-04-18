@@ -3,7 +3,6 @@ package org.beijing.presentation.service
 import org.beijing.logic.usecases.ViewMealsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
-
 fun viewMealsService() {
     val viewMeals: ViewMealsUseCases = getKoin().get()
 
@@ -18,7 +17,6 @@ fun viewMealsService() {
         else -> println("Invalid input: $input")
     }
     viewMealsService()
-
 }
 
 fun showOptionsForViewMealsService() {
@@ -65,9 +63,4 @@ fun launchHealthyQuickPreparedMeals(viewMealsUseCases: ViewMealsUseCases) {
         }
     }
 }
-// endregion
-
-// region Sorted SeaFood
-
-
 // endregion
