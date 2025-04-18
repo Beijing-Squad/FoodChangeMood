@@ -1,12 +1,19 @@
 package org.beijing.presentation
 
-import org.beijing.logic.IngredientGameUseCase
-import org.beijing.model.GameState
+import org.beijing.logic.usecases.GamesMealsUseCases
+import org.beijing.logic.usecases.SearchMealsUseCases
+import org.beijing.logic.usecases.SuggestionMealsUseCases
+import org.beijing.logic.usecases.ViewMealsUseCases
+import org.beijing.presentation.service.gameMealService
+import org.beijing.presentation.service.searchMealService
+import org.beijing.presentation.service.suggestionMealService
+import org.beijing.presentation.service.viewMealsService
 
 class FoodConsoleUi(
-    private val mealUseCases: MealUseCases,
-    private val ingredientGameUseCase: IngredientGameUseCase
-
+    private val viewMealsUseCases: ViewMealsUseCases,
+    private val gamesMealsUseCases: GamesMealsUseCases,
+    private val searchMealsUseCases: SearchMealsUseCases,
+    private val suggestionMealsUseCases: SuggestionMealsUseCases
 ) {
 
     fun start() {
@@ -27,9 +34,13 @@ class FoodConsoleUi(
     private fun presentFeatures() {
         showOptions()
         when (val input = getUserInput()) {
-            0 -> return
-            13 -> startIngredientGame()
             //write here your feature
+            1 -> onSuggestionMealClick()
+            2 -> onSearchMealClick()
+            3 -> onGameMealClick()
+            4 -> onViewMealClick()
+
+            0 -> return
 
             else -> {
                 println("Invalid input: $input")
@@ -39,12 +50,31 @@ class FoodConsoleUi(
         presentFeatures()
     }
 
+    private fun onGameMealClick() {
+        gameMealService(gamesMealsUseCases)
+    }
+
+    private fun onSearchMealClick() {
+        searchMealService(searchMealsUseCases)
+    }
+
+    private fun onSuggestionMealClick() {
+        suggestionMealService(suggestionMealsUseCases)
+    }
+
+    private fun onViewMealClick() {
+        viewMealsService(viewMealsUseCases)
+    }
+
     private fun showOptions() {
         println("\n\n ===Please enter one of the numbers listed below===\n")
-        println("13. Start Ingredient Game 🍲")
-        println("0. Exit")
         //write here your feature as string with number
+        println("1. Suggestion Meal")
+        println("2. Search Meal")
+        println("3. Game Meal")
+        println("4. View Meal")
 
+        println("0. Exit")
         print("\nhere: ")
     }
 
@@ -52,66 +82,5 @@ class FoodConsoleUi(
     private fun getUserInput(): Int? {
         return readlnOrNull()?.toIntOrNull()
     }
-    private fun startIngredientGame() {
-        println("\uD83D\uDC69\u200D\uD83C\uDF73 Welcome to the Ingredient Game!")
-        println("Guess the correct ingredient for each meal. One wrong answer ends the game!")
 
-        var state = GameState()
-        var shouldExit = false
-
-        while (!shouldExit && !ingredientGameUseCase.isGameOver(state)) {
-            val result = ingredientGameUseCase.playRound(state)
-
-            result.fold(
-                onSuccess = { (round, updatedState) ->
-                    state = updatedState
-                    println("\n🍽 Meal: ${round.mealName}")
-                    println("Which of the following is one of its ingredients? 🤔")
-
-                    round.options.forEachIndexed { index, option ->
-                        println("${index + 1}. $option")
-                    }
-
-                    print("Select an option (1-3): ")
-                    val userChoice = readlnOrNull()?.toIntOrNull()
-
-                    val inputResult = if (userChoice != null && userChoice in 1..3) {
-                        Result.success(userChoice)
-                    } else {
-                        Result.failure(Exception("Invalid input: Please enter a number between 1 and 3"))
-                    }
-
-                    inputResult.fold(
-                        onSuccess = { choice ->
-                            val (isCorrect, newState) = ingredientGameUseCase.checkAnswer(choice, round, state)
-                            state = newState
-
-                            if (isCorrect) {
-                                println("✅ Correct!")
-                                println("\uD83C\uDFAF Score: ${state.score}")
-                            } else {
-                                println("❌ Wrong! The correct answer was: ${round.correctAnswer}")
-                                shouldExit = true
-                            }
-                        },
-                        onFailure = { error ->
-                            println("⚠️ ${error.message}. Game over.")
-                            shouldExit = true
-                        }
-                    )
-                },
-                onFailure = { error ->
-                    println("⚠️ ${error.message}")
-                    shouldExit = true
-                }
-            )
-        }
-
-        println("\n\uD83C\uDFAF Final Score: ${state.score}")
-        if (ingredientGameUseCase.isGameOver(state)) {
-            println("\uD83C\uDFC6 Congratulations! You win 🎉")
-        } else {
-            println("👿 Game Over!")
-        }
-    }
 }
