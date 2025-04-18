@@ -66,7 +66,22 @@ class SearchMealsUseCases(
         }
     }
     //endregion
-
+    // region explore country meals
+    fun exploreCountryMeals(countryQuery: String): List<Meal> {
+        val query = countryQuery.lowercase()
+        return mealRepository.getAllMeals()
+            .asSequence()
+            .filter { meal ->
+                meal.tags.any {
+                    it.lowercase().contains(query)
+                    meal.tags.joinToString(" ").lowercase().contains(query)
+                }
+            }
+            .shuffled()
+            .take(20)
+            .toList()
+    }
+    // end region explore country meals
     companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
