@@ -78,11 +78,6 @@ class GamesMealsUseCases(
         val isCompleted: Boolean,
         val lastFeedBack: String?
     )
-    companion object {
-        private const val MAX_CORRECT_ANSWERS = 15
-        private const val SCORE_INCREMENT = 1000
-        private const val INCORRECT_OPTION_COUNT = 2
-    }
 
     fun isGameOver(state: GameState): Boolean = state.correctAnswers >= MAX_CORRECT_ANSWERS
 
@@ -129,4 +124,11 @@ class GamesMealsUseCases(
 
         return (incorrectOptions + correct).shuffled()
     }
+
+    companion object {
+        private const val MAX_CORRECT_ANSWERS = 15
+        private const val SCORE_INCREMENT = 1000
+        private const val INCORRECT_OPTION_COUNT = 2
+    }
+
 }
