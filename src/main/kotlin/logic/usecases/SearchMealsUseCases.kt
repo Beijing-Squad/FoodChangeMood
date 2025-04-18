@@ -14,23 +14,16 @@ class SearchMealsUseCases(
     fun getMealsByDate(date: LocalDate): List<Pair<Int, String>> {
         val mealsOnDate = mealRepository.getAllMeals()
             .filter { it.submitted == date }
-            .map { Pair(it.id, it.name) }
+            .map { it.id to it.name }
 
-        if (mealsOnDate.isEmpty()) {
-            throw Exception("❌ No Meals Found For The Date [$date].")
-        } else {
-            return mealsOnDate
-        }
+        return mealsOnDate.ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
 
     fun getMealOnDateById(date: LocalDate, id: Int): Meal {
         val meal = mealRepository.getAllMeals()
             .find { it.submitted == date && it.id == id }
-        if (meal != null) {
-            return meal
-        } else {
-            throw Exception("❌ No Meal Found With ID [$id] On The Date $date.")
-        }
+
+        return meal ?: throw Exception("❌ No Meal Found With ID [$id] On The Date $date.")
     }
     // endregion
 
@@ -57,7 +50,7 @@ class SearchMealsUseCases(
     }
 
     //endregion
-    
+
     //region search by name
     fun getSearchMealsByName(searchQuery: String): List<Meal> {
         validateSearchQuery(searchQuery)
