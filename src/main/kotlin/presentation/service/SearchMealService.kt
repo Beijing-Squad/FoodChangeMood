@@ -99,7 +99,7 @@ private fun getDateInput(): LocalDate {
         try {
             return LocalDate.parse(input)
         } catch (e: Exception) {
-            println("Invalid Date Format, Please Use (YYYY-MM-DD).")
+            println("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
         }
     }
 }
