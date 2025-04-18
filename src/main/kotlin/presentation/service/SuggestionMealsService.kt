@@ -1,14 +1,11 @@
 package org.beijing.presentation.service
 
-import org.beijing.data.CsvFileParser
-import org.beijing.data.CsvFileReader
-import org.beijing.data.CsvMealRepository
 import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.koin.mp.KoinPlatform.getKoin
-import java.io.File
+
+private val suggestionMeals: SuggestionMealsUseCases = getKoin().get()
 
 fun suggestionMealService() {
-    val suggestionMealsUseCases: SuggestionMealsUseCases = getKoin().get()
     showSuggestionOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
@@ -45,16 +42,10 @@ private fun getUserInput(): Int? {
 
 //region sweets with no eggs
 fun sweetsWithNoEggsUi() {
-    val filePath = File("food.csv")
-    val reader = CsvFileReader(filePath)
-    val parser = CsvFileParser()
-    val repository = CsvMealRepository(reader, parser)
-    val useCase = SuggestionMealsUseCases(repository)
-
     println("🍬 Welcome to the Egg-Free Sweets Suggester!")
 
     while (true) {
-        val sweet = useCase.getSweetWithNoEggs()
+        val sweet = suggestionMeals.getSweetWithNoEggs()
 
         if (sweet == null) {
             println("🚫 No more unique sweets without eggs found.")
