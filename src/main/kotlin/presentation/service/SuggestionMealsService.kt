@@ -1,9 +1,10 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SuggestionMealsUseCases
+import org.koin.mp.KoinPlatform.getKoin
 
-fun suggestionMealService(suggestionMealsUseCases: SuggestionMealsUseCases) {
-
+fun suggestionMealService() {
+    val suggestionMealsUseCases: SuggestionMealsUseCases = getKoin().get()
     showSuggestionOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
@@ -13,7 +14,7 @@ fun suggestionMealService(suggestionMealsUseCases: SuggestionMealsUseCases) {
 
         else -> println("Invalid input: $input")
     }
-    suggestionMealService(suggestionMealsUseCases)
+    suggestionMealService()
 
 }
 
