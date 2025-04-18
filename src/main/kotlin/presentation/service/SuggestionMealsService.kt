@@ -1,7 +1,6 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SuggestionMealsUseCases
-import org.beijing.model.Meal
 import org.koin.java.KoinJavaComponent.getKoin
 fun suggestionMealService(){
     val suggestionMealsUseCases: SuggestionMealsUseCases=getKoin().get()
