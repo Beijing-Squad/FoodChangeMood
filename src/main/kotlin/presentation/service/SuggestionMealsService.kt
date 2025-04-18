@@ -262,11 +262,16 @@ private fun showMealDeatils(meal: Meal) {
     println("Meal Saturated: ${meal.nutrition.saturatedFat}")
     println("Meal Tags: ${meal.tags}")
     println("Meal ContributorId: ${meal.contributorId}")
-    println("Meal Ingredients: ${meal.ingredients}")
+    println("Meal Ingredients:")
+    meal.ingredients.forEach { ingredient ->
+        println("   • $ingredient")
+    }
+    println("Meal Steps ((${meal.nSteps} total) :")
+    meal.steps.forEachIndexed { index, step ->
+        println("   ${index + 1}. $step")
+    }
     println("Meal NIngredients: ${meal.nIngredients}")
     println("Meal Minutes: ${meal.minutes}")
-    println("Meal NSteps: ${meal.nSteps}")
-    println("Meal Steps: ${meal.steps}")
     println("Meal Submitted: ${meal.submitted}")
 
 }
