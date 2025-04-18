@@ -1,21 +1,9 @@
 package org.beijing.presentation
 
-import org.beijing.logic.usecases.GamesMealsUseCases
-import org.beijing.logic.usecases.SearchMealsUseCases
-import org.beijing.logic.usecases.SuggestionMealsUseCases
-import org.beijing.logic.usecases.ViewMealsUseCases
-import org.beijing.presentation.service.gameMealService
-import org.beijing.presentation.service.searchMealService
-import org.beijing.presentation.service.suggestionMealService
-import org.beijing.presentation.service.viewMealsService
 
-class FoodConsoleUi(
-    private val viewMealsUseCases: ViewMealsUseCases,
-    private val gamesMealsUseCases: GamesMealsUseCases,
-    private val searchMealsUseCases: SearchMealsUseCases,
-    private val suggestionMealsUseCases: SuggestionMealsUseCases
-) {
+import org.beijing.presentation.service.*
 
+class FoodConsoleUi {
     fun start() {
         showWelcome()
 
@@ -30,50 +18,48 @@ class FoodConsoleUi(
         println("Welcome to Food Change Mood App")
     }
 
-
     private fun presentFeatures() {
         showOptions()
         when (val input = getUserInput()) {
-            //write here your feature
+            0 -> return
             1 -> onSuggestionMealClick()
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
             4 -> onViewMealClick()
-
-            0 -> return
+            5 -> searchMealByCountryService()
+            6 -> launchEasyMeal()
 
             else -> {
                 println("Invalid input: $input")
             }
         }
-
         presentFeatures()
     }
 
     private fun onGameMealClick() {
-        gameMealService(gamesMealsUseCases)
+        gameMealService()
     }
 
     private fun onSearchMealClick() {
-        searchMealService(searchMealsUseCases)
+        searchMealService()
     }
 
     private fun onSuggestionMealClick() {
-        suggestionMealService(suggestionMealsUseCases)
+        suggestionMealService()
     }
 
     private fun onViewMealClick() {
-        viewMealsService(viewMealsUseCases)
+        viewMealsService()
     }
 
     private fun showOptions() {
         println("\n\n ===Please enter one of the numbers listed below===\n")
-        //write here your feature as string with number
         println("1. Suggestion Meal")
         println("2. Search Meal")
         println("3. Game Meal")
         println("4. View Meal")
-
+        println("5. Explore meals from a specific country")
+        println("6. Easy Food Suggestion")
         println("0. Exit")
         print("\nhere: ")
     }
