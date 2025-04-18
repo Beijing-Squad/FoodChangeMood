@@ -13,7 +13,6 @@ class FoodConsoleUi(
     private val viewMealsUseCases: ViewMealsUseCases,
     private val gamesMealsUseCases: GamesMealsUseCases,
     private val searchMealsUseCases: SearchMealsUseCases,
-    private val suggestionMealsUseCases: SuggestionMealsUseCases
 ) {
 
     fun start() {

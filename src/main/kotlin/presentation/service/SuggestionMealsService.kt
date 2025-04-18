@@ -4,12 +4,11 @@ import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
 fun suggestionMealService() {
-    val suggestionMealsUseCases: SuggestionMealsUseCases = getKoin().get()
     showSuggestionOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         // add number of feature here as ( 1-> featureOne() )
-        1 -> launchKetoMealHelper(suggestionMealsUseCases)
+        8 -> launchKetoMealHelper()
         0 -> return
 
         else -> println("Invalid input: $input")
@@ -20,7 +19,7 @@ fun suggestionMealService() {
 
 fun showSuggestionOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
-    println("1. Suggest a Keto Meal \uD83E\uDD51 ")
+    println("8. Suggest a Keto Meal \uD83E\uDD51 ")
     println("0. Exit")
 }
 
@@ -30,7 +29,8 @@ private fun getUserInput(): Int? {
 
 // add ui feature function inside region block
 // region Keto Diet
-private fun launchKetoMealHelper(suggestionMealsUseCases: SuggestionMealsUseCases) {
+private fun launchKetoMealHelper() {
+    val suggestionMealsUseCases: SuggestionMealsUseCases = getKoin().get()
     val usedKetoMealIds = mutableSetOf<Int>()
 
     while (true) {
@@ -73,9 +73,12 @@ private fun launchKetoMealHelper(suggestionMealsUseCases: SuggestionMealsUseCase
                 continue
             }
 
+            "exit" -> {
+                break
+            }
+
             else -> {
                 println("⚠️ Please type 'yes' or 'no'")
-                break
             }
         }
     }
