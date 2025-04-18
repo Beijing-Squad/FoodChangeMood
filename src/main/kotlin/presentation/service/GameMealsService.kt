@@ -78,7 +78,7 @@ private fun launchIngredientGame() {
                 }
 
                 print("Select an option (1-3): ")
-                val userChoice = readlnOrNull()?.toIntOrNull()
+                val userChoice = readlnOrNull()?.trim()?.toIntOrNull()
 
                 val inputResult = if (userChoice != null && userChoice in 1..3) {
                     Result.success(userChoice)
