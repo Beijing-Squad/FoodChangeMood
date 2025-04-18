@@ -1,11 +1,11 @@
 package di
 
-import org.beijing.logic.usecases.SearchMealsUseCases
-import org.beijing.logic.usecases.ViewMealsUseCase
+import org.beijing.logic.usecases.*
 import org.koin.dsl.module
 
 val logicModule = module {
-    // put features classes here
-    single { SearchMealsUseCases(get()) }
-    single { ViewMealsUseCase(get()) }
+    single { ManageMealsViewsUseCases(get()) }
+    single { ManageMealsGamesUseCases(get()) }
+    single { ManageMealsSearchUseCases(get()) }
+    single { ManageMealsSuggestionsUseCases(get()) }
 }
