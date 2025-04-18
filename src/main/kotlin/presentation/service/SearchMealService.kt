@@ -9,19 +9,17 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
     when (val input = getUserInput()) {
         1 -> launchGymHelper(searchMealsUseCases)
 
+
         0 -> return
 
         else -> println("Invalid input: $input")
     }
     searchMealService(searchMealsUseCases)
-
 }
 
 fun showOptionsForSearchMealService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Gym Helper")
-
-
     println("0. Exit")
 }
 
@@ -43,6 +41,5 @@ private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
             )
         )
     }
-
 }
 //endregion

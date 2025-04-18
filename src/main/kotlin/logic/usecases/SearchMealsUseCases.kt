@@ -8,7 +8,6 @@ class SearchMealsUseCases(
     private val mealRepository: MealRepository
 ) {
 
-
     //region gym helper
     fun getGymHelperMeals(targetCalories: Double, targetProtein: Double): List<Meal> {
         checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
