@@ -1,15 +1,16 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SuggestionMealsUseCases
-import org.koin.java.KoinJavaComponent.getKoin
-fun suggestionMealService(){
-    val suggestionMealsUseCases: SuggestionMealsUseCases=getKoin().get()
+import org.koin.mp.KoinPlatform.getKoin
+
+private val suggestionMeals: SuggestionMealsUseCases = getKoin().get()
+fun suggestionMealService() {
 
     showSuggestionOptions()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         // add number of feature here as ( 1-> featureOne() )
-        1 -> launchItalianLargeGroupMeals(suggestionMealsUseCases)
+        1 -> launchItalianLargeGroupMeals()
         0 -> return
 
         else -> println("Invalid input: $input")
@@ -37,15 +38,15 @@ private fun getUserInput(): Int? {
 
 // endregion
 // region Italian Large Group Meals
-fun launchItalianLargeGroupMeals(suggestionMealsUseCases: SuggestionMealsUseCases) {
-    val meals = suggestionMealsUseCases.getItalianLargeGroupsMeals()
+fun launchItalianLargeGroupMeals() {
+    val meals = suggestionMeals.getItalianLargeGroupsMeals()
 
     if (meals.isEmpty()) {
         println("❌ No Italian meals found for large groups.")
     } else {
         println("🍝 Meals from Italy suitable for large groups:\n")
         meals.forEachIndexed { index, meal ->
-            println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} mins |")
+            println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} minutes |")
         }
     }
 }
