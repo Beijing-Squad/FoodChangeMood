@@ -3,7 +3,7 @@ package org.beijing.presentation.service
 import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
-private val suggestionMealsUseCases: SuggestionMealsUseCases = getKoin().get()
+private val suggestionMeals: SuggestionMealsUseCases = getKoin().get()
 
 fun suggestionMealService() {
     showSuggestionOptions()
@@ -42,7 +42,7 @@ private fun launchKetoMealHelper() {
     val usedKetoMealIds = mutableSetOf<Int>()
 
     while (true) {
-        val meal = suggestionMealsUseCases.suggestKetoMeal(usedKetoMealIds)
+        val meal = suggestionMeals.suggestKetoMeal(usedKetoMealIds)
 
         if (meal == null) {
             println("\uD83D\uDE14 No more keto meals to suggest.")
@@ -54,7 +54,7 @@ private fun launchKetoMealHelper() {
 
         println("Do you like it? ❤")
         print("write 'yes' to get details or 'no' to get another meal:")
-        when (readlnOrNull()?.lowercase()) {
+        when (readlnOrNull()?.trim()?.lowercase()){
             "yes" -> {
                 println("\n📋 Full Meal Details:")
                 println("🍽 Name: ${meal.name}")

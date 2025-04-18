@@ -36,8 +36,10 @@ class SuggestionMealsUseCases(
                         "italian" in it.tags.map(String::lowercase)
             }
     }//endregion
-    private val meals = mealRepository.getAllMeals()
+
+    //region keti diet meal
     fun suggestKetoMeal(usedMealIds: MutableSet<Int>): Meal? {
+        val meals = mealRepository.getAllMeals()
         val maxCarbs = 20
         return meals
             .asSequence()
@@ -50,4 +52,5 @@ class SuggestionMealsUseCases(
             .firstOrNull()
             ?.also { usedMealIds.add(it.id) }
     }
+    //end region
 }
