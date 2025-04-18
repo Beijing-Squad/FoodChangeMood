@@ -9,9 +9,11 @@ class SuggestionMealsUseCases(
 ) {
     private val meals = mealRepository.getAllMeals()
     fun suggestKetoMeal(usedMealIds: MutableSet<Int>): Meal? {
+        val maxCarbs = 20
         return meals
+            .asSequence()
             .filter { meal ->
-                meal.nutrition.carbohydrates < 20 &&
+                meal.nutrition.carbohydrates < maxCarbs &&
                 meal.nutrition.totalFat > meal.nutrition.protein
             }
             .filterNot { it.id in usedMealIds }
