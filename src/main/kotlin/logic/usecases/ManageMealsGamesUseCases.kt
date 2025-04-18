@@ -1,10 +1,10 @@
 package org.beijing.logic.usecases
 
+import model.GameRound
 import org.beijing.logic.MealRepository
-import org.beijing.model.Meal
 import kotlin.random.Random
 
-class GamesMealsUseCases(
+class ManageMealsGamesUseCases(
     private val mealRepository: MealRepository,
 ) {
     private val maxAttempts = 3

@@ -1,22 +1,21 @@
 package org.beijing.presentation.service
 
-import org.beijing.logic.usecases.ViewMealsUseCases
+import org.beijing.logic.usecases.ManageMealsViewsUseCases
+import org.koin.mp.KoinPlatform.getKoin
 
+private val viewMeals: ManageMealsViewsUseCases = getKoin().get()
 
-fun viewMealsService(viewMealsUseCases: ViewMealsUseCases) {
+fun viewMealsService() {
 
     showOptionsForViewMealsService()
     print("\nhere: \n")
     when (val input = getUserInput()) {
-        // add number of feature here as ( 1-> featureOne() )
-        1 -> launchHealthyQuickPreparedMeals(viewMealsUseCases)
-
+        1 -> launchHealthyQuickPreparedMeals()
         0 -> return
 
         else -> println("Invalid input: $input")
     }
-    viewMealsService(viewMealsUseCases)
-
+    viewMealsService()
 }
 
 fun showOptionsForViewMealsService() {
@@ -31,10 +30,9 @@ private fun getUserInput(): Int? {
     return readlnOrNull()?.toIntOrNull()
 }
 
-// add ui feature function inside region block
 // region healthy fast food meals
-fun launchHealthyQuickPreparedMeals(viewMealsUseCases: ViewMealsUseCases) {
-    val healthyQuickMeals = viewMealsUseCases.getHealthyQuickPreparedMeals()
+fun launchHealthyQuickPreparedMeals() {
+    val healthyQuickMeals = viewMeals.getHealthyQuickPreparedMeals()
 
     if (healthyQuickMeals.isEmpty()) {
         println("There is no healthy quick-prepared meals.")
@@ -63,9 +61,4 @@ fun launchHealthyQuickPreparedMeals(viewMealsUseCases: ViewMealsUseCases) {
         }
     }
 }
-// endregion
-
-// region Sorted SeaFood
-
-
 // endregion

@@ -1,36 +1,31 @@
 package org.beijing.presentation.service
 
-import org.beijing.logic.usecases.SuggestionMealsUseCases
+import org.beijing.logic.usecases.ManageMealsSuggestionsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
-private val suggestionMeals: SuggestionMealsUseCases = getKoin().get()
-
+private val suggestionMeals: ManageMealsSuggestionsUseCases = getKoin().get()
 fun suggestionMealService() {
     showSuggestionOptions()
-    print("\nhere: \n")
+    print("\nhere: ")
     when (val input = getUserInput()) {
-        // add number of feature here as ( 1-> featureOne() )
-        8 -> launchKetoMealHelper()
-        22 -> sweetsWithNoEggsUi()
-
-        1 -> launchItalianLargeGroupMeals()
-        2 -> launchTenRandomPotatoMeals()
+        1 -> launchKetoMealHelper()
+        2 -> sweetsWithNoEggsUi()
+        3 -> launchEasyMeal()
+        4 -> launchItalianLargeGroupMeals()
+        5 -> launchTenRandomPotatoMeals()
         0 -> return
-
         else -> println("Invalid input: $input")
     }
     suggestionMealService()
-
 }
 
 fun showSuggestionOptions() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
-    println("8. Suggest a Keto Meal \uD83E\uDD51 ")
-    println("22. Sweets with No Eggs") // add feature name here
-    println("1. Suggest Italian Meals for Large Groups") // add feature name here
-    println("2. Suggest Ten Meals Contains Potato In Ingredients")
-
-
+    println("1. Suggest a Keto Meal \uD83E\uDD51 ")
+    println("2. Sweets with No Eggs")
+    println("3. Easy Food Suggestion")
+    println("4. Suggest Italian Meals for Large Groups")
+    println("5. Suggest Ten Meals Contains Potato In Ingredients")
     println("0. Exit")
 }
 
@@ -38,7 +33,6 @@ private fun getUserInput(): Int? {
     return readlnOrNull()?.toIntOrNull()
 }
 
-// add ui feature function inside region block
 // region Keto Diet
 private fun launchKetoMealHelper() {
     val usedKetoMealIds = mutableSetOf<Int>()
@@ -95,13 +89,7 @@ private fun launchKetoMealHelper() {
 }
 // endregion
 
-// region Sorted SeaFood
-
-
-// endregion
-
 //region ten random meals contains potato
-
 fun launchTenRandomPotatoMeals() {
     val tenRandomPotatoMeals = suggestionMeals.getTenRandomMealsContainsPotato()
 
@@ -123,8 +111,6 @@ fun launchTenRandomPotatoMeals() {
     }
 }
 //endregion
-
-
 
 //region sweets with no eggs
 fun sweetsWithNoEggsUi() {
@@ -177,6 +163,7 @@ fun sweetsWithNoEggsUi() {
     }
 }
 //endregion
+
 // region Italian Large Group Meals
 fun launchItalianLargeGroupMeals() {
     val meals = suggestionMeals.getItalianLargeGroupsMeals()
@@ -191,3 +178,20 @@ fun launchItalianLargeGroupMeals() {
     }
 }
 // endregion
+
+// region easy meal service
+fun launchEasyMeal() {
+    println("🥗 Easy Meal Suggestions")
+    println("------------------------")
+    println("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
+    val meals = suggestionMeals.getEasyFoodSuggestion()
+    if (meals.isEmpty()) {
+        println("😔 Sorry, no meals found for '. Try again later!")
+    } else {
+        println("\n🍽️ Found ${meals.size} meal(s):\n")
+        meals.forEachIndexed { index, meal ->
+            println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mints • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
+        }
+    }
+}
+// end region easy meal service
