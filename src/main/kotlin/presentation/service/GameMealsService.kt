@@ -13,7 +13,6 @@ fun gameMealService() {
         showGameMealOptions()
         when (val input = getUserInput()) {
             1 -> launchGuessGame()
-            2 -> launchIngredientGame()
             0 -> return
             else -> println("Invalid input: $input")
         }
@@ -23,7 +22,6 @@ fun gameMealService() {
 fun showGameMealOptions() {
     println("\n\n === Please enter one of the numbers listed below ===")
     println("1. Guess Preparation Time Game")
-    println("2. Guess the Ingredient Game")
     println("0. Exit")
 }
 

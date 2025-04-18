@@ -1,5 +1,6 @@
 package org.beijing.logic.usecases
 
+import model.GameRound
 import org.beijing.logic.MealRepository
 import org.beijing.model.GameState
 import org.beijing.model.IngredientGameRound
@@ -71,13 +72,6 @@ class ManageMealsGamesUseCases(
             lastFeedBack = finalFeedBack
         )
     }
-
-    data class GameRound(
-        val meal: Meal,
-        val attemptsLeft: Int,
-        val isCompleted: Boolean,
-        val lastFeedBack: String?
-    )
 
     fun isGameOver(state: GameState): Boolean = state.correctAnswers >= MAX_CORRECT_ANSWERS
 
