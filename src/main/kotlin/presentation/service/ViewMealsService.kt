@@ -11,6 +11,7 @@ fun viewMealsService() {
     print("\nhere: \n")
     when (val input = getUserInput()) {
         1 -> launchHealthyQuickPreparedMeals()
+        2 -> showSortedSeaFoodByProtein()
         0 -> return
 
         else -> println("Invalid input: $input")
@@ -21,7 +22,7 @@ fun viewMealsService() {
 fun showOptionsForViewMealsService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Show Healthy Quick Prepared Meals") // add feature name here
-
+    println("1. Show SeaFood Sorted By Protein Content")
 
     println("0. Exit")
 }
@@ -62,3 +63,15 @@ fun launchHealthyQuickPreparedMeals() {
     }
 }
 // endregion
+
+// region get a list of seafood sorted by protein content
+
+fun showSortedSeaFoodByProtein() {
+    println("List Of SeaFood Sorted By Protein:")
+    println(String.format("%-6s| %-70s | %-14s", "Rank", "Meal Name", "Protein Content"))
+    println("----------------------------------------------------------------------------------------------------")
+    viewMeals.getSortedSeaFoodByProtein().forEachIndexed { index, meal ->
+        println(String.format("%-6d| %-70s | %-14d", index + 1, meal.name, meal.nutrition.protein.toInt()))
+    }
+}
+//endregion
