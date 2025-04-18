@@ -14,7 +14,7 @@ fun suggestionMealService() {
         3 -> launchEasyMeal()
         4 -> launchItalianLargeGroupMeals()
         5 -> launchTenRandomPotatoMeals()
-        6 -> suggestMealWithMoreThanSevenHundredCalories()
+        6 -> getMealWithMoreThanSevenHundredCalories()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -203,34 +203,31 @@ fun launchEasyMeal() {
 
 // region Suggest Meal With more than 700 calories
 
-private fun suggestMealWithMoreThanSevenHundredCalories() {
+fun getMealWithMoreThanSevenHundredCalories() {
     val suggestedMeals = mutableListOf<Meal>()
-    var meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
-    var choice: Int?
+    var meal = suggestionMeals.getMealHaveMoreThanSevenHundredCalories().random()
+    var choice: String?
 
     while (true) {
 
         if (suggestedMeals.contains(meal)) {
-            meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
+            meal = suggestionMeals.getMealHaveMoreThanSevenHundredCalories().random()
         }
         suggestedMeals.add(meal)
         showMeal(meal)
 
         println("Do You Like This Meal?")
-        println("1. Yes")
-        println("2. No")
-        println("0. Exit")
+        print("write 'yes' to get details or 'no' to get another meal Or 'exit':")
         print("\nhere: ")
-
-        choice = readlnOrNull()?.toIntOrNull()
+        choice = readlnOrNull()?.trim()?.lowercase()
         when (choice) {
-            1 -> {
+            "yes" -> {
                 showMealDeatils(meal)
                 break
             }
 
-            2 -> continue
-            0 -> return
+            "no" -> continue
+            "exit" -> return
             else -> {
                 println("Invalid input! Please choose 1, 2 or 0.")
             }
