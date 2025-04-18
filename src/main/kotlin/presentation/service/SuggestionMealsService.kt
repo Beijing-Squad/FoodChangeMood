@@ -1,6 +1,7 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCases
+import org.beijing.model.Meal
 import org.koin.mp.KoinPlatform.getKoin
 
 private val suggestionMeals: ManageMealsSuggestionsUseCases = getKoin().get()
@@ -13,6 +14,7 @@ fun suggestionMealService() {
         3 -> launchEasyMeal()
         4 -> launchItalianLargeGroupMeals()
         5 -> launchTenRandomPotatoMeals()
+        6 -> getMealWithMoreThanSevenHundredCalories()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -26,12 +28,14 @@ fun showSuggestionOptions() {
     println("3. Easy Food Suggestion")
     println("4. Suggest Italian Meals for Large Groups")
     println("5. Suggest Ten Meals Contains Potato In Ingredients")
+    println("6. Suggest Meal With more than 700 calories")
     println("0. Exit")
 }
 
 private fun getUserInput(): Int? {
     return readlnOrNull()?.toIntOrNull()
 }
+
 
 // region Keto Diet
 private fun launchKetoMealHelper() {
@@ -50,7 +54,7 @@ private fun launchKetoMealHelper() {
 
         println("Do you like it? ❤")
         print("write 'yes' to get details or 'no' to get another meal:")
-        when (readlnOrNull()?.trim()?.lowercase()){
+        when (readlnOrNull()?.trim()?.lowercase()) {
             "yes" -> {
                 println("\n📋 Full Meal Details:")
                 println("🍽 Name: ${meal.name}")
@@ -195,3 +199,78 @@ fun launchEasyMeal() {
     }
 }
 // end region easy meal service
+
+
+// region Suggest Meal With more than 700 calories
+
+fun getMealWithMoreThanSevenHundredCalories() {
+    val suggestedMeals = mutableListOf<Meal>()
+    var meal = suggestionMeals.getMealHaveMoreThanSevenHundredCalories().random()
+    var choice: String?
+
+    while (true) {
+
+        if (suggestedMeals.contains(meal)) {
+            meal = suggestionMeals.getMealHaveMoreThanSevenHundredCalories().random()
+        }
+        suggestedMeals.add(meal)
+        showMeal(meal)
+
+        println("Do You Like This Meal?")
+        print("write 'yes' to get details or 'no' to get another meal Or 'exit':")
+        print("\nhere: ")
+        choice = readlnOrNull()?.trim()?.lowercase()
+        when (choice) {
+            "yes" -> {
+                showMealDeatils(meal)
+                break
+            }
+
+            "no" -> continue
+            "exit" -> return
+            else -> {
+                println("Invalid input! Please choose 1, 2 or 0.")
+            }
+        }
+    }
+
+
+}
+
+
+private fun showMeal(meal: Meal) {
+    println("Below Meal With More Than 700 Calories")
+    println("Meal Name: ${meal.name}")
+    println("Meal Desc: ${meal.description ?: "No Description"}")
+
+}
+
+private fun showMealDeatils(meal: Meal) {
+    println("Below Meal Details:")
+    println("Meal ID: ${meal.id}")
+    println("Meal Name: ${meal.name}")
+    println("Meal Desc: ${meal.description ?: "No Description"}")
+    println("Meal Protein: ${meal.nutrition.protein}")
+    println("Meal Sodium: ${meal.nutrition.sodium}")
+    println("Meal Sugar: ${meal.nutrition.sugar}")
+    println("Meal Calories: ${meal.nutrition.calories}")
+    println("Meal TotalFat: ${meal.nutrition.totalFat}")
+    println("Meal Carbohydrates: ${meal.nutrition.carbohydrates}")
+    println("Meal Saturated: ${meal.nutrition.saturatedFat}")
+    println("Meal Tags: ${meal.tags}")
+    println("Meal ContributorId: ${meal.contributorId}")
+    println("Meal Ingredients:")
+    meal.ingredients.forEach { ingredient ->
+        println("   • $ingredient")
+    }
+    println("Meal Steps ((${meal.nSteps} total) :")
+    meal.steps.forEachIndexed { index, step ->
+        println("   ${index + 1}. $step")
+    }
+    println("Meal NIngredients: ${meal.nIngredients}")
+    println("Meal Minutes: ${meal.minutes}")
+    println("Meal Submitted: ${meal.submitted}")
+
+}
+
+// endregion
