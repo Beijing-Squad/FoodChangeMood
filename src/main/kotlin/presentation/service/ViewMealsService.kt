@@ -1,9 +1,11 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.ViewMealsUseCases
+import org.koin.mp.KoinPlatform.getKoin
 
+private val viewMealsUseCases: ViewMealsUseCases = getKoin().get()
 
-fun viewMealsService(viewMealsUseCases: ViewMealsUseCases) {
+fun viewMealsService() {
 
     showOptionsForViewMealsService()
     print("\nhere: \n")
@@ -15,8 +17,7 @@ fun viewMealsService(viewMealsUseCases: ViewMealsUseCases) {
 
         else -> println("Invalid input: $input")
     }
-    viewMealsService(viewMealsUseCases)
-
+    viewMealsService()
 }
 
 fun showOptionsForViewMealsService() {
@@ -63,9 +64,4 @@ fun launchHealthyQuickPreparedMeals(viewMealsUseCases: ViewMealsUseCases) {
         }
     }
 }
-// endregion
-
-// region Sorted SeaFood
-
-
 // endregion
