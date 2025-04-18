@@ -8,7 +8,5 @@ val logicModule = module {
     single { GamesMealsUseCases(get()) }
     single { SearchMealsUseCases(get()) }
     single { SuggestionMealsUseCases(get()) }
-    single { ExploreCountryMealsUseCase(get()) }
-    single { EasyMealSuggestionUseCase(get()) }
-    single { SearchMealsUseCases(get())}
+    single { SearchMealsUseCases(get()) }
 }
