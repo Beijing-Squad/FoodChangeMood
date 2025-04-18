@@ -1,9 +1,9 @@
 package org.beijing.presentation.service
 
-import org.beijing.logic.usecases.SuggestionMealsUseCases
+import org.beijing.logic.usecases.ManageMealsSuggestionsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
-private val suggestionMeals: SuggestionMealsUseCases = getKoin().get()
+private val suggestionMeals: ManageMealsSuggestionsUseCases = getKoin().get()
 fun suggestionMealService() {
     showSuggestionOptions()
     print("\nhere: ")

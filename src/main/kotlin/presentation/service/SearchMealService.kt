@@ -1,12 +1,12 @@
 package org.beijing.presentation.service
 
 import kotlinx.datetime.LocalDate
-import org.beijing.logic.usecases.SearchMealsUseCases
+import org.beijing.logic.usecases.ManageMealsSearchUseCases
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 import org.koin.mp.KoinPlatform.getKoin
 
-private val searchMeals: SearchMealsUseCases = getKoin().get()
+private val searchMeals: ManageMealsSearchUseCases = getKoin().get()
 fun searchMealService() {
     showOptionsForSearchMealService()
     print("\nhere: \n")
