@@ -1,9 +1,6 @@
 package di
 
-import org.beijing.logic.usecases.GamesMealsUseCases
-import org.beijing.logic.usecases.SearchMealsUseCases
-import org.beijing.logic.usecases.SuggestionMealsUseCases
-import org.beijing.logic.usecases.ViewMealsUseCases
+import org.beijing.logic.usecases.*
 import org.koin.dsl.module
 
 val logicModule = module {
@@ -11,4 +8,7 @@ val logicModule = module {
     single { GamesMealsUseCases(get()) }
     single { SearchMealsUseCases(get()) }
     single { SuggestionMealsUseCases(get()) }
+    single { ExploreCountryMealsUseCase(get()) }
+    single { EasyMealSuggestionUseCase(get()) }
+    single { SearchMealsUseCases(get())}
 }
