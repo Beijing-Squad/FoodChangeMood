@@ -2,8 +2,7 @@ package org.beijing.presentation.service
 
 import model.GameRound
 import org.beijing.logic.usecases.ManageMealsGamesUseCases
-import org.beijing.logic.usecases.GamesMealsUseCases
-import org.beijing.logic.usecases.GamesMealsUseCases.GameState
+import org.beijing.model.GameState
 import org.koin.mp.KoinPlatform.getKoin
 
 private var currentRound: GameRound? = null
@@ -61,8 +60,8 @@ private fun launchIngredientGame() {
     println("Guess the correct ingredient for each meal. One wrong answer ends the game!")
     var ingredientGameState = GameState()
     var shouldExit = false
-    while (!shouldExit && !gamesMealsUseCases.isGameOver(ingredientGameState)) {
-        val result = gamesMealsUseCases.startIngredientGame(ingredientGameState)
+    while (!shouldExit && !gamesMeals.isGameOver(ingredientGameState)) {
+        val result = gamesMeals.startIngredientGame(ingredientGameState)
         result.fold(
             onSuccess = { (round, updatedState) ->
                 ingredientGameState = updatedState
@@ -82,7 +81,7 @@ private fun launchIngredientGame() {
                 }
                 inputResult.fold(
                     onSuccess = { choice ->
-                        val (isCorrect, newState) = gamesMealsUseCases.checkAnswer(choice, round, ingredientGameState)
+                        val (isCorrect, newState) = gamesMeals.checkAnswer(choice, round, ingredientGameState)
                         ingredientGameState = newState
 
                         if (isCorrect) {
@@ -106,7 +105,7 @@ private fun launchIngredientGame() {
         )
     }
     println("\n\uD83C\uDFAF Final Score: ${ingredientGameState.score}")
-    if (gamesMealsUseCases.isGameOver(ingredientGameState)) {
+    if (gamesMeals.isGameOver(ingredientGameState)) {
         println("\uD83C\uDFC6 Congratulations! You win 🎉")
     } else {
         println("👿 Game Over!")

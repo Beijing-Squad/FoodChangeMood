@@ -1,7 +1,9 @@
 package org.beijing.logic.usecases
 
-import model.GameRound
 import org.beijing.logic.MealRepository
+import org.beijing.model.GameState
+import org.beijing.model.IngredientGameRound
+import org.beijing.model.Meal
 import kotlin.random.Random
 
 class ManageMealsGamesUseCases(
@@ -128,16 +130,5 @@ class ManageMealsGamesUseCases(
         private const val SCORE_INCREMENT = 1000
         private const val INCORRECT_OPTION_COUNT = 2
     }
-    data class GameState(
-        val score: Int = 0,
-        val correctAnswers: Int = 0,
-        val usedMeals: Set<Int> = emptySet()
-    )
-
-    data class IngredientGameRound(
-        val mealName: String,
-        val correctAnswer: String,
-        val options: List<String>
-    )
 
 }
