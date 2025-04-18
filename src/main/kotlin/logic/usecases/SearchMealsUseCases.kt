@@ -1,5 +1,6 @@
 package org.beijing.logic.usecases
 
+import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.utils.KmpSubstringSearch
 import org.beijing.model.Meal
@@ -9,6 +10,23 @@ class SearchMealsUseCases(
     private val mealRepository: MealRepository
 ) {
 
+    // region search by add date and see meal details by id use case feature (8)
+    fun getMealsByDate(date: LocalDate): List<Pair<Int, String>> {
+        val mealsOnDate = mealRepository.getAllMeals()
+            .filter { it.submitted == date }
+            .map { it.id to it.name }
+
+        return mealsOnDate.ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
+    }
+
+    fun getMealOnDateById(date: LocalDate, id: Int): Meal {
+        val meal = mealRepository.getAllMeals()
+            .find { it.submitted == date && it.id == id }
+
+        return meal ?: throw Exception("❌ No Meal Found With ID [$id] On The Date $date.")
+    }
+    // endregion
+
     //region gym helper
     fun getGymHelperMeals(targetCalories: Double, targetProtein: Double): List<Meal> {
         checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
@@ -16,7 +34,6 @@ class SearchMealsUseCases(
         return mealRepository.getAllMeals().filter { currentMeal ->
             isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
         }
-
     }
 
     private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
@@ -33,7 +50,7 @@ class SearchMealsUseCases(
     }
 
     //endregion
-    
+
     //region search by name
     fun getSearchMealsByName(searchQuery: String): List<Meal> {
         validateSearchQuery(searchQuery)
