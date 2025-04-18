@@ -57,7 +57,7 @@ class ManageMealsGamesUseCases(
         val isCompleted = isCorrect || newAttemptsLeft <= 0
 
         val finalFeedBack = if (isCompleted && !isCorrect) {
-            "$feedback\n"+ FeedbackStatus.GAME_OVER.message.format(actualMinutes)
+            "$feedback\n" + FeedbackStatus.GAME_OVER.message.format(actualMinutes)
         } else {
             feedback
         }
