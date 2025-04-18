@@ -21,13 +21,11 @@ class FoodConsoleUi {
     private fun presentFeatures() {
         showOptions()
         when (val input = getUserInput()) {
-            0 -> return
             1 -> onSuggestionMealClick()
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
             4 -> onViewMealClick()
-            5 -> searchMealByCountryService()
-            6 -> launchEasyMeal()
+            0 -> return
 
             else -> {
                 println("Invalid input: $input")
@@ -58,8 +56,6 @@ class FoodConsoleUi {
         println("2. Search Meal")
         println("3. Game Meal")
         println("4. View Meal")
-        println("5. Explore meals from a specific country")
-        println("6. Easy Food Suggestion")
         println("0. Exit")
         print("\nhere: ")
     }
