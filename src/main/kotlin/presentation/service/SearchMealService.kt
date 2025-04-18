@@ -23,6 +23,10 @@ fun showOptionsForSearchMealService() {
     println("0. Exit")
 }
 
+private fun getUserInput(): Int? {
+    return readlnOrNull()?.toIntOrNull()
+}
+
 // region search by name
 private fun launchSearchByName(searchMealsUseCases: SearchMealsUseCases) {
     val mealNameQuery = readMealNameFromInput()
@@ -72,6 +76,4 @@ private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
 }
 //endregion
 
-private fun getUserInput(): Int? {
-    return readlnOrNull()?.toIntOrNull()
-}
+
