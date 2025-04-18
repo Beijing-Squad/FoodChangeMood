@@ -1,6 +1,5 @@
 package org.beijing.presentation
 
-
 import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.logic.usecases.GamesMealsUseCases
 import org.beijing.logic.usecases.SuggestionMealsUseCases
@@ -10,7 +9,7 @@ import org.beijing.presentation.service.*
 class FoodConsoleUi(
     private val viewMealsUseCases: ViewMealsUseCases,
     private val gamesMealsUseCases: GamesMealsUseCases,
-    private val suggestionMealsUseCases: SuggestionMealsUseCases
+    private val searchMealsUseCases: SearchMealsUseCases,
 ) {
 
     fun start() {

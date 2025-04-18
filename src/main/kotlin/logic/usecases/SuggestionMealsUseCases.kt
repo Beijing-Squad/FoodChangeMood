@@ -46,4 +46,21 @@ class SuggestionMealsUseCases(
                         "italian" in it.tags.map(String::lowercase)
             }
     }//endregion
+
+    //region keti diet meal
+    fun suggestKetoMeal(usedMealIds: MutableSet<Int>): Meal? {
+        val meals = mealRepository.getAllMeals()
+        val maxCarbs = 20
+        return meals
+            .asSequence()
+            .filter { meal ->
+                meal.nutrition.carbohydrates < maxCarbs &&
+                meal.nutrition.totalFat > meal.nutrition.protein
+            }
+            .filterNot { it.id in usedMealIds }
+            .shuffled()
+            .firstOrNull()
+            ?.also { usedMealIds.add(it.id) }
+    }
+    //end region
 }
