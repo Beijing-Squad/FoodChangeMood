@@ -14,7 +14,7 @@ fun searchMealService() {
         1 -> launchGymHelper()
         2 -> launchSearchByName()
         3 -> launchMealsByDate()
-        4 -> exploreCountryGameService()
+        4 -> searchMealByCountryService()
         0 -> return
         else -> println("Invalid input: $input")
     }

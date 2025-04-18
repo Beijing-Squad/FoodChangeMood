@@ -1,7 +1,6 @@
 package org.beijing.presentation
 
 
-import org.beijing.logic.usecases.ViewMealsUseCases
 import org.beijing.presentation.service.*
 
 class FoodConsoleUi {
@@ -28,7 +27,7 @@ class FoodConsoleUi {
             3 -> onGameMealClick()
             4 -> onViewMealClick()
             5 -> searchMealByCountryService()
-            6 -> easyMealService()
+            6 -> launchEasyMeal()
 
             else -> {
                 println("Invalid input: $input")

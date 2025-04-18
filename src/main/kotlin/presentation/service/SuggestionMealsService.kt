@@ -2,8 +2,6 @@ package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCases
 import org.koin.mp.KoinPlatform.getKoin
-import org.beijing.logic.usecases.SuggestionMealsUseCases
-import org.koin.java.KoinJavaComponent.getKoin
 
 private val suggestionMeals: ManageMealsSuggestionsUseCases = getKoin().get()
 fun suggestionMealService() {
@@ -12,7 +10,7 @@ fun suggestionMealService() {
     when (val input = getUserInput()) {
         1 -> launchKetoMealHelper()
         2 -> sweetsWithNoEggsUi()
-        3 -> easyMealService()
+        3 -> launchEasyMeal()
         4 -> launchItalianLargeGroupMeals()
         5 -> launchTenRandomPotatoMeals()
         0 -> return
@@ -182,17 +180,17 @@ fun launchItalianLargeGroupMeals() {
 // endregion
 
 // region easy meal service
-fun easyMealService() {
+fun launchEasyMeal() {
     println("🥗 Easy Meal Suggestions")
     println("------------------------")
-    println("✨ These meals are quick (≤30 mins), simple (≤5 ingredients), and easy (≤6 steps)")
-    val meals = suggestionMeals.easyFoodSuggestion()
+    println("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
+    val meals = suggestionMeals.getEasyFoodSuggestion()
     if (meals.isEmpty()) {
         println("😔 Sorry, no meals found for '. Try again later!")
     } else {
         println("\n🍽️ Found ${meals.size} meal(s):\n")
         meals.forEachIndexed { index, meal ->
-            println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mins • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
+            println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mints • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
         }
     }
 }

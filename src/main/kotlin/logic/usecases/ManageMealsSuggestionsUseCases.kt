@@ -65,13 +65,13 @@ class ManageMealsSuggestionsUseCases(
     }
     //end region
 
-    //region Easy Meal Suggestion
-    fun easyFoodSuggestion(): List<Meal> {
+    // region easy food suggestions
+    fun getEasyFoodSuggestion(): List<Meal> {
         return mealRepository.getAllMeals().asSequence()
             .filter { it.nSteps <= Constant.N_STEP && it.nIngredients <= Constant.N_INGREDIENTS && it.minutes <= Constant.MINUTES }
             .shuffled()
             .take(Constant.N_EASY_MEAL)
             .toList()
     }
-    //endregion
+    // end region easy food suggestions
 }
