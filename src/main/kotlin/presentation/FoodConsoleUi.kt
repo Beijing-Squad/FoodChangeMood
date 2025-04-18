@@ -59,7 +59,7 @@ class FoodConsoleUi(
     }
 
     private fun onViewMealClick() {
-        viewMealsService(viewMealsUseCases)
+        viewMealsService()
     }
 
     private fun showOptions() {
