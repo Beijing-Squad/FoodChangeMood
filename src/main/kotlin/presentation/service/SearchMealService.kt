@@ -1,7 +1,6 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SearchMealsUseCases
-import org.beijing.model.Meal
 
 fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
 
@@ -9,7 +8,6 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
     print("\nhere: \n")
     when (val input = getUserInput()) {
         1 -> launchGymHelper(searchMealsUseCases)
-        2 -> launchIraqiMeals(searchMealsUseCases)
 
 
         0 -> return
@@ -22,7 +20,6 @@ fun searchMealService(searchMealsUseCases: SearchMealsUseCases) {
 fun showOptionsForSearchMealService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Gym Helper")
-    println("2. Iraqi Meals")
     println("0. Exit")
 }
 
@@ -46,22 +43,3 @@ private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
     }
 }
 //endregion
-
-private fun launchIraqiMeals(searchMealsUseCases: SearchMealsUseCases) {
-    val iraqiMeals = searchMealsUseCases.getIraqiMeals()
-    veiwIraqiMeals(iraqiMeals)
-}
-
-fun veiwIraqiMeals(iraqiMeals: List<Meal>) {
-
-    if (iraqiMeals.isEmpty()) {
-        println("No Iraqi meals found in the dataset.")
-        return
-    }
-
-    println("\n===== Iraqi Meals =====")
-    println("Found ${iraqiMeals.size} Iraqi meals:")
-    iraqiMeals.forEachIndexed { index, meal ->
-        println("${index + 1}. ${meal.name}")
-    }
-}
