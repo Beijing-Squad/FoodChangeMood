@@ -2,13 +2,9 @@ package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.SuggestionMealsUseCases
 import org.koin.java.KoinJavaComponent.getKoin
-import org.koin.mp.KoinPlatform
-
-fun suggestionMealService(){
-    val suggestionMealsUseCases: SuggestionMealsUseCases=getKoin().get()
-import org.koin.mp.KoinPlatform.getKoin
 
 private val suggestionMeals: SuggestionMealsUseCases = getKoin().get()
+
 fun suggestionMealService() {
 
     showSuggestionOptions()
@@ -97,6 +93,7 @@ fun sweetsWithNoEggsUi() {
         }
     }
 }
+
 //endregion
 // region Italian Large Group Meals
 fun launchItalianLargeGroupMeals() {
@@ -107,7 +104,7 @@ fun launchItalianLargeGroupMeals() {
     } else {
         println("🍝 Meals from Italy suitable for large groups:\n")
         meals.forEachIndexed { index, meal ->
-            println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} minutes |")
+            println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} mins |")
         }
     }
 }
@@ -115,11 +112,10 @@ fun launchItalianLargeGroupMeals() {
 
 // region easy meal service
 fun easyMealService() {
-    val suggestionMealsUseCases : SuggestionMealsUseCases = KoinPlatform.getKoin().get()
     println("🥗 Easy Meal Suggestions")
     println("------------------------")
     println("✨ These meals are quick (≤30 mins), simple (≤5 ingredients), and easy (≤6 steps)")
-    val meals = suggestionMealsUseCases.easyFoodSuggestion()
+    val meals = suggestionMeals.easyFoodSuggestion()
     if (meals.isEmpty()) {
         println("😔 Sorry, no meals found for '. Try again later!")
     } else {

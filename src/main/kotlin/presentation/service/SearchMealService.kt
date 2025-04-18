@@ -4,6 +4,7 @@ import org.beijing.logic.usecases.SearchMealsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 import org.beijing.model.Meal
 
+val searchMeals: SearchMealsUseCases = getKoin().get()
 
 fun searchMealService() {
     val searchMealsUseCases: SearchMealsUseCases = getKoin().get()
@@ -78,9 +79,8 @@ private fun launchGymHelper(searchMealsUseCases: SearchMealsUseCases) {
 }
 //endregion
 
-// region explore country game service
-fun exploreCountryGameService() {
-    val searchMealsUseCase: SearchMealsUseCases = getKoin().get()
+// region search meal by country
+fun searchMealByCountryService() {
     println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
     println("------------------------------------------------------")
     println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
@@ -107,7 +107,7 @@ fun exploreCountryGameService() {
             }
 
             else -> {
-                val meals = searchMealsUseCase.exploreCountryMeals(country)
+                val meals = searchMeals.searchMealByCountry(country)
                 if (meals.isEmpty()) {
                     println("😔 Sorry, no meals found for '$country'. Try another country!")
                 } else {
@@ -120,4 +120,4 @@ fun exploreCountryGameService() {
         }
     }
 }
-// end region explore country service
+// end region search meal by country
