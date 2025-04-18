@@ -33,7 +33,7 @@ class SearchMealsUseCases(
 
     //endregion
 
-    companion object {
+    private companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
         const val ERROR_MESSAGE = "\nPlease ensure that both Calories " +
