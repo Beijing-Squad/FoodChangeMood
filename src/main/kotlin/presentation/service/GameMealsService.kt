@@ -57,16 +57,12 @@ private fun launchGuessGame() {
 
 // region Ingredient Game
 private fun launchIngredientGame() {
-    val gamesMealsUseCases: GamesMealsUseCases =getKoin().get()
     println("\uD83D\uDC69\u200D\uD83C\uDF73 Welcome to the Ingredient Game!")
     println("Guess the correct ingredient for each meal. One wrong answer ends the game!")
-
-    var ingredientGameState = GameState() // Maintain ingredient game state
+    var ingredientGameState = GameState()
     var shouldExit = false
-
     while (!shouldExit && !gamesMealsUseCases.isGameOver(ingredientGameState)) {
         val result = gamesMealsUseCases.startIngredientGame(ingredientGameState)
-
         result.fold(
             onSuccess = { (round, updatedState) ->
                 ingredientGameState = updatedState
@@ -76,7 +72,6 @@ private fun launchIngredientGame() {
                 round.options.forEachIndexed { index, option ->
                     println("${index + 1}. $option")
                 }
-
                 print("Select an option (1-3): ")
                 val userChoice = readlnOrNull()?.trim()?.toIntOrNull()
 
@@ -85,7 +80,6 @@ private fun launchIngredientGame() {
                 } else {
                     Result.failure(Exception("Invalid input: Please enter a number between 1 and 3"))
                 }
-
                 inputResult.fold(
                     onSuccess = { choice ->
                         val (isCorrect, newState) = gamesMealsUseCases.checkAnswer(choice, round, ingredientGameState)
@@ -111,7 +105,6 @@ private fun launchIngredientGame() {
             }
         )
     }
-
     println("\n\uD83C\uDFAF Final Score: ${ingredientGameState.score}")
     if (gamesMealsUseCases.isGameOver(ingredientGameState)) {
         println("\uD83C\uDFC6 Congratulations! You win 🎉")
