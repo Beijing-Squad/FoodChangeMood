@@ -1,19 +1,18 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.GamesMealsUseCases
-import org.beijing.model.GameState
+import org.beijing.logic.usecases.GamesMealsUseCases.GameState
 import org.koin.mp.KoinPlatform.getKoin
 
-
 private var currentRound: GamesMealsUseCases.GameRound? = null
+private val gameMealsUseCases: GamesMealsUseCases =getKoin().get()
 
 fun gameMealService() {
-    val gamesMealsUseCases: GamesMealsUseCases =getKoin().get()
     while (true) {
         showGameMealOptions()
         when (val input = getUserInput()) {
-            1 -> launchGuessGame(gamesMealsUseCases)
-            2 -> launchIngredientGame(gamesMealsUseCases)
+            1 -> launchGuessGame()
+            2 -> launchIngredientGame()
             0 -> return
             else -> println("Invalid input: $input")
         }
@@ -31,8 +30,8 @@ private fun getUserInput(): Int? = readlnOrNull()?.toIntOrNull()
 
 // region Guess Game Preparation Time
 
-private fun launchGuessGame(useCases: GamesMealsUseCases) {
-    currentRound = useCases.startNewRound()
+private fun launchGuessGame() {
+    currentRound = gameMealsUseCases.startNewRound()
     val mealName = currentRound?.meal?.name ?: "Unknown"
 
     println("\n🎯 Guess the Preparation Time for: **$mealName** (in minutes)")
@@ -47,7 +46,7 @@ private fun launchGuessGame(useCases: GamesMealsUseCases) {
             continue
         }
 
-        currentRound = useCases.makeGuess(currentRound!!, guess)
+        currentRound = gameMealsUseCases.makeGuess(currentRound!!, guess)
         println(currentRound?.lastFeedBack)
     }
 
@@ -56,15 +55,16 @@ private fun launchGuessGame(useCases: GamesMealsUseCases) {
 // endregion
 
 // region Ingredient Game
-private fun launchIngredientGame(ingredientGameUseCase: GamesMealsUseCases) {
+private fun launchIngredientGame() {
+    val gamesMealsUseCases: GamesMealsUseCases =getKoin().get()
     println("\uD83D\uDC69\u200D\uD83C\uDF73 Welcome to the Ingredient Game!")
     println("Guess the correct ingredient for each meal. One wrong answer ends the game!")
 
     var ingredientGameState = GameState() // Maintain ingredient game state
     var shouldExit = false
 
-    while (!shouldExit && !ingredientGameUseCase.isGameOver(ingredientGameState)) {
-        val result = ingredientGameUseCase.startIngredientGame(ingredientGameState)
+    while (!shouldExit && !gamesMealsUseCases.isGameOver(ingredientGameState)) {
+        val result = gamesMealsUseCases.startIngredientGame(ingredientGameState)
 
         result.fold(
             onSuccess = { (round, updatedState) ->
@@ -87,7 +87,7 @@ private fun launchIngredientGame(ingredientGameUseCase: GamesMealsUseCases) {
 
                 inputResult.fold(
                     onSuccess = { choice ->
-                        val (isCorrect, newState) = ingredientGameUseCase.checkAnswer(choice, round, ingredientGameState)
+                        val (isCorrect, newState) = gamesMealsUseCases.checkAnswer(choice, round, ingredientGameState)
                         ingredientGameState = newState
 
                         if (isCorrect) {
@@ -112,7 +112,7 @@ private fun launchIngredientGame(ingredientGameUseCase: GamesMealsUseCases) {
     }
 
     println("\n\uD83C\uDFAF Final Score: ${ingredientGameState.score}")
-    if (ingredientGameUseCase.isGameOver(ingredientGameState)) {
+    if (gamesMealsUseCases.isGameOver(ingredientGameState)) {
         println("\uD83C\uDFC6 Congratulations! You win 🎉")
     } else {
         println("👿 Game Over!")
