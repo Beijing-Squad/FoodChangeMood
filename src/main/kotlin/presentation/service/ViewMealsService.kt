@@ -3,14 +3,15 @@ package org.beijing.presentation.service
 import org.beijing.logic.usecases.ViewMealsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
+private val viewMealsUseCases: ViewMealsUseCases = getKoin().get()
+
 fun viewMealsService() {
-    val viewMeals: ViewMealsUseCases = getKoin().get()
 
     showOptionsForViewMealsService()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         // add number of feature here as ( 1-> featureOne() )
-        1 -> launchHealthyQuickPreparedMeals(viewMeals)
+        1 -> launchHealthyQuickPreparedMeals(viewMealsUseCases)
 
         0 -> return
 
