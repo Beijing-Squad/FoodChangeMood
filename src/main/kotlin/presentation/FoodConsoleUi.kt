@@ -1,12 +1,8 @@
 package org.beijing.presentation
 
-import org.beijing.logic.usecases.ViewMealsUseCases
 import org.beijing.presentation.service.*
 
-class FoodConsoleUi(
-    private val viewMealsUseCases: ViewMealsUseCases,
-) {
-
+class FoodConsoleUi {
     fun start() {
         showWelcome()
 
@@ -55,11 +51,11 @@ class FoodConsoleUi(
 
     private fun showOptions() {
         println("\n\n ===Please enter one of the numbers listed below===\n")
-        println("0. Exit")
         println("1. Suggestion Meal")
         println("2. Search Meal")
         println("3. Game Meal")
         println("4. View Meal")
+        println("0. Exit")
         print("\nhere: ")
     }
 
