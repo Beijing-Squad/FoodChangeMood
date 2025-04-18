@@ -2,9 +2,8 @@ package org.beijing.logic.usecases
 
 import model.GameRound
 import org.beijing.logic.MealRepository
-import org.beijing.model.GameState
 import org.beijing.model.IngredientGameRound
-import org.beijing.model.Meal
+import org.beijing.model.IngredientGameState
 import kotlin.random.Random
 
 class ManageMealsGamesUseCases(
@@ -73,9 +72,9 @@ class ManageMealsGamesUseCases(
         )
     }
 
-    fun isGameOver(state: GameState): Boolean = state.correctAnswers >= MAX_CORRECT_ANSWERS
+    fun isGameOver(state: IngredientGameState): Boolean = state.correctAnswers >= MAX_CORRECT_ANSWERS
 
-    fun startIngredientGame(state: GameState): Result<Pair<IngredientGameRound, GameState>> {
+    fun startIngredientGame(state: IngredientGameState): Result<Pair<IngredientGameRound, IngredientGameState>> {
         val meals = mealRepository.getAllMeals()
 
         if (isGameOver(state)) return Result.failure(Exception("Game Over"))
@@ -94,7 +93,7 @@ class ManageMealsGamesUseCases(
         return Result.success(IngredientGameRound(meal.name, correct, options) to updatedState)
     }
 
-    fun checkAnswer(userChoice: Int, round: IngredientGameRound, state: GameState): Pair<Boolean, GameState> {
+    fun checkAnswer(userChoice: Int, round: IngredientGameRound, state: IngredientGameState): Pair<Boolean, IngredientGameState> {
         val isCorrect = round.options.getOrNull(userChoice - 1) == round.correctAnswer
 
         return if (isCorrect) {

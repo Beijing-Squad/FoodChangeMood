@@ -2,7 +2,7 @@ package org.beijing.presentation.service
 
 import model.GameRound
 import org.beijing.logic.usecases.ManageMealsGamesUseCases
-import org.beijing.model.GameState
+import org.beijing.model.IngredientGameState
 import org.koin.mp.KoinPlatform.getKoin
 
 private var currentRound: GameRound? = null
@@ -13,6 +13,7 @@ fun gameMealService() {
         showGameMealOptions()
         when (val input = getUserInput()) {
             1 -> launchGuessGame()
+            2 -> launchIngredientGame()
             0 -> return
             else -> println("Invalid input: $input")
         }
@@ -22,6 +23,7 @@ fun gameMealService() {
 fun showGameMealOptions() {
     println("\n\n === Please enter one of the numbers listed below ===")
     println("1. Guess Preparation Time Game")
+    println("2. Guess Ingredient Game")
     println("0. Exit")
 }
 
@@ -56,7 +58,7 @@ private fun launchGuessGame() {
 private fun launchIngredientGame() {
     println("\uD83D\uDC69\u200D\uD83C\uDF73 Welcome to the Ingredient Game!")
     println("Guess the correct ingredient for each meal. One wrong answer ends the game!")
-    var ingredientGameState = GameState()
+    var ingredientGameState = IngredientGameState()
     var shouldExit = false
     while (!shouldExit && !gamesMeals.isGameOver(ingredientGameState)) {
         val result = gamesMeals.startIngredientGame(ingredientGameState)
