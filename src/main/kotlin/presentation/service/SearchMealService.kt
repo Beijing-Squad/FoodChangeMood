@@ -1,6 +1,4 @@
 package org.beijing.presentation.service
-
-import org.beijing.logic.usecases.GamesMealsUseCases
 import org.beijing.logic.usecases.SearchMealsUseCases
 import org.koin.java.KoinJavaComponent.getKoin
 
