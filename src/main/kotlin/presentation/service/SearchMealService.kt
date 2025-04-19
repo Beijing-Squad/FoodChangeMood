@@ -22,7 +22,7 @@ fun searchMealService() {
 }
 
 fun showOptionsForSearchMealService() {
-    println("\n\n ===Please enter one of the numbers listed below===\n")
+    println("\n\n===Please enter one of the numbers listed below===\n")
     println("1. Gym Helper")
     println("2. Search by name of meal")
     println("3. Search By Date And See Meal Details")
@@ -31,17 +31,17 @@ fun showOptionsForSearchMealService() {
 }
 
 private fun getUserInput(): Int? {
-    return readlnOrNull()?.toIntOrNull()
+    return readlnOrNull()?.trim()?.toIntOrNull()
 }
 
 // region search by name
 private fun launchSearchByName() {
-    val mealNameQuery = readMealNameFromInput()
+    val mealNameQuery = getMealNameFromInput()
     val searchResults = searchMeals.getSearchMealsByName(mealNameQuery)
     displaySearchResults(searchResults, mealNameQuery)
 }
 
-private fun readMealNameFromInput(): String {
+private fun getMealNameFromInput(): String {
     print("Enter meal name to search: ")
     val input = readlnOrNull()?.trim()
         ?: throw IllegalArgumentException("Meal name input cannot be null.")
@@ -68,7 +68,6 @@ private fun displaySearchResults(results: List<Meal>, query: String) {
 // region search by add date && see details by id feature (8)
 private fun launchMealsByDate() {
     val date = getDateInput()
-
     val meals = try {
         searchMeals.getMealsByDate(date)
     } catch (exception: Exception) {
