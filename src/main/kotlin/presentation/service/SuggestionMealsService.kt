@@ -6,44 +6,41 @@ import org.koin.mp.KoinPlatform.getKoin
 
 private val suggestionMeals: ManageMealsSuggestionsUseCases = getKoin().get()
 fun suggestionMealService() {
-    showSuggestionOptions()
+    showOptionsForSuggestionMealService()
     print("\nhere: ")
     when (val input = getUserInput()) {
         1 -> launchKetoMealHelper()
-        2 -> sweetsWithNoEggsUi()
-        3 -> launchEasyMeal()
+        2 -> launchSweetWithoutEggs()
+        3 -> launchEasyMeals()
         4 -> launchItalianLargeGroupMeals()
         5 -> launchTenRandomPotatoMeals()
-        6 -> getMealWithMoreThanSevenHundredCalories()
+        6 -> launchSoThinMeals()
         0 -> return
         else -> println("Invalid input: $input")
     }
     suggestionMealService()
 }
 
-fun showSuggestionOptions() {
-    println("\n\n ===Please enter one of the numbers listed below===\n")
+fun showOptionsForSuggestionMealService() {
+    println("\n\n===Please enter one of the numbers listed below===\n")
     println("1. Suggest a Keto Meal \uD83E\uDD51 ")
-    println("2. Sweets with No Eggs")
-    println("3. Easy Food Suggestion")
-    println("4. Suggest Italian Meals for Large Groups")
-    println("5. Suggest Ten Meals Contains Potato In Ingredients")
-    println("6. Suggest Meal With more than 700 calories")
+    println("2. Suggest Sweets with No Eggs \uD83C\uDF70")
+    println("3. Suggest Easy Food \uD83C\uDF2D")
+    println("4. Suggest Italian Meals for Large Groups \uD83C\uDF55")
+    println("5. Suggest Ten Meals Contains Potato In Ingredients \uD83E\uDD54")
+    println("6. Suggest Meal With more than 700 calories \uD83C\uDF54")
     println("0. Exit")
 }
 
 private fun getUserInput(): Int? {
-    return readlnOrNull()?.toIntOrNull()
+    return readlnOrNull()?.trim()?.toIntOrNull()
 }
-
 
 // region Keto Diet
 private fun launchKetoMealHelper() {
     val usedKetoMealIds = mutableSetOf<Int>()
-
     while (true) {
         val meal = suggestionMeals.suggestKetoMeal(usedKetoMealIds)
-
         if (meal == null) {
             println("\uD83D\uDE14 No more keto meals to suggest.")
             return
@@ -53,38 +50,18 @@ private fun launchKetoMealHelper() {
         println("Short Description: ${meal.description}")
 
         println("Do you like it? ❤")
-        print("write 'yes' to get details or 'no' to get another meal:")
+        print("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
         when (readlnOrNull()?.trim()?.lowercase()) {
             "yes" -> {
-                println("\n📋 Full Meal Details:")
-                println("🍽 Name: ${meal.name}")
-                println("🕒 Ready in: ${meal.minutes} minutes")
-                println("📅 Submitted on: ${meal.submitted}")
-                println("\n🥦 Ingredients (${meal.nIngredients}):")
-                meal.ingredients.forEach { println("• $it") }
-
-                println("\n📖 Steps (${meal.nSteps}):")
-                meal.steps.forEachIndexed { i, step -> println("${i + 1}. $step") }
-
-                println("\n📊 Nutritional Info (per serving):")
-                println("• Calories: ${meal.nutrition.calories}")
-                println("• Carbohydrates: ${meal.nutrition.carbohydrates}g")
-                println("• Total Fat: ${meal.nutrition.totalFat}g")
-                println("• Saturated Fat: ${meal.nutrition.saturatedFat}g")
-                println("• Sugar: ${meal.nutrition.sugar}g")
-                println("• Protein: ${meal.nutrition.protein}g")
-                println("• Sodium: ${meal.nutrition.sodium}mg")
+                viewMealDetails(meal)
             }
-
             "no" -> {
                 println("🔄 Okay! Let's try another one.")
                 continue
             }
-
             "exit" -> {
                 break
             }
-
             else -> {
                 println("⚠️ Please type 'yes' or 'no'")
             }
@@ -117,9 +94,8 @@ fun launchTenRandomPotatoMeals() {
 //endregion
 
 //region sweets with no eggs
-fun sweetsWithNoEggsUi() {
+fun launchSweetWithoutEggs() {
     println("🍬 Welcome to the Egg-Free Sweets Suggester!")
-
     while (true) {
         val sweet = suggestionMeals.getSweetWithNoEggs()
 
@@ -127,36 +103,13 @@ fun sweetsWithNoEggsUi() {
             println("🚫 No more unique sweets without eggs found.")
             break
         }
-
         println("Try this sweet: ${sweet.name}")
         println("Description: ${sweet.description ?: "No description"}")
         print("Do you like it? (yes to view details / no to see another / exit): ")
 
         when (readlnOrNull()?.lowercase()) {
             "yes" -> {
-                println("\n✅ Name: ${sweet.name}")
-                println("🕒 Prep Time: ${sweet.minutes} minutes")
-
-                println("📊 Nutrition:")
-                println("   • Calories: ${sweet.nutrition.calories}")
-                println("   • Total Fat: ${sweet.nutrition.totalFat}")
-                println("   • Sugar: ${sweet.nutrition.sugar}")
-                println("   • Sodium: ${sweet.nutrition.sodium}")
-                println("   • Protein: ${sweet.nutrition.protein}")
-                println("   • Saturated Fat: ${sweet.nutrition.saturatedFat}")
-                println("   • Carbohydrates: ${sweet.nutrition.carbohydrates}")
-
-                println("\n🧾 Ingredients:")
-                sweet.ingredients.forEach { ingredient ->
-                    println("   • $ingredient")
-                }
-
-                println("\n🍽 Steps (${sweet.nSteps} total):")
-                sweet.steps.forEachIndexed { index, step ->
-                    println("   ${index + 1}. $step")
-                }
-
-                println()
+                viewMealDetails(sweet)
                 break
             }
 
@@ -171,7 +124,6 @@ fun sweetsWithNoEggsUi() {
 // region Italian Large Group Meals
 fun launchItalianLargeGroupMeals() {
     val meals = suggestionMeals.getItalianLargeGroupsMeals()
-
     if (meals.isEmpty()) {
         println("❌ No Italian meals found for large groups.")
     } else {
@@ -184,7 +136,7 @@ fun launchItalianLargeGroupMeals() {
 // endregion
 
 // region easy meal service
-fun launchEasyMeal() {
+fun launchEasyMeals() {
     println("🥗 Easy Meal Suggestions")
     println("------------------------")
     println("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
@@ -200,10 +152,8 @@ fun launchEasyMeal() {
 }
 // end region easy meal service
 
-
 // region Suggest Meal With more than 700 calories
-
-fun getMealWithMoreThanSevenHundredCalories() {
+fun launchSoThinMeals() {
     val suggestedMeals = mutableListOf<Meal>()
     var meal = suggestionMeals.getMealHaveMoreThanSevenHundredCalories().random()
     var choice: String?
@@ -222,7 +172,7 @@ fun getMealWithMoreThanSevenHundredCalories() {
         choice = readlnOrNull()?.trim()?.lowercase()
         when (choice) {
             "yes" -> {
-                showMealDeatils(meal)
+                showMealDetails(meal)
                 break
             }
 
@@ -233,10 +183,7 @@ fun getMealWithMoreThanSevenHundredCalories() {
             }
         }
     }
-
-
 }
-
 
 private fun showMeal(meal: Meal) {
     println("Below Meal With More Than 700 Calories")
@@ -245,7 +192,7 @@ private fun showMeal(meal: Meal) {
 
 }
 
-private fun showMealDeatils(meal: Meal) {
+private fun showMealDetails(meal: Meal) {
     println("Below Meal Details:")
     println("Meal ID: ${meal.id}")
     println("Meal Name: ${meal.name}")

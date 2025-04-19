@@ -1,12 +1,12 @@
 package org.beijing.presentation.service
 
 import kotlinx.datetime.LocalDate
-import org.beijing.logic.usecases.ManageMealsSearchUseCases
+import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 import org.koin.mp.KoinPlatform.getKoin
 
-private val searchMeals: ManageMealsSearchUseCases = getKoin().get()
+private val searchMeals: ManageMealsSearchUseCase = getKoin().get()
 fun searchMealService() {
     showOptionsForSearchMealService()
     print("\nhere: \n")
@@ -14,7 +14,7 @@ fun searchMealService() {
         1 -> launchGymHelper()
         2 -> launchSearchByName()
         3 -> launchMealsByDate()
-        4 -> searchMealByCountryService()
+        4 -> launchSearchByCountry()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -132,41 +132,35 @@ private fun getIdInput(): Int {
     }
 }
 
-private fun viewMealDetails(meal: Meal) {
+fun viewMealDetails(meal: Meal) {
     println("╔════════════════════════════════════╗")
     println("║          🍽️ Meal Details           ║")
     println("╚════════════════════════════════════╝")
-
-    println("🟢 Name : ${meal.name}")
+    println("🍽 Name : ${meal.name}")
     println("⏱️ Preparation Time : ${meal.minutes} minutes")
-
     println("\n📊 Nutrition Facts:")
     displayNutrition(meal.nutrition)
-
     println()
     displaySteps(meal.steps)
-
     println("\n📄 Description:")
     if (meal.description.isNullOrBlank()) {
-        println("   No Description Available.")
+        println("  • No Description Available.")
     } else {
-        println("   ${meal.description}")
+        println("  • ${meal.description}")
     }
-
     println()
     displayIngredients(meal.ingredients)
-
     println("══════════════════════════════════════")
 }
 
 private fun displayNutrition(nutrition: Nutrition) {
-    println("   - Calories       : ${nutrition.calories} kcal")
-    println("   - Total Fat      : ${nutrition.totalFat} g")
-    println("   - Sugar          : ${nutrition.sugar} g")
-    println("   - Sodium         : ${nutrition.sodium} mg")
-    println("   - Protein        : ${nutrition.protein} g")
-    println("   - Saturated Fat  : ${nutrition.saturatedFat} g")
-    println("   - Carbohydrates  : ${nutrition.carbohydrates} g")
+    println("   • Calories       : ${nutrition.calories} kcal")
+    println("   • Total Fat      : ${nutrition.totalFat} g")
+    println("   • Sugar          : ${nutrition.sugar} g")
+    println("   • Sodium         : ${nutrition.sodium} mg")
+    println("   • Protein        : ${nutrition.protein} g")
+    println("   • Saturated Fat  : ${nutrition.saturatedFat} g")
+    println("   • Carbohydrates  : ${nutrition.carbohydrates} g")
 }
 
 private fun displaySteps(steps: List<String>) {
@@ -202,7 +196,7 @@ private fun launchGymHelper() {
 //endregion
 
 // region search meal by country
-fun searchMealByCountryService() {
+fun launchSearchByCountry() {
     println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
     println("------------------------------------------------------")
     println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")

@@ -1,12 +1,12 @@
 package org.beijing.presentation.service
 
 import model.GameRound
-import org.beijing.logic.usecases.ManageMealsGamesUseCases
+import org.beijing.logic.usecases.ManageMealsGamesUseCase
 import org.beijing.model.IngredientGameState
 import org.koin.mp.KoinPlatform.getKoin
 
 private var currentRound: GameRound? = null
-private val gamesMeals: ManageMealsGamesUseCases = getKoin().get()
+private val gamesMeals: ManageMealsGamesUseCase = getKoin().get()
 
 fun gameMealService() {
     while (true) {

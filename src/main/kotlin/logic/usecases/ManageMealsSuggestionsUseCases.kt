@@ -19,7 +19,6 @@ class ManageMealsSuggestionsUseCases(
             .filterNot { meal ->
                 meal.ingredients.any { it.contains("egg", ignoreCase = true) }
             }
-            // Exclude already shown
             .filterNot { seen.contains(it.id) }
 
         val nextMeal = sweetsWithoutEggs.firstOrNull()

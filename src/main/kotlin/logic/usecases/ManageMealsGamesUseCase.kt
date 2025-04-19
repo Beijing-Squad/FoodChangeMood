@@ -8,13 +8,14 @@ import kotlin.random.Random
 import org.beijing.model.FeedbackStatus
 import org.beijing.model.GuessStatus
 
-class ManageMealsGamesUseCases(
+class ManageMealsGamesUseCase(
     private val mealRepository: MealRepository,
 ) {
     private val maxAttempts = 3
+    val meals = mealRepository.getAllMeals()
 
+    // region preparation time guess game
     fun startNewRound(): GameRound {
-        val meals = mealRepository.getAllMeals()
         if (meals.isEmpty()) {
             throw IllegalArgumentException("No meals found in the repository")
         }
@@ -70,29 +71,29 @@ class ManageMealsGamesUseCases(
             lastFeedBack = finalFeedBack
         )
     }
+    // endregion
 
-    fun isGameOver(state: IngredientGameState): Boolean = state.correctAnswers >= MAX_CORRECT_ANSWERS
-
+    // region ingredient game
     fun startIngredientGame(state: IngredientGameState): Result<Pair<IngredientGameRound, IngredientGameState>> {
-        val meals = mealRepository.getAllMeals()
 
         if (isGameOver(state)) return Result.failure(Exception("Game Over"))
 
         val availableMeals = meals.filter { it.id !in state.usedMeals && it.ingredients.isNotEmpty() }
-
         val meal = availableMeals.shuffled().firstOrNull()
             ?: return Result.failure(Exception("No meals available 😔"))
-
         val correct = meal.ingredients.randomOrNull()
             ?: return Result.failure(Exception("No ingredients in meal 😔"))
-
         val options = generateOptions(correct)
         val updatedState = state.copy(usedMeals = state.usedMeals + meal.id)
 
         return Result.success(IngredientGameRound(meal.name, correct, options) to updatedState)
     }
 
-    fun checkAnswer(userChoice: Int, round: IngredientGameRound, state: IngredientGameState): Pair<Boolean, IngredientGameState> {
+    fun checkAnswer(
+        userChoice: Int,
+        round: IngredientGameRound,
+        state: IngredientGameState
+    ): Pair<Boolean, IngredientGameState> {
         val isCorrect = round.options.getOrNull(userChoice - 1) == round.correctAnswer
 
         return if (isCorrect) {
@@ -117,10 +118,12 @@ class ManageMealsGamesUseCases(
         return (incorrectOptions + correct).shuffled()
     }
 
+    fun isGameOver(state: IngredientGameState): Boolean = state.correctAnswers >= MAX_CORRECT_ANSWERS
+
     companion object {
         private const val MAX_CORRECT_ANSWERS = 15
         private const val SCORE_INCREMENT = 1000
         private const val INCORRECT_OPTION_COUNT = 2
     }
-
+    // endregion
 }

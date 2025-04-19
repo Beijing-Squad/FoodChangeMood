@@ -6,7 +6,7 @@ import org.beijing.logic.usecases.utils.KmpSubstringSearch
 import org.beijing.model.Meal
 import kotlin.math.abs
 
-class ManageMealsSearchUseCases(
+class ManageMealsSearchUseCase(
     private val mealRepository: MealRepository
 ) {
 
@@ -82,6 +82,7 @@ class ManageMealsSearchUseCases(
         }
     }
     //endregion
+
     // region search meal by country
     fun searchMealByCountry(countryQuery: String): List<Meal> {
         val query = countryQuery.lowercase()
