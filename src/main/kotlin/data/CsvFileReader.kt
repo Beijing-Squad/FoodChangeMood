@@ -7,6 +7,6 @@ class CsvFileReader(
 ) {
 
     fun readLinesFromFile(): List<String> {
-        return file.readLines().take(100)
+        return file.readLines()
     }
 }
