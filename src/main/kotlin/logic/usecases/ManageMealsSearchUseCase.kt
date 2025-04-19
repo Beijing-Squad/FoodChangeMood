@@ -111,7 +111,7 @@ class ManageMealsSearchUseCase(
                     meal.description?.contains("Iraq", ignoreCase = true) == true
         }
     }
-   //endregion
+    //endregion
 
     companion object {
         const val MATCH_PERCENTAGE = 0.5
