@@ -3,10 +3,9 @@ package org.beijing.logic.usecases
 import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
 
-class ViewMealsUseCases(
+class ManageMealsViewsUseCases(
     private val mealRepository: MealRepository
 ) {
-    // add feature function here
     // region get a list of healthy fast food meals
     fun getHealthyQuickPreparedMeals(): List<Meal> {
         val (fatAvg, saturatedFatAvg, carbsAvg) = calculateNutritionAverages(mealRepository.getAllMeals())
@@ -41,4 +40,13 @@ class ViewMealsUseCases(
     //endregion
 
 
+    // region get a list of seafood sorted by protein content
+
+    fun getSortedSeaFoodByProtein(): List<Meal> {
+        val sortedSeaFood = mealRepository.getAllMeals()
+            .filter { it.tags.contains("seafood") }
+            .sortedByDescending { it.nutrition.protein }
+        return sortedSeaFood
+    }
+    //endregion
 }

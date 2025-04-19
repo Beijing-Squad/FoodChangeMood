@@ -1,29 +1,28 @@
 package org.beijing.presentation.service
 
-import org.beijing.logic.usecases.ViewMealsUseCases
+import org.beijing.logic.usecases.ManageMealsViewsUseCases
 import org.koin.mp.KoinPlatform.getKoin
 
+private val viewMeals: ManageMealsViewsUseCases = getKoin().get()
 
 fun viewMealsService() {
 
     showOptionsForViewMealsService()
-    print("\nhere: ")
+    print("\nhere: \n")
     when (val input = getUserInput()) {
-        // add number of feature here as ( 1-> featureOne() )
         1 -> launchHealthyQuickPreparedMeals()
-
+        2 -> showSortedSeaFoodByProtein()
         0 -> return
 
         else -> println("Invalid input: $input")
     }
     viewMealsService()
-
 }
 
 fun showOptionsForViewMealsService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Show Healthy Quick Prepared Meals") // add feature name here
-
+    println("1. Show SeaFood Sorted By Protein Content")
 
     println("0. Exit")
 }
@@ -32,10 +31,8 @@ private fun getUserInput(): Int? {
     return readlnOrNull()?.toIntOrNull()
 }
 
-// add ui feature function inside region block
 // region healthy fast food meals
 fun launchHealthyQuickPreparedMeals() {
-    val viewMeals: ViewMealsUseCases = getKoin().get()
     val healthyQuickMeals = viewMeals.getHealthyQuickPreparedMeals()
 
     if (healthyQuickMeals.isEmpty()) {
@@ -67,7 +64,14 @@ fun launchHealthyQuickPreparedMeals() {
 }
 // endregion
 
-// region Sorted SeaFood
+// region get a list of seafood sorted by protein content
 
-
-// endregion
+fun showSortedSeaFoodByProtein() {
+    println("List Of SeaFood Sorted By Protein:")
+    println(String.format("%-6s| %-70s | %-14s", "Rank", "Meal Name", "Protein Content"))
+    println("----------------------------------------------------------------------------------------------------")
+    viewMeals.getSortedSeaFoodByProtein().forEachIndexed { index, meal ->
+        println(String.format("%-6d| %-70s | %-14d", index + 1, meal.name, meal.nutrition.protein.toInt()))
+    }
+}
+//endregion
