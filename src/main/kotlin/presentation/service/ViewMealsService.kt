@@ -1,9 +1,9 @@
 package org.beijing.presentation.service
 
-import org.beijing.logic.usecases.ManageMealsViewsUseCases
+import org.beijing.logic.usecases.ManageMealsViewUseCase
 import org.koin.mp.KoinPlatform.getKoin
 
-private val viewMeals: ManageMealsViewsUseCases = getKoin().get()
+private val viewMeals: ManageMealsViewUseCase = getKoin().get()
 
 fun viewMealsService() {
     showOptionsForViewMealsService()

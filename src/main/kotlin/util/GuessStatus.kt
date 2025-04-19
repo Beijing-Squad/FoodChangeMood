@@ -1,4 +1,4 @@
-package org.beijing.model
+package org.beijing.util
 
 enum class GuessStatus(val message: String) {
     TOO_HIGH("Too high! Try a lower number."),
