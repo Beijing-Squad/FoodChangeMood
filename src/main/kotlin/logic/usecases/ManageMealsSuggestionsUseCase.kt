@@ -7,11 +7,11 @@ import org.beijing.util.Constant
 class ManageMealsSuggestionsUseCase(
     private val mealRepository: MealRepository
 ) {
-    //region sweets with no eggs
-    fun getSweetWithNoEggs(): Meal? {
+
+    //region suggest sweets with no eggs
+    fun suggestSweetsWithNoEggs(): Meal? {
         val meals = mealRepository.getAllMeals()
         val seen = mutableSetOf<Int>()
-
         val sweetsWithoutEggs = meals
             .filter { meal ->
                 meal.tags.any { it.contains("sweet", ignoreCase = true) }
@@ -28,8 +28,8 @@ class ManageMealsSuggestionsUseCase(
     }
     //endregion
 
-    //region ten random meals contains potato
-    fun getTenRandomMealsContainsPotato(): List<Meal> {
+    //region suggest ten random meals contains potato in ingredients
+    fun suggestTenRandomMealsContainsPotato(): List<Meal> {
         return mealRepository.getAllMeals().asSequence().filter { meal ->
             meal.ingredients.any { ingredient ->
                 ingredient.contains("Potato", true)
@@ -38,8 +38,8 @@ class ManageMealsSuggestionsUseCase(
     }
     //endregion
 
-    //region Italian Large Group Meals
-    fun getItalianLargeGroupsMeals(): List<Meal> {
+    //region suggest italian large group meals
+    fun suggestItalianLargeGroupsMeals(): List<Meal> {
         return mealRepository.getAllMeals()
             .filter {
                 "for-large-groups" in it.tags.map(String::lowercase) &&
@@ -47,7 +47,7 @@ class ManageMealsSuggestionsUseCase(
             }
     }//endregion
 
-    //region keto diet meal
+    //region suggest keto diet meals
     fun suggestKetoMeal(usedMealIds: MutableSet<Int>): Meal? {
         val meals = mealRepository.getAllMeals()
         val maxCarbs = 20
@@ -62,22 +62,20 @@ class ManageMealsSuggestionsUseCase(
             .firstOrNull()
             ?.also { usedMealIds.add(it.id) }
     }
-    //end region
+    //endregion
 
-    // region easy food suggestions
-    fun getEasyFoodSuggestion(): List<Meal> {
+    // region suggest easy prepared meal
+    fun suggestEasyPreparedMeal(): List<Meal> {
         return mealRepository.getAllMeals().asSequence()
             .filter { it.nSteps <= Constant.N_STEP && it.nIngredients <= Constant.N_INGREDIENTS && it.minutes <= Constant.MINUTES }
             .shuffled()
             .take(Constant.N_EASY_MEAL)
             .toList()
     }
-    // end region easy food suggestions
+    // endregion easy food suggestions
 
-
-    // region Meals have more than seven hundred calories
-
-    fun getMealHaveMoreThanSevenHundredCalories(): List<Meal> {
+    // region suggest meals have more than seven hundred calories
+    fun suggestMealHaveMoreThanSevenHundredCalories(): List<Meal> {
 
         val filteredMeals = mealRepository.getAllMeals().filter(::checkMealCaloriesContent)
         return filteredMeals
@@ -86,7 +84,7 @@ class ManageMealsSuggestionsUseCase(
     fun checkMealCaloriesContent(meal: Meal): Boolean {
         return meal.nutrition.calories >= CALORIES_CONTENT_NEEDED
     }
-    //end region
+    //endregion
 
     private companion object {
         val CALORIES_CONTENT_NEEDED = 700

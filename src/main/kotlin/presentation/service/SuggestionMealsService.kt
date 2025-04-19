@@ -72,7 +72,7 @@ private fun launchKetoMealHelper() {
 
 //region ten random meals contains potato
 fun launchTenRandomPotatoMeals() {
-    val tenRandomPotatoMeals = suggestionMeals.getTenRandomMealsContainsPotato()
+    val tenRandomPotatoMeals = suggestionMeals.suggestTenRandomMealsContainsPotato()
 
     if (tenRandomPotatoMeals.isEmpty()) {
         println("There is no meals contains potato in their ingredients")
@@ -97,7 +97,7 @@ fun launchTenRandomPotatoMeals() {
 fun launchSweetWithoutEggs() {
     println("🍬 Welcome to the Egg-Free Sweets Suggester!")
     while (true) {
-        val sweet = suggestionMeals.getSweetWithNoEggs()
+        val sweet = suggestionMeals.suggestSweetsWithNoEggs()
 
         if (sweet == null) {
             println("🚫 No more unique sweets without eggs found.")
@@ -123,7 +123,7 @@ fun launchSweetWithoutEggs() {
 
 // region Italian Large Group Meals
 fun launchItalianLargeGroupMeals() {
-    val meals = suggestionMeals.getItalianLargeGroupsMeals()
+    val meals = suggestionMeals.suggestItalianLargeGroupsMeals()
     if (meals.isEmpty()) {
         println("❌ No Italian meals found for large groups.")
     } else {
@@ -140,7 +140,7 @@ fun launchEasyMeals() {
     println("🥗 Easy Meal Suggestions")
     println("------------------------")
     println("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
-    val meals = suggestionMeals.getEasyFoodSuggestion()
+    val meals = suggestionMeals.suggestEasyPreparedMeal()
     if (meals.isEmpty()) {
         println("😔 Sorry, no meals found for '. Try again later!")
     } else {
@@ -155,13 +155,13 @@ fun launchEasyMeals() {
 // region Suggest Meal With more than 700 calories
 fun launchSoThinMeals() {
     val suggestedMeals = mutableListOf<Meal>()
-    var meal = suggestionMeals.getMealHaveMoreThanSevenHundredCalories().random()
+    var meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
     var choice: String?
 
     while (true) {
 
         if (suggestedMeals.contains(meal)) {
-            meal = suggestionMeals.getMealHaveMoreThanSevenHundredCalories().random()
+            meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
         }
         suggestedMeals.add(meal)
         showMeal(meal)

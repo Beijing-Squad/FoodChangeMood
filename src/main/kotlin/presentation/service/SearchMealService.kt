@@ -39,7 +39,7 @@ private fun getUserInput(): Int? {
 // region search by name
 private fun launchSearchByName() {
     val mealNameQuery = getMealNameFromInput()
-    val searchResults = searchMeals.getSearchMealsByName(mealNameQuery)
+    val searchResults = searchMeals.getMealByName(mealNameQuery)
     displaySearchResults(searchResults, mealNameQuery)
 }
 
@@ -83,7 +83,7 @@ private fun launchMealsByDate() {
     if (seeDetailsAnswer) {
         val mealId = getIdInput()
         try {
-            val meal = searchMeals.getMealOnDateById(date, mealId)
+            val meal = searchMeals.getMealByDateAndId(date, mealId)
             viewMealDetails(meal)
         } catch (exception: Exception) {
             println(exception.message)
@@ -188,7 +188,7 @@ private fun launchGymHelper() {
     val targetProtein = readlnOrNull()?.trim()?.toDoubleOrNull()
     if (targetProtein != null && targetCalories != null) {
         checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
-        val meals = searchMeals.getGymHelperMeals(
+        val meals = searchMeals.getGymHelperMealsByCaloriesAndProtein(
             targetCalories, targetProtein
         )
         showGymHelperResult(meals)
@@ -282,7 +282,7 @@ fun launchSearchByCountry() {
             }
 
             else -> {
-                val meals = searchMeals.searchMealByCountry(country)
+                val meals = searchMeals.getMealByCountry(country)
                 if (meals.isEmpty()) {
                     println("😔 Sorry, no meals found for '$country'. Try another country!")
                 } else {
