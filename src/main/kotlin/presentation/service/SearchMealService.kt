@@ -2,7 +2,6 @@ package org.beijing.presentation.service
 
 import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSearchUseCases
-import org.beijing.logic.usecases.SearchMealsUseCases
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 import org.koin.mp.KoinPlatform.getKoin
@@ -188,12 +187,12 @@ private fun displayIngredients(ingredients: List<String>) {
 
 // region gym helper
 private fun launchGymHelper() {
-    val searchMeals: SearchMealsUseCases = getKoin().get()
     print("enter target of Calories: ")
     val targetCalories = readlnOrNull()?.toDoubleOrNull()
     print("enter target of Protein: ")
     val targetProtein = readlnOrNull()?.toDoubleOrNull()
     if (targetProtein != null && targetCalories != null) {
+        checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
         val meals = searchMeals.getGymHelperMeals(
             targetCalories, targetProtein
         )
@@ -202,31 +201,50 @@ private fun launchGymHelper() {
     }
 }
 
+private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
+    if (targetCalories <= 0 || targetProtein <= 0) throw Exception(
+        "\nPlease ensure that both Calories " +
+                "and Protein inputs are positive values."
+    )
+}
+
 private fun showGymHelperResult(meals: List<Meal>) {
     searchAgainAboutGymHelper(meals)
+
+    println("🍽️🍴 GYM HELPER MEAL PLAN 🍴🍽️")
+    println("=".repeat(60))
+
     meals.forEachIndexed { indexOfMeal, currentMeal ->
-        println("\n${indexOfMeal + 1}- ${currentMeal.name}")
-        println("\t\t\t\t minutes: ${currentMeal.minutes}")
-        println("\t\t\t\t nutrition: ")
-        currentMeal.nutrition.also { currentNutrition ->
-            println("\t\t\t\t\t\t Calories: ${currentNutrition.calories}")
-            println("\t\t\t\t\t\t Protein: ${currentNutrition.protein}")
-        }
-        println("\n\t\t\t\t ingredients: ")
-        currentMeal.ingredients.forEachIndexed { indexOfIngredient, currentIngredient ->
-            println("\t\t\t\t\t\t ${indexOfIngredient + 1}- $currentIngredient")
-        }
-        println("\n\t\t\t\t steps: ")
-        currentMeal.steps.forEachIndexed { indexOfSteps, currentStep ->
-            println("\t\t\t\t\t\t ${indexOfSteps + 1}- $currentStep")
+        println("\n🔹 Meal ${indexOfMeal + 1}: ${currentMeal.name.uppercase()}")
+        println("-".repeat(60))
+
+        println("🕒 Duration: ${currentMeal.minutes} minutes")
+
+        println("\n🥗 Nutrition Info:")
+        with(currentMeal.nutrition) {
+            println("\t⚡ Calories: $calories kcal")
+            println("\t💪 Protein: $protein g")
         }
 
+        println("\n🛒 Ingredients:")
+        currentMeal.ingredients.forEachIndexed { index, ingredient ->
+            println("\t${index + 1}. $ingredient")
+        }
+
+        println("\n👨‍🍳 Preparation Steps:")
+        currentMeal.steps.forEachIndexed { index, step ->
+            println("\t${index + 1}. $step")
+        }
+
+        println("=".repeat(60))
     }
+
+    println("\n✅ All meals displayed successfully!")
 }
 
 private fun searchAgainAboutGymHelper(meals: List<Meal>) {
     if (meals.isEmpty()) {
-        println("\nNo meals found\n")
+        println("\n⚠️ No meals found!\n🍽️ Try searching again or check your filters.\n")
         println("Do you want search again?")
         println("\t1- Yes")
         println("\t0- No")
