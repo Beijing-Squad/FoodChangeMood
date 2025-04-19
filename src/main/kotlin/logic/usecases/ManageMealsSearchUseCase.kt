@@ -10,7 +10,7 @@ class ManageMealsSearchUseCase(
     private val mealRepository: MealRepository
 ) {
 
-    // region search by add date and see meal details by id
+    // region search meal by date then see meal details by id
     fun getMealsByDate(date: LocalDate): List<Pair<Int, String>> {
         val mealsOnDate = mealRepository.getAllMeals()
             .filter { it.submitted == date }
@@ -19,7 +19,7 @@ class ManageMealsSearchUseCase(
         return mealsOnDate.ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
 
-    fun getMealOnDateById(date: LocalDate, id: Int): Meal {
+    fun getMealByDateAndId(date: LocalDate, id: Int): Meal {
         val meal = mealRepository.getAllMeals()
             .find { it.submitted == date && it.id == id }
 
@@ -27,8 +27,8 @@ class ManageMealsSearchUseCase(
     }
     // endregion
 
-    //region gym helper
-    fun getGymHelperMeals(targetCalories: Double, targetProtein: Double): List<Meal> {
+    //region search meal for gym helper by calories and protein
+    fun getGymHelperMealsByCaloriesAndProtein(targetCalories: Double, targetProtein: Double): List<Meal> {
         return mealRepository.getAllMeals().filter { currentMeal ->
             isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
         }
@@ -44,8 +44,8 @@ class ManageMealsSearchUseCase(
     }
     //endregion
 
-    //region search by name
-    fun getSearchMealsByName(searchQuery: String): List<Meal> {
+    //region search meal by name
+    fun getMealByName(searchQuery: String): List<Meal> {
         validateSearchQuery(searchQuery)
 
         val allMeals = getAllMealsOrThrow()
@@ -78,7 +78,7 @@ class ManageMealsSearchUseCase(
     //endregion
 
     // region search meal by country
-    fun searchMealByCountry(countryQuery: String): List<Meal> {
+    fun getMealByCountry(countryQuery: String): List<Meal> {
         val query = countryQuery.lowercase()
         return mealRepository.getAllMeals()
             .asSequence()
@@ -92,7 +92,8 @@ class ManageMealsSearchUseCase(
             .take(20)
             .toList()
     }
-    // end search meal by country
+    // endregion search meal by country
+
     companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
