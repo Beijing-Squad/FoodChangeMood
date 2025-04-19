@@ -187,9 +187,9 @@ private fun displayIngredients(ingredients: List<String>) {
 // region gym helper
 private fun launchGymHelper() {
     print("enter target of Calories: ")
-    val targetCalories = readlnOrNull()?.toDoubleOrNull()
+    val targetCalories = readlnOrNull()?.trim()?.toDoubleOrNull()
     print("enter target of Protein:")
-    val targetProtein = readlnOrNull()?.toDoubleOrNull()
+    val targetProtein = readlnOrNull()?.trim()?.toDoubleOrNull()
     if (targetProtein != null && targetCalories != null) {
         println(
             searchMeals.getGymHelperMeals(
