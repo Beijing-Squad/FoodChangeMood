@@ -29,15 +29,9 @@ class ManageMealsSearchUseCases(
 
     //region gym helper
     fun getGymHelperMeals(targetCalories: Double, targetProtein: Double): List<Meal> {
-        checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
-
         return mealRepository.getAllMeals().filter { currentMeal ->
             isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
         }
-    }
-
-    private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
-        if (targetCalories <= 0 || targetProtein <= 0) throw Exception(ERROR_MESSAGE)
     }
 
     private fun isMealWithinNutritionTargets(meal: Meal, targetCalories: Double, targetProtein: Double): Boolean {
@@ -101,7 +95,5 @@ class ManageMealsSearchUseCases(
     companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
-        const val ERROR_MESSAGE = "\nPlease ensure that both Calories " +
-                "and Protein inputs are positive values."
     }
 }
