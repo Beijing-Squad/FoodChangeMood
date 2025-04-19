@@ -15,7 +15,7 @@ class FoodConsoleUi {
     }
 
     private fun showWelcome() {
-        println("Welcome to Food Change Mood App")
+        print("Welcome to Food Change Mood\uD83E\uDD6A ")
     }
 
     private fun presentFeatures() {
@@ -51,11 +51,11 @@ class FoodConsoleUi {
     }
 
     private fun showOptions() {
-        println("\n\n ===Please enter one of the numbers listed below===\n")
-        println("1. Suggestion Meal")
-        println("2. Search Meal")
-        println("3. Game Meal")
-        println("4. View Meal")
+        println("\n\n===Please enter one of the numbers listed below===\n")
+        println("1. Suggestion Meal \uD83E\uDD14")
+        println("2. Search Meal \uD83D\uDD0E")
+        println("3. Game Meal \uD83C\uDFAE")
+        println("4. View Meal \uD83E\uDD63")
         println("0. Exit")
         print("\nhere: ")
     }
