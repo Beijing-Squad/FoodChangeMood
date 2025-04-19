@@ -101,6 +101,18 @@ class ManageMealsSearchUseCase(
             .toList()
     }
     // end search meal by country
+
+    //region iraqi meals
+    fun getIraqiMeals(): List<Meal> {
+        val allMeals = mealRepository.getAllMeals()
+
+        return allMeals.filter { meal ->
+            (meal.tags?.any { tag -> tag.equals("Iraqi", ignoreCase = true) } == true) ||
+                    meal.description?.contains("Iraq", ignoreCase = true) == true
+        }
+    }
+   //endregion
+
     companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
