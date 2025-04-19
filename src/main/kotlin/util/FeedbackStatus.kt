@@ -1,4 +1,4 @@
-package org.beijing.model
+package org.beijing.util
 
 enum class FeedbackStatus(val message: String) {
     NO_ATTEMPTS_LEFT("No Attempts Left, The Actual Preparation Time is: %d minutes."),
