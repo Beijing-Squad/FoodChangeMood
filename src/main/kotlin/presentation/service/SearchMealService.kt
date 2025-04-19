@@ -15,6 +15,7 @@ fun searchMealService() {
         2 -> launchSearchByName()
         3 -> launchMealsByDate()
         4 -> launchSearchByCountry()
+        5 -> launchIraqiMeals()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -27,6 +28,7 @@ fun showOptionsForSearchMealService() {
     println("2. Search by name of meal")
     println("3. Search By Date And See Meal Details")
     println("4. Explore Country Meals")
+    println("5. Iraqi Meals")
     println("0. Exit")
 }
 
@@ -294,3 +296,24 @@ fun launchSearchByCountry() {
     }
 }
 // end region search meal by country
+
+// region iraqi meals
+private fun launchIraqiMeals() {
+    val iraqiMeals = searchMeals.getIraqiMeals()
+    viewIraqiMeals(iraqiMeals)
+}
+
+private fun viewIraqiMeals(iraqiMeals: List<Meal>) {
+
+    if (iraqiMeals.isEmpty()) {
+        println("No Iraqi meals found in the dataset.")
+        return
+    }
+
+    println("\n===== Iraqi Meals =====")
+    println("Found ${iraqiMeals.size} Iraqi meals:")
+    iraqiMeals.forEachIndexed { index, meal ->
+        println("${index + 1}. ${meal.name}")
+    }
+}
+// endregion
