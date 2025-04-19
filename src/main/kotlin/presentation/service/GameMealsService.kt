@@ -1,16 +1,16 @@
 package org.beijing.presentation.service
 
 import model.GameRound
-import org.beijing.logic.usecases.ManageMealsGamesUseCases
+import org.beijing.logic.usecases.ManageMealsGamesUseCase
 import org.beijing.model.IngredientGameState
 import org.koin.mp.KoinPlatform.getKoin
 
 private var currentRound: GameRound? = null
-private val gamesMeals: ManageMealsGamesUseCases = getKoin().get()
+private val gamesMeals: ManageMealsGamesUseCase = getKoin().get()
 
 fun gameMealService() {
     while (true) {
-        showGameMealOptions()
+        showOptionsForGameMealService()
         when (val input = getUserInput()) {
             1 -> launchGuessGame()
             2 -> launchIngredientGame()
@@ -20,14 +20,14 @@ fun gameMealService() {
     }
 }
 
-fun showGameMealOptions() {
-    println("\n\n === Please enter one of the numbers listed below ===")
+fun showOptionsForGameMealService() {
+    println("\n\n=== Please enter one of the numbers listed below ===")
     println("1. Guess Preparation Time Game")
     println("2. Guess Ingredient Game")
     println("0. Exit")
 }
 
-private fun getUserInput(): Int? = readlnOrNull()?.toIntOrNull()
+private fun getUserInput(): Int? = readlnOrNull()?.trim()?.toIntOrNull()
 
 // region Guess Game Preparation Time
 private fun launchGuessGame() {
@@ -39,7 +39,7 @@ private fun launchGuessGame() {
 
     while (currentRound != null && currentRound?.isCompleted == false) {
         print("Your guess: ")
-        val guess = readlnOrNull()?.toIntOrNull()
+        val guess = readlnOrNull()?.trim()?.toIntOrNull()
 
         if (guess == null) {
             println("Please enter a valid number.")

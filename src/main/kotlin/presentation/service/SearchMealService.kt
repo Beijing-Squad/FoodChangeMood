@@ -1,12 +1,12 @@
 package org.beijing.presentation.service
 
 import kotlinx.datetime.LocalDate
-import org.beijing.logic.usecases.ManageMealsSearchUseCases
+import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 import org.koin.mp.KoinPlatform.getKoin
 
-private val searchMeals: ManageMealsSearchUseCases = getKoin().get()
+private val searchMeals: ManageMealsSearchUseCase = getKoin().get()
 fun searchMealService() {
     showOptionsForSearchMealService()
     print("\nhere: ")
@@ -14,7 +14,7 @@ fun searchMealService() {
         1 -> launchGymHelper()
         2 -> launchSearchByName()
         3 -> launchMealsByDate()
-        4 -> searchMealByCountryService()
+        4 -> launchSearchByCountry()
         0 -> return
         else -> println("Invalid input: $input")
     }
@@ -22,7 +22,7 @@ fun searchMealService() {
 }
 
 fun showOptionsForSearchMealService() {
-    println("\n\n ===Please enter one of the numbers listed below===\n")
+    println("\n\n===Please enter one of the numbers listed below===\n")
     println("1. Gym Helper")
     println("2. Search by name of meal")
     println("3. Search By Date And See Meal Details")
@@ -31,17 +31,17 @@ fun showOptionsForSearchMealService() {
 }
 
 private fun getUserInput(): Int? {
-    return readlnOrNull()?.toIntOrNull()
+    return readlnOrNull()?.trim()?.toIntOrNull()
 }
 
 // region search by name
 private fun launchSearchByName() {
-    val mealNameQuery = readMealNameFromInput()
+    val mealNameQuery = getMealNameFromInput()
     val searchResults = searchMeals.getSearchMealsByName(mealNameQuery)
     displaySearchResults(searchResults, mealNameQuery)
 }
 
-private fun readMealNameFromInput(): String {
+private fun getMealNameFromInput(): String {
     print("Enter meal name to search: ")
     val input = readlnOrNull()?.trim()
         ?: throw IllegalArgumentException("Meal name input cannot be null.")
@@ -68,7 +68,6 @@ private fun displaySearchResults(results: List<Meal>, query: String) {
 // region search by add date && see details by id feature (8)
 private fun launchMealsByDate() {
     val date = getDateInput()
-
     val meals = try {
         searchMeals.getMealsByDate(date)
     } catch (exception: Exception) {
@@ -133,41 +132,35 @@ private fun getIdInput(): Int {
     }
 }
 
-private fun viewMealDetails(meal: Meal) {
+fun viewMealDetails(meal: Meal) {
     println("╔════════════════════════════════════╗")
     println("║          🍽️ Meal Details           ║")
     println("╚════════════════════════════════════╝")
-
-    println("🟢 Name : ${meal.name}")
+    println("🍽 Name : ${meal.name}")
     println("⏱️ Preparation Time : ${meal.minutes} minutes")
-
     println("\n📊 Nutrition Facts:")
     displayNutrition(meal.nutrition)
-
     println()
     displaySteps(meal.steps)
-
     println("\n📄 Description:")
     if (meal.description.isNullOrBlank()) {
-        println("   No Description Available.")
+        println("  • No Description Available.")
     } else {
-        println("   ${meal.description}")
+        println("  • ${meal.description}")
     }
-
     println()
     displayIngredients(meal.ingredients)
-
     println("══════════════════════════════════════")
 }
 
 private fun displayNutrition(nutrition: Nutrition) {
-    println("   - Calories       : ${nutrition.calories} kcal")
-    println("   - Total Fat      : ${nutrition.totalFat} g")
-    println("   - Sugar          : ${nutrition.sugar} g")
-    println("   - Sodium         : ${nutrition.sodium} mg")
-    println("   - Protein        : ${nutrition.protein} g")
-    println("   - Saturated Fat  : ${nutrition.saturatedFat} g")
-    println("   - Carbohydrates  : ${nutrition.carbohydrates} g")
+    println("   • Calories       : ${nutrition.calories} kcal")
+    println("   • Total Fat      : ${nutrition.totalFat} g")
+    println("   • Sugar          : ${nutrition.sugar} g")
+    println("   • Sodium         : ${nutrition.sodium} mg")
+    println("   • Protein        : ${nutrition.protein} g")
+    println("   • Saturated Fat  : ${nutrition.saturatedFat} g")
+    println("   • Carbohydrates  : ${nutrition.carbohydrates} g")
 }
 
 private fun displaySteps(steps: List<String>) {
@@ -188,9 +181,9 @@ private fun displayIngredients(ingredients: List<String>) {
 // region gym helper
 private fun launchGymHelper() {
     print("enter target of Calories: ")
-    val targetCalories = readlnOrNull()?.toDoubleOrNull()
-    print("enter target of Protein: ")
-    val targetProtein = readlnOrNull()?.toDoubleOrNull()
+    val targetCalories = readlnOrNull()?.trim()?.toDoubleOrNull()
+    print("enter target of Protein:")
+    val targetProtein = readlnOrNull()?.trim()?.toDoubleOrNull()
     if (targetProtein != null && targetCalories != null) {
         checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
         val meals = searchMeals.getGymHelperMeals(
@@ -260,7 +253,7 @@ private fun searchAgainAboutGymHelper(meals: List<Meal>) {
 //endregion
 
 // region search meal by country
-fun searchMealByCountryService() {
+fun launchSearchByCountry() {
     println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
     println("------------------------------------------------------")
     println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")

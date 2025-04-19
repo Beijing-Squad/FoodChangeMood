@@ -6,14 +6,12 @@ import org.koin.mp.KoinPlatform.getKoin
 private val viewMeals: ManageMealsViewsUseCases = getKoin().get()
 
 fun viewMealsService() {
-
     showOptionsForViewMealsService()
     print("\nhere: \n")
     when (val input = getUserInput()) {
         1 -> launchHealthyQuickPreparedMeals()
         2 -> showSortedSeaFoodByProtein()
         0 -> return
-
         else -> println("Invalid input: $input")
     }
     viewMealsService()
@@ -21,9 +19,8 @@ fun viewMealsService() {
 
 fun showOptionsForViewMealsService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
-    println("1. Show Healthy Quick Prepared Meals") // add feature name here
+    println("1. Show Healthy Quick Prepared Meals")
     println("1. Show SeaFood Sorted By Protein Content")
-
     println("0. Exit")
 }
 
