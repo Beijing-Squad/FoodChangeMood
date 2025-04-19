@@ -1,13 +1,13 @@
 package org.beijing.presentation.service
 
-import org.beijing.logic.usecases.ManageMealsViewsUseCases
+import org.beijing.logic.usecases.ManageMealsViewUseCase
 import org.koin.mp.KoinPlatform.getKoin
 
-private val viewMeals: ManageMealsViewsUseCases = getKoin().get()
+private val viewMeals: ManageMealsViewUseCase = getKoin().get()
 
 fun viewMealsService() {
     showOptionsForViewMealsService()
-    print("\nhere: \n")
+    print("\nhere: ")
     when (val input = getUserInput()) {
         1 -> launchHealthyQuickPreparedMeals()
         2 -> showSortedSeaFoodByProtein()
@@ -20,7 +20,7 @@ fun viewMealsService() {
 fun showOptionsForViewMealsService() {
     println("\n\n ===Please enter one of the numbers listed below===\n")
     println("1. Show Healthy Quick Prepared Meals")
-    println("1. Show SeaFood Sorted By Protein Content")
+    println("2. Show SeaFood Sorted By Protein Content")
     println("0. Exit")
 }
 

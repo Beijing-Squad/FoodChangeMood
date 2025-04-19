@@ -5,8 +5,8 @@ import org.beijing.logic.MealRepository
 import org.beijing.model.IngredientGameRound
 import org.beijing.model.IngredientGameState
 import kotlin.random.Random
-import org.beijing.model.FeedbackStatus
-import org.beijing.model.GuessStatus
+import org.beijing.util.FeedbackStatus
+import org.beijing.util.GuessStatus
 
 class ManageMealsGamesUseCase(
     private val mealRepository: MealRepository,

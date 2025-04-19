@@ -4,7 +4,7 @@ import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
 import org.beijing.util.Constant
 
-class ManageMealsSuggestionsUseCases(
+class ManageMealsSuggestionsUseCase(
     private val mealRepository: MealRepository
 ) {
     //region sweets with no eggs
