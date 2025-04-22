@@ -81,14 +81,45 @@ private fun showMealsSearchResult(results: List<Meal>, query: String) {
 private fun launchMealsByDate() {
     val date = getDateInput()
     val mealsOnDate = try {
-        searchMeals.getMealsByDate(date)
+        getMealsOnDate(date)
     } catch (exception: Exception) {
         println(exception.message)
         return
     }
-
     viewMealsOnDate(mealsOnDate)
+    seeMealDetailsById(mealsOnDate)
+}
 
+private fun getDateInput(): LocalDate {
+    while (true) {
+        println("Please Enter The Date In Format YYYY-MM-DD")
+        print("Enter Date (YYYY-MM-DD): ")
+        val input = readln().trim()
+        try {
+            return LocalDate.parse(input)
+        } catch (e: Exception) {
+            println("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
+        }
+    }
+}
+
+private fun getMealsOnDate(date: LocalDate): List<Meal> {
+    try {
+        return searchMeals.getMealsByDate(date)
+    } catch (exception: Exception) {
+        throw exception
+    }
+}
+
+private fun viewMealsOnDate(meals: List<Meal>) {
+    println("=== Meals On [${meals[0].submitted}] ===")
+    meals.forEach { meal ->
+        println("- ID: ${meal.id}, Name: ${meal.name}")
+    }
+    println("========================================")
+}
+
+fun seeMealDetailsById(mealsOnDate: List<Meal>) {
     val wantsToSeeDetails = getSeeDetailsAnswer()
     if (wantsToSeeDetails) {
         val id = getIdInput()
@@ -107,27 +138,6 @@ private fun launchMealsByDate() {
     } else {
         println("Exiting...")
     }
-}
-
-private fun getDateInput(): LocalDate {
-    while (true) {
-        println("Please Enter The Date In Format YYYY-MM-DD")
-        print("Enter Date (YYYY-MM-DD): ")
-        val input = readln().trim()
-        try {
-            return LocalDate.parse(input)
-        } catch (e: Exception) {
-            println("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
-        }
-    }
-}
-
-private fun viewMealsOnDate(meals: List<Meal>) {
-    println("=== Meals On [${meals[0].submitted}] ===")
-    meals.forEach { meal ->
-        println("- ID: ${meal.id}, Name: ${meal.name}")
-    }
-    println("========================================")
 }
 
 private fun getSeeDetailsAnswer(): Boolean {
