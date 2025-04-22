@@ -9,13 +9,12 @@ import kotlin.random.Random
 class ManageMealsGamesUseCase(
     private val mealRepository: MealRepository,
 ) {
-    private val maxAttempts = 3
-    val meals = mealRepository.getAllMeals()
+    private val meals = mealRepository.getAllMeals()
 
     // region preparation time guess game
     fun startNewRound(): GameRound {
         if (meals.isEmpty()) {
-            throw IllegalArgumentException("No meals found in the repository")
+            throw IllegalArgumentException(NO_MEALS_IN_REPO)
         }
 
         val randomIndex = Random.nextInt(meals.size)
@@ -23,7 +22,7 @@ class ManageMealsGamesUseCase(
 
         return GameRound(
             meal = selectedMeal,
-            attemptsLeft = maxAttempts,
+            attemptsLeft = MAX_ATTEMPTS,
             isCompleted = false,
             lastFeedBack = null
         )
@@ -74,13 +73,13 @@ class ManageMealsGamesUseCase(
     // region ingredient game
     fun startIngredientGame(state: IngredientGameState): Result<Pair<IngredientGameRound, IngredientGameState>> {
 
-        if (isGameOver(state)) return Result.failure(Exception("Game Over"))
+        if (isGameOver(state)) return Result.failure(Exception(END_GAME))
 
         val availableMeals = meals.filter { it.id !in state.usedMeals && it.ingredients.isNotEmpty() }
         val meal = availableMeals.shuffled().firstOrNull()
-            ?: return Result.failure(Exception("No meals available 😔"))
+            ?: return Result.failure(Exception(NO_MEALS))
         val correct = meal.ingredients.randomOrNull()
-            ?: return Result.failure(Exception("No ingredients in meal 😔"))
+            ?: return Result.failure(Exception(NO_INGREDIENTS))
         val options = generateOptions(correct)
         val updatedState = state.copy(usedMeals = state.usedMeals + meal.id)
 
@@ -122,6 +121,11 @@ class ManageMealsGamesUseCase(
         private const val MAX_CORRECT_ANSWERS = 15
         private const val SCORE_INCREMENT = 1000
         private const val INCORRECT_OPTION_COUNT = 2
+        private const val MAX_ATTEMPTS = 3
+        private const val END_GAME = "Game Over"
+        private const val NO_MEALS = "No meals available 😔"
+        private const val NO_INGREDIENTS = "No ingredients in meal 😔"
+        private const val NO_MEALS_IN_REPO = "No meals found in the repository"
     }
     // endregion
 

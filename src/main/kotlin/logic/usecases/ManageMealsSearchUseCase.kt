@@ -35,8 +35,8 @@ class ManageMealsSearchUseCase(
     }
 
     private fun isMealWithinNutritionTargets(meal: Meal, targetCalories: Double, targetProtein: Double): Boolean {
-        return calculateNutrition(meal.nutrition.calories, targetCalories) <= MATCH_PERCENTAGE &&
-                calculateNutrition(meal.nutrition.protein, targetProtein) <= MATCH_PERCENTAGE
+        return calculateNutrition(meal.nutrition.caloriesKcal, targetCalories) <= MATCH_PERCENTAGE &&
+                calculateNutrition(meal.nutrition.proteinGrams, targetProtein) <= MATCH_PERCENTAGE
     }
 
     private fun calculateNutrition(currentNutrition: Double, targetNutrition: Double): Double {
@@ -55,14 +55,14 @@ class ManageMealsSearchUseCase(
 
     private fun validateSearchQuery(query: String) {
         if (query.isBlank()) {
-            throw IllegalArgumentException("Search query must not be blank.")
+            throw IllegalArgumentException(BLANK_SEARCH_EXCEPTION)
         }
     }
 
     private fun getAllMealsOrThrow(): List<Meal> {
         val meals = mealRepository.getAllMeals()
         if (meals.isEmpty()) {
-            throw IllegalStateException("No food data available to search.")
+            throw IllegalStateException(NO_FOOD_DATA)
         }
         return meals
     }
@@ -101,16 +101,19 @@ class ManageMealsSearchUseCase(
         val allMeals = mealRepository.getAllMeals()
 
         return allMeals.filter { meal ->
-            (meal.tags?.any { tag -> tag.equals("Iraqi", ignoreCase = true) } == true) ||
-                    meal.description?.contains("Iraq", ignoreCase = true) == true
+            (meal.tags?.any { tag -> tag.equals(IRAQI, ignoreCase = true) } == true) ||
+                    meal.description?.contains(IRAQI, ignoreCase = true) == true
         }
     }
     //endregion
 
-    companion object {
+    private companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
+        const val IRAQI = "Iraqi"
         const val ERROR_MESSAGE = "\nPlease ensure that both Calories " +
                 "and Protein inputs are positive values."
+        const val BLANK_SEARCH_EXCEPTION = "Search query must not be blank."
+        const val NO_FOOD_DATA = "No food data available to search."
     }
 }
