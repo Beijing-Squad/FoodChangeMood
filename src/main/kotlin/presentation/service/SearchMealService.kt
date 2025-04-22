@@ -10,14 +10,14 @@ private val searchMeals: ManageMealsSearchUseCase = getKoin().get()
 fun searchMealService() {
     showOptionsForSearchMealService()
     print("\nhere: ")
-    when (val input = getUserInput()) {
+    when (getUserInput()) {
         1 -> launchGymHelper()
         2 -> launchSearchByName()
         3 -> launchMealsByDate()
         4 -> launchSearchByCountry()
         5 -> launchIraqiMeals()
         0 -> return
-        else -> println("Invalid input: $input")
+        else -> println("❌ Invalid input! Please enter a number between 0 and 5")
     }
     searchMealService()
 }

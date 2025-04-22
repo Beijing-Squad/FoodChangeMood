@@ -8,7 +8,7 @@ private val suggestionMeals: ManageMealsSuggestionsUseCase = getKoin().get()
 fun suggestionMealService() {
     showOptionsForSuggestionMealService()
     print("\nhere: ")
-    when (val input = getUserInput()) {
+    when (getUserInput()) {
         1 -> launchKetoMealHelper()
         2 -> launchSweetWithoutEggs()
         3 -> launchEasyMeals()
@@ -16,7 +16,7 @@ fun suggestionMealService() {
         5 -> launchTenRandomPotatoMeals()
         6 -> launchSoThinMeals()
         0 -> return
-        else -> println("Invalid input: $input")
+        else -> println("❌ Invalid input! Please enter a number between 0 and 6")
     }
     suggestionMealService()
 }

@@ -20,16 +20,14 @@ class FoodConsoleUi {
 
     private fun presentFeatures() {
         showOptions()
-        when (val input = getUserInput()) {
+        when (getUserInput()) {
             1 -> onSuggestionMealClick()
             2 -> onSearchMealClick()
             3 -> onGameMealClick()
             4 -> onViewMealClick()
             0 -> return
-
             else -> {
-                println("Invalid input: $input")
-            }
+                println("❌ Invalid input! Please enter a number between 0 and 4")            }
         }
         presentFeatures()
     }

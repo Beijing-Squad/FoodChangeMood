@@ -11,11 +11,11 @@ private val gamesMeals: ManageMealsGamesUseCase = getKoin().get()
 fun gameMealService() {
     while (true) {
         showOptionsForGameMealService()
-        when (val input = getUserInput()) {
+        when (getUserInput()) {
             1 -> launchGuessGame()
             2 -> launchIngredientGame()
             0 -> return
-            else -> println("Invalid input: $input")
+            else -> println("❌ Invalid input! Please enter a number between 0 and 2")
         }
     }
 }
