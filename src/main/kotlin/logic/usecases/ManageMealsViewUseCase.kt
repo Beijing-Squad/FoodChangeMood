@@ -22,9 +22,9 @@ class ManageMealsViewUseCase(
     }
 
     private fun isMealHealthy(meal: Meal, fatAvg: Double, saturatedFatAvg: Double, carbsAvg: Double): Boolean {
-        return meal.nutrition.totalFat < fatAvg &&
-                meal.nutrition.saturatedFat < saturatedFatAvg &&
-                meal.nutrition.carbohydrates < carbsAvg
+        return meal.nutrition.totalFatGrams < fatAvg &&
+                meal.nutrition.saturatedFatGrams < saturatedFatAvg &&
+                meal.nutrition.carbohydratesGrams < carbsAvg
     }
 
     private fun calculateAverage(values: List<Double>): Double {
@@ -33,9 +33,9 @@ class ManageMealsViewUseCase(
 
     private fun calculateNutritionAverages(meals: List<Meal>): Triple<Double, Double, Double> {
         return Triple(
-            calculateAverage(meals.map { it.nutrition.totalFat }),
-            calculateAverage(meals.map { it.nutrition.saturatedFat }),
-            calculateAverage(meals.map { it.nutrition.carbohydrates })
+            calculateAverage(meals.map { it.nutrition.totalFatGrams }),
+            calculateAverage(meals.map { it.nutrition.saturatedFatGrams }),
+            calculateAverage(meals.map { it.nutrition.carbohydratesGrams })
         )
     }
     //endregion
@@ -45,7 +45,7 @@ class ManageMealsViewUseCase(
     fun getSortedSeaFoodByProtein(): List<Meal> {
         val sortedSeaFood = mealRepository.getAllMeals()
             .filter { it.tags.contains("seafood") }
-            .sortedByDescending { it.nutrition.protein }
+            .sortedByDescending { it.nutrition.proteinGrams }
         return sortedSeaFood
     }
     //endregion

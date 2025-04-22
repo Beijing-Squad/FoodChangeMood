@@ -107,7 +107,7 @@ fun launchSweetWithoutEggs() {
         println("Description: ${sweet.description ?: "No description"}")
         print("Do you like it? (yes to view details / no to see another / exit): ")
 
-        when (readlnOrNull()?.lowercase()) {
+        when (readlnOrNull()?.lowercase()?.trim()) {
             "yes" -> {
                 viewMealDetails(sweet)
                 break
@@ -197,13 +197,13 @@ private fun showMealDetails(meal: Meal) {
     println("Meal ID: ${meal.id}")
     println("Meal Name: ${meal.name}")
     println("Meal Desc: ${meal.description ?: "No Description"}")
-    println("Meal Protein: ${meal.nutrition.protein}")
-    println("Meal Sodium: ${meal.nutrition.sodium}")
-    println("Meal Sugar: ${meal.nutrition.sugar}")
-    println("Meal Calories: ${meal.nutrition.calories}")
-    println("Meal TotalFat: ${meal.nutrition.totalFat}")
-    println("Meal Carbohydrates: ${meal.nutrition.carbohydrates}")
-    println("Meal Saturated: ${meal.nutrition.saturatedFat}")
+    println("Meal Protein: ${meal.nutrition.proteinGrams}")
+    println("Meal Sodium: ${meal.nutrition.sodiumGrams}")
+    println("Meal Sugar: ${meal.nutrition.sugarGrams}")
+    println("Meal Calories: ${meal.nutrition.caloriesKcal}")
+    println("Meal TotalFat: ${meal.nutrition.totalFatGrams}")
+    println("Meal Carbohydrates: ${meal.nutrition.carbohydratesGrams}")
+    println("Meal Saturated: ${meal.nutrition.saturatedFatGrams}")
     println("Meal Tags: ${meal.tags}")
     println("Meal ContributorId: ${meal.contributorId}")
     println("Meal Ingredients:")
