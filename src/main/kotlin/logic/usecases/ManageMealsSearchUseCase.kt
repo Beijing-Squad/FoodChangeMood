@@ -93,8 +93,6 @@ class ManageMealsSearchUseCase(
     }
     // endregion search meal by country
 
-    // end search meal by country
-
     //region iraqi meals
     fun getIraqiMeals(): List<Meal> {
         val allMeals = mealRepository.getAllMeals()
@@ -109,7 +107,5 @@ class ManageMealsSearchUseCase(
     companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
-        const val ERROR_MESSAGE = "\nPlease ensure that both Calories " +
-                "and Protein inputs are positive values."
     }
 }
