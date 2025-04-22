@@ -6,21 +6,19 @@ import org.beijing.model.Meal
 class ManageMealsSuggestionsUseCase(
     private val mealRepository: MealRepository
 ) {
+    private val seen = mutableSetOf<Int>()
 
     //region suggest sweets with no eggs
     fun suggestSweetsWithNoEggs(): Meal? {
         val meals = mealRepository.getAllMeals()
-        val seen = mutableSetOf<Int>()
-        val sweetsWithoutEggs = meals
             .filter { meal ->
-                meal.tags.any { it.contains("sweet", ignoreCase = true) }
+                meal.tags.any { it.contains(SWEET, ignoreCase = true) }
             }
             .filterNot { meal ->
-                meal.ingredients.any { it.contains("egg", ignoreCase = true) }
+                meal.ingredients.any { it.contains(EGG, ignoreCase = true) }
             }
             .filterNot { seen.contains(it.id) }
-
-        val nextMeal = sweetsWithoutEggs.firstOrNull()
+        val nextMeal = meals.firstOrNull()
         nextMeal?.let { seen.add(it.id) }
 
         return nextMeal
@@ -31,7 +29,7 @@ class ManageMealsSuggestionsUseCase(
     fun suggestTenRandomMealsContainsPotato(): List<Meal> {
         return mealRepository.getAllMeals().asSequence().filter { meal ->
             meal.ingredients.any { ingredient ->
-                ingredient.contains("Potato", true)
+                ingredient.contains(POTATO, true)
             }
         }.shuffled().take(10).toList()
     }
@@ -41,8 +39,8 @@ class ManageMealsSuggestionsUseCase(
     fun suggestItalianLargeGroupsMeals(): List<Meal> {
         return mealRepository.getAllMeals()
             .filter {
-                "for-large-groups" in it.tags.map(String::lowercase) &&
-                        "italian" in it.tags.map(String::lowercase)
+                FOR_LARGE_GROUP in it.tags.map(String::lowercase) &&
+                        ITALIAN in it.tags.map(String::lowercase)
             }
     }//endregion
 
@@ -53,8 +51,8 @@ class ManageMealsSuggestionsUseCase(
         return meals
             .asSequence()
             .filter { meal ->
-                meal.nutrition.carbohydrates < maxCarbs &&
-                        meal.nutrition.totalFat > meal.nutrition.protein
+                meal.nutrition.carbohydratesGrams < maxCarbs &&
+                        meal.nutrition.totalFatGrams > meal.nutrition.proteinGrams
             }
             .filterNot { it.id in usedMealIds }
             .shuffled()
@@ -81,16 +79,21 @@ class ManageMealsSuggestionsUseCase(
     }
 
     fun checkMealCaloriesContent(meal: Meal): Boolean {
-        return meal.nutrition.calories >= CALORIES_CONTENT_NEEDED
+        return meal.nutrition.caloriesKcal >= CALORIES_CONTENT_NEEDED
     }
     //endregion
 
     private companion object {
         const val CALORIES_CONTENT_NEEDED = 700
-        const val N_STEP : Int = 6
-        const val N_INGREDIENTS : Int =5
-        const val MINUTES : Int =30
-        const val N_EASY_MEAL =10
+        const val N_STEP = 6
+        const val N_INGREDIENTS = 5
+        const val MINUTES = 30
+        const val N_EASY_MEAL = 10
+        const val SWEET = "sweet"
+        const val EGG = "egg"
+        const val POTATO = "potato"
+        const val FOR_LARGE_GROUP = "for-large-groups"
+        const val ITALIAN = "italian"
 
     }
 }
