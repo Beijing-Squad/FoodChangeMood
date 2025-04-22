@@ -38,24 +38,34 @@ private fun getUserInput(): Int? {
 
 // region search by name
 private fun launchSearchByName() {
-    val mealNameQuery = getMealNameFromInput()
-    val searchResults = searchMeals.getMealByName(mealNameQuery)
-    displaySearchResults(searchResults, mealNameQuery)
+    try {
+        val mealNameQuery = getMealNameFromInput()
+        val searchResults = searchMeals.getMealByName(mealNameQuery)
+        showMealsSearchResult(searchResults, mealNameQuery)
+    } catch (e: IllegalArgumentException) {
+        println("❌ ${e.message}")
+        searchMealService()
+    }
 }
 
 private fun getMealNameFromInput(): String {
     print("Enter meal name to search: ")
-    val input = readlnOrNull()?.trim()
+    val userInput = readlnOrNull()?.trim()
         ?: throw IllegalArgumentException("Meal name input cannot be null.")
 
-    if (input.isEmpty()) {
+    if (userInput.isEmpty()) {
         throw IllegalArgumentException("Meal name input cannot be empty.")
     }
 
-    return input
+    val isOnlyLettersAndSpaces = userInput.matches(Regex("^[A-Za-z ]+$"))
+    if (!isOnlyLettersAndSpaces) {
+        throw IllegalArgumentException("Meal name must contain only letters and spaces.")
+    }
+
+    return userInput
 }
 
-private fun displaySearchResults(results: List<Meal>, query: String) {
+private fun showMealsSearchResult(results: List<Meal>, query: String) {
     if (results.isEmpty()) {
         println("No meals found matching \"$query\".")
     } else {
