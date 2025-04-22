@@ -2,22 +2,22 @@ package org.beijing.logic.usecases.utils
 
 object KmpSearch {
 
-    fun containsPattern(text: String, pattern: String): Boolean {
-        if (pattern.isEmpty()) return true
+    fun containsPattern(searchedFullText: String, searchedPattern: String): Boolean {
+        if (searchedPattern.isEmpty()) return true
 
-        val longestPrefixSuffix = computeLpsArray(pattern)
+        val longestPrefixSuffix = computeLpsArray(searchedPattern)
         var textIndex = 0
         var patternIndex = 0
 
-        while (textIndex < text.length) {
-            if (pattern[patternIndex] == text[textIndex]) {
+        while (textIndex < searchedFullText.length) {
+            if (searchedPattern[patternIndex] == searchedFullText[textIndex]) {
                 textIndex++
                 patternIndex++
             }
 
-            if (patternIndex == pattern.length) {
+            if (patternIndex == searchedPattern.length) {
                 return true
-            } else if (textIndex < text.length && pattern[patternIndex] != text[textIndex]) {
+            } else if (textIndex < searchedFullText.length && searchedPattern[patternIndex] != searchedFullText[textIndex]) {
                 if (patternIndex != 0) {
                     // Use LPS array to avoid redundant comparisons
                     patternIndex = longestPrefixSuffix[patternIndex - 1]
