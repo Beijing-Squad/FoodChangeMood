@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
+import org.beijing.presentation.utils.MealServiceError
 import org.koin.mp.KoinPlatform.getKoin
 
 private val searchMeals: ManageMealsSearchUseCase = getKoin().get()
@@ -43,7 +44,7 @@ private fun launchSearchByName() {
         val searchResults = searchMeals.getMealByName(mealNameQuery)
         showMealsSearchResult(searchResults, mealNameQuery)
     } catch (e: IllegalArgumentException) {
-        println("❌ ${e.message}")
+        println(e.message)
         searchMealService()
     }
 }
@@ -51,15 +52,15 @@ private fun launchSearchByName() {
 private fun getMealNameFromInput(): String {
     print("Enter meal name to search: ")
     val userInput = readlnOrNull()?.trim()
-        ?: throw IllegalArgumentException("Meal name input cannot be null.")
+        ?: throw IllegalArgumentException(MealServiceError.NULL_MEAL_NAME_INPUT.message)
 
     if (userInput.isEmpty()) {
-        throw IllegalArgumentException("Meal name input cannot be empty.")
+        throw IllegalArgumentException(MealServiceError.EMPTY_MEAL_NAME_INPUT.message)
     }
 
     val isOnlyLettersAndSpaces = userInput.matches(Regex("^[A-Za-z ]+$"))
     if (!isOnlyLettersAndSpaces) {
-        throw IllegalArgumentException("Meal name must contain only letters and spaces.")
+        throw IllegalArgumentException(MealServiceError.INVALID_MEAL_NAME.message)
     }
 
     return userInput
@@ -112,7 +113,7 @@ private fun getDateInput(): LocalDate {
         try {
             return LocalDate.parse(input)
         } catch (e: Exception) {
-            println("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
+            println(MealServiceError.INVALID_DATE_FORMAT.message)
         }
     }
 }
@@ -139,7 +140,7 @@ private fun getIdInput(): Int {
         try {
             return input.toInt()
         } catch (e: Exception) {
-            println("Invalid ID Format, Please Use A Number.")
+            println(MealServiceError.INVALID_ID_FORMAT.message)
         }
     }
 }
@@ -207,10 +208,8 @@ private fun launchGymHelper() {
 }
 
 private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
-    if (targetCalories <= 0 || targetProtein <= 0) throw Exception(
-        "\nPlease ensure that both Calories " +
-                "and Protein inputs are positive values."
-    )
+    if (targetCalories <= 0 || targetProtein <= 0)
+        throw Exception(MealServiceError.INVALID_TARGETS.message)
 }
 
 private fun showGymHelperResult(meals: List<Meal>) {
