@@ -21,11 +21,11 @@ class ManageMealsSuggestionsUseCase(
 
     //region suggest ten random meals contains potato in ingredients
     fun suggestTenRandomMealsContainsPotato(): List<Meal> {
-        return mealRepository.getAllMeals().asSequence().filter { meal ->
+        return mealRepository.getAllMeals().filter { meal ->
             meal.ingredients.any { ingredient ->
                 ingredient.contains(POTATO, true)
             }
-        }.shuffled().take(10).toList()
+        }.shuffled().take(MEALS_SUGGESTION_TEN_LIMIT).toList()
     }
     //endregion
 
@@ -83,6 +83,7 @@ class ManageMealsSuggestionsUseCase(
         const val N_INGREDIENTS = 5
         const val MINUTES = 30
         const val N_EASY_MEAL = 10
+        const val MEALS_SUGGESTION_TEN_LIMIT = 10
         const val SWEET = "sweet"
         const val EGG = "egg"
         const val POTATO = "potato"
