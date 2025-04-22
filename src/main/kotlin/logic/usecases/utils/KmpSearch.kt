@@ -1,11 +1,11 @@
 package org.beijing.logic.usecases.utils
 
-object KmpSubstringSearch {
+object KmpSearch {
 
-    fun doesTextContainPattern(text: String, pattern: String): Boolean {
+    fun containsPattern(text: String, pattern: String): Boolean {
         if (pattern.isEmpty()) return true
 
-        val longestPrefixSuffix = buildLpsArray(pattern)
+        val longestPrefixSuffix = computeLpsArray(pattern)
         var textIndex = 0
         var patternIndex = 0
 
@@ -30,7 +30,7 @@ object KmpSubstringSearch {
         return false
     }
 
-    private fun buildLpsArray(pattern: String): IntArray {
+    private fun computeLpsArray(pattern: String): IntArray {
         val lps = IntArray(pattern.length)
         var length = 0
         var i = 1

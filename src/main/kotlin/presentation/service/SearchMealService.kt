@@ -38,24 +38,34 @@ private fun getUserInput(): Int? {
 
 // region search by name
 private fun launchSearchByName() {
-    val mealNameQuery = getMealNameFromInput()
-    val searchResults = searchMeals.getMealByName(mealNameQuery)
-    displaySearchResults(searchResults, mealNameQuery)
+    try {
+        val mealNameQuery = getMealNameFromInput()
+        val searchResults = searchMeals.getMealByName(mealNameQuery)
+        showMealsSearchResult(searchResults, mealNameQuery)
+    } catch (e: IllegalArgumentException) {
+        println("❌ ${e.message}")
+        searchMealService()
+    }
 }
 
 private fun getMealNameFromInput(): String {
     print("Enter meal name to search: ")
-    val input = readlnOrNull()?.trim()
+    val userInput = readlnOrNull()?.trim()
         ?: throw IllegalArgumentException("Meal name input cannot be null.")
 
-    if (input.isEmpty()) {
+    if (userInput.isEmpty()) {
         throw IllegalArgumentException("Meal name input cannot be empty.")
     }
 
-    return input
+    val isOnlyLettersAndSpaces = userInput.matches(Regex("^[A-Za-z ]+$"))
+    if (!isOnlyLettersAndSpaces) {
+        throw IllegalArgumentException("Meal name must contain only letters and spaces.")
+    }
+
+    return userInput
 }
 
-private fun displaySearchResults(results: List<Meal>, query: String) {
+private fun showMealsSearchResult(results: List<Meal>, query: String) {
     if (results.isEmpty()) {
         println("No meals found matching \"$query\".")
     } else {
@@ -162,13 +172,13 @@ fun viewMealDetails(meal: Meal) {
 }
 
 private fun displayNutrition(nutrition: Nutrition) {
-    println("   • Calories       : ${nutrition.calories} kcal")
-    println("   • Total Fat      : ${nutrition.totalFat} g")
-    println("   • Sugar          : ${nutrition.sugar} g")
-    println("   • Sodium         : ${nutrition.sodium} mg")
-    println("   • Protein        : ${nutrition.protein} g")
-    println("   • Saturated Fat  : ${nutrition.saturatedFat} g")
-    println("   • Carbohydrates  : ${nutrition.carbohydrates} g")
+    println("   • Calories       : ${nutrition.caloriesKcal} kcal")
+    println("   • Total Fat      : ${nutrition.totalFatGrams} g")
+    println("   • Sugar          : ${nutrition.sugarGrams} g")
+    println("   • Sodium         : ${nutrition.sodiumGrams} mg")
+    println("   • Protein        : ${nutrition.proteinGrams} g")
+    println("   • Saturated Fat  : ${nutrition.saturatedFatGrams} g")
+    println("   • Carbohydrates  : ${nutrition.carbohydratesGrams} g")
 }
 
 private fun displaySteps(steps: List<String>) {
@@ -223,8 +233,8 @@ private fun showGymHelperResult(meals: List<Meal>) {
 
         println("\n🥗 Nutrition Info:")
         with(currentMeal.nutrition) {
-            println("\t⚡ Calories: $calories kcal")
-            println("\t💪 Protein: $protein g")
+            println("\t⚡ Calories: $caloriesKcal kcal")
+            println("\t💪 Protein: $proteinGrams g")
         }
 
         println("\n🛒 Ingredients:")
