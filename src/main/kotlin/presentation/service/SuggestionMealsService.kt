@@ -9,13 +9,13 @@ fun suggestionMealService() {
     showOptionsForSuggestionMealService()
     print("\nhere: ")
     when (getUserInput()) {
-        1 -> launchKetoMealHelper()
-        2 -> launchSweetWithoutEggs()
-        3 -> launchEasyMeals()
-        4 -> launchItalianLargeGroupMeals()
-        5 -> launchTenRandomPotatoMeals()
-        6 -> launchSoThinMeals()
-        0 -> return
+        "1" -> launchKetoMealHelper()
+        "2" -> launchSweetWithoutEggs()
+        "3" -> launchEasyMeals()
+        "4" -> launchItalianLargeGroupMeals()
+        "5" -> launchTenRandomPotatoMeals()
+        "6" -> launchSoThinMeals()
+        "0" -> return
         else -> println("❌ Invalid input! Please enter a number between 0 and 6")
     }
     suggestionMealService()
@@ -32,8 +32,8 @@ fun showOptionsForSuggestionMealService() {
     println("0. Exit")
 }
 
-private fun getUserInput(): Int? {
-    return readlnOrNull()?.trim()?.toIntOrNull()
+private fun getUserInput(): String? {
+    return readlnOrNull()?.trim()
 }
 
 // region Keto Diet
@@ -114,7 +114,7 @@ fun launchSweetWithoutEggs() {
         when (readlnOrNull()?.lowercase()) {
             "yes" -> {
                 //this function is not working properly, need to fix it later.
-//                viewMealDetails(sweet)
+               //viewMealDetails(sweet)
                 break
             }
 

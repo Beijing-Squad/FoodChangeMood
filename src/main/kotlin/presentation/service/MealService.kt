@@ -10,7 +10,7 @@ abstract class MealService {
 
     abstract fun handleUserChoice()
 
-    protected fun getUserInput(): Int? {
-        return readlnOrNull()?.trim()?.toIntOrNull()
+    protected fun getUserInput(): String? {
+        return readlnOrNull()?.trim()
     }
 }

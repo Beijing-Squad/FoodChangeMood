@@ -21,9 +21,9 @@ class ViewMealsService : MealService() {
     override fun handleUserChoice() {
         print("\nhere: ")
         when (getUserInput()) {
-            1 -> launchHealthyQuickPreparedMeals()
-            2 -> showSortedSeaFoodByProtein()
-            0 -> return
+            "1" -> launchHealthyQuickPreparedMeals()
+            "2" -> showSortedSeaFoodByProtein()
+            "0" -> return
             else -> println("❌ Invalid input! Please enter a number between 0 and 2")
         }
     }

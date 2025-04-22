@@ -5,7 +5,8 @@ import org.beijing.presentation.service.*
 
 class FoodConsoleUi(
     private val searchMealService: SearchMealService,
-    private val viewMealsService: ViewMealsService
+    private val viewMealsService: ViewMealsService,
+    private val gameMealsService: GameMealsService
 ) : FoodUi {
     override fun start() {
         showWelcome()
@@ -26,7 +27,7 @@ class FoodConsoleUi(
         when (getUserInput()) {
             1 -> suggestionMealService()
             2 -> searchMealService.showService()
-            3 -> gameMealService()
+            3 -> gameMealsService.showService()
             4 -> viewMealsService.showService()
             0 -> return
             else -> {
