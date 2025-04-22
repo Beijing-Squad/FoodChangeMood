@@ -1,7 +1,6 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.ManageMealsViewUseCase
-import org.beijing.presentation.FoodUi
 import org.koin.mp.KoinPlatform.getKoin
 
 class ViewMealsService : MealService() {

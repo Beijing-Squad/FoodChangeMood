@@ -53,15 +53,19 @@ private fun launchKetoMealHelper() {
         print("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
         when (readlnOrNull()?.trim()?.lowercase()) {
             "yes" -> {
-                viewMealDetails(meal)
+                //this function is not working properly, need to fix it later.
+//              viewMealDetails(meal)
             }
+
             "no" -> {
                 println("🔄 Okay! Let's try another one.")
                 continue
             }
+
             "exit" -> {
                 break
             }
+
             else -> {
                 println("⚠️ Please type 'yes' or 'no'")
             }
@@ -109,7 +113,8 @@ fun launchSweetWithoutEggs() {
 
         when (readlnOrNull()?.lowercase()) {
             "yes" -> {
-                viewMealDetails(sweet)
+                //this function is not working properly, need to fix it later.
+//                viewMealDetails(sweet)
                 break
             }
 
