@@ -26,31 +26,29 @@ object KmpSearch {
                 }
             }
         }
-
         return false
     }
 
-    private fun computeLpsArray(pattern: String): IntArray {
-        val lps = IntArray(pattern.length)
-        var length = 0
-        var i = 1
+    private fun computeLpsArray(wordToSearchBy: String): IntArray {
+        val lps = IntArray(wordToSearchBy.length)
+        var prefixLength = 0
+        var currentIndex = 1
 
-        while (i < pattern.length) {
-            if (pattern[i] == pattern[length]) {
-                length++
-                lps[i] = length
-                i++
+        while (currentIndex < wordToSearchBy.length) {
+            if (wordToSearchBy[currentIndex] == wordToSearchBy[prefixLength]) {
+                prefixLength++
+                lps[currentIndex] = prefixLength
+                currentIndex++
             } else {
-                if (length != 0) {
+                if (prefixLength != 0) {
                     // Fall back to previous LPS value
-                    length = lps[length - 1]
+                    prefixLength = lps[prefixLength - 1]
                 } else {
-                    lps[i] = 0
-                    i++
+                    lps[currentIndex] = 0
+                    currentIndex++
                 }
             }
         }
-
         return lps
     }
 }
