@@ -18,11 +18,11 @@ class ManageMealsSearchUseCase(
     }
     // endregion
 
-    fun getMealByDateAndId(date: LocalDate, id: Int): Meal {
-        val meal = mealRepository.getAllMeals()
-            .find { it.submitted == date && it.id == id }
-
-        return meal ?: throw Exception("❌ No Meal Found With ID [$id] On The Date $date.")
+    // region search meal by id
+    fun getMealById(id: Int): Meal {
+        return mealRepository.getAllMeals()
+            .find { it.id == id }
+            ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
     }
     // endregion
 
