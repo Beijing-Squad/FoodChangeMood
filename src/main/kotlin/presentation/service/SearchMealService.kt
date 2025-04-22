@@ -156,13 +156,13 @@ fun viewMealDetails(meal: Meal) {
 }
 
 private fun displayNutrition(nutrition: Nutrition) {
-    println("   • Calories       : ${nutrition.calories} kcal")
-    println("   • Total Fat      : ${nutrition.totalFat} g")
-    println("   • Sugar          : ${nutrition.sugar} g")
-    println("   • Sodium         : ${nutrition.sodium} mg")
-    println("   • Protein        : ${nutrition.protein} g")
-    println("   • Saturated Fat  : ${nutrition.saturatedFat} g")
-    println("   • Carbohydrates  : ${nutrition.carbohydrates} g")
+    println("   • Calories       : ${nutrition.caloriesKcal} kcal")
+    println("   • Total Fat      : ${nutrition.totalFatGrams} g")
+    println("   • Sugar          : ${nutrition.sugarGrams} g")
+    println("   • Sodium         : ${nutrition.sodiumGrams} mg")
+    println("   • Protein        : ${nutrition.proteinGrams} g")
+    println("   • Saturated Fat  : ${nutrition.saturatedFatGrams} g")
+    println("   • Carbohydrates  : ${nutrition.carbohydratesGrams} g")
 }
 
 private fun displaySteps(steps: List<String>) {
@@ -217,8 +217,8 @@ private fun showGymHelperResult(meals: List<Meal>) {
 
         println("\n🥗 Nutrition Info:")
         with(currentMeal.nutrition) {
-            println("\t⚡ Calories: $calories kcal")
-            println("\t💪 Protein: $protein g")
+            println("\t⚡ Calories: $caloriesKcal kcal")
+            println("\t💪 Protein: $proteinGrams g")
         }
 
         println("\n🛒 Ingredients:")
