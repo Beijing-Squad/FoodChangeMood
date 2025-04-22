@@ -10,14 +10,13 @@ class ManageMealsSearchUseCase(
     private val mealRepository: MealRepository
 ) {
 
-    // region search meal by date then see meal details by id
-    fun getMealsByDate(date: LocalDate): List<Pair<Int, String>> {
-        val mealsOnDate = mealRepository.getAllMeals()
+    // region search meal by date
+    fun getMealsByDate(date: LocalDate): List<Meal> {
+        return mealRepository.getAllMeals()
             .filter { it.submitted == date }
-            .map { it.id to it.name }
-
-        return mealsOnDate.ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
+            .ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
+    // endregion
 
     fun getMealByDateAndId(date: LocalDate, id: Int): Meal {
         val meal = mealRepository.getAllMeals()
