@@ -55,13 +55,16 @@ private fun launchKetoMealHelper() {
             "yes" -> {
                 viewMealDetails(meal)
             }
+
             "no" -> {
                 println("🔄 Okay! Let's try another one.")
                 continue
             }
+
             "exit" -> {
                 break
             }
+
             else -> {
                 println("⚠️ Please type 'yes' or 'no'")
             }
@@ -154,26 +157,20 @@ fun launchEasyMeals() {
 
 // region Suggest Meal With more than 700 calories
 fun launchSoThinMeals() {
-    val suggestedMeals = mutableListOf<Meal>()
-    var meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
-    var choice: String?
-
+    val suggestedMeals = mutableSetOf<Meal>()
     while (true) {
 
-        if (suggestedMeals.contains(meal)) {
-            meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
-        }
-        suggestedMeals.add(meal)
+        val meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
+        if (!suggestedMeals.add(meal)) continue
         showMeal(meal)
-
         println("Do You Like This Meal?")
         print("write 'yes' to get details or 'no' to get another meal Or 'exit':")
         print("\nhere: ")
-        choice = readlnOrNull()?.trim()?.lowercase()
-        when (choice) {
+
+        when (readlnOrNull()?.trim()?.lowercase()) {
             "yes" -> {
                 showMealDetails(meal)
-                break
+                return
             }
 
             "no" -> continue
