@@ -3,12 +3,12 @@ package org.beijing.presentation.service
 import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.model.Meal
-import org.beijing.model.Nutrition
+import org.beijing.presentation.ViewMealDetails
 import org.koin.mp.KoinPlatform.getKoin
-import kotlin.io.println
 
-class SearchMealService : MealService() {
+class SearchMealService() : MealService() {
     private val searchMeals: ManageMealsSearchUseCase = getKoin().get()
+    private val viewMealDetails: ViewMealDetails = getKoin().get()
 
     override fun showOptionService() {
         println("\n\n===Please enter one of the numbers listed below===\n")
@@ -33,45 +33,45 @@ class SearchMealService : MealService() {
         }
     }
 
-// region search by name
-private fun launchSearchByName() {
-    try {
-        val mealNameQuery = getMealNameFromInput()
-        val searchResults = searchMeals.getMealByName(mealNameQuery)
-        showMealsSearchResult(searchResults, mealNameQuery)
-    } catch (e: IllegalArgumentException) {
-        println("❌ ${e.message}")
-        showService()
-    }
-}
-
-private fun getMealNameFromInput(): String {
-    print("Enter meal name to search: ")
-    val userInput = readlnOrNull()?.trim()
-        ?: throw IllegalArgumentException("Meal name input cannot be null.")
-
-    if (userInput.isEmpty()) {
-        throw IllegalArgumentException("Meal name input cannot be empty.")
-    }
-
-    val isOnlyLettersAndSpaces = userInput.matches(Regex("^[A-Za-z ]+$"))
-    if (!isOnlyLettersAndSpaces) {
-        throw IllegalArgumentException("Meal name must contain only letters and spaces.")
-    }
-
-    return userInput
-}
-
-private fun showMealsSearchResult(results: List<Meal>, query: String) {
-    if (results.isEmpty()) {
-        println("No meals found matching \"$query\".")
-    } else {
-        println("Meals found:")
-        results.forEach { meal ->
-            println(meal.name)
+    // region search by name
+    private fun launchSearchByName() {
+        try {
+            val mealNameQuery = getMealNameFromInput()
+            val searchResults = searchMeals.getMealByName(mealNameQuery)
+            showMealsSearchResult(searchResults, mealNameQuery)
+        } catch (e: IllegalArgumentException) {
+            println("❌ ${e.message}")
+            showService()
         }
     }
-}
+
+    private fun getMealNameFromInput(): String {
+        print("Enter meal name to search: ")
+        val userInput = readlnOrNull()?.trim()
+            ?: throw IllegalArgumentException("Meal name input cannot be null.")
+
+        if (userInput.isEmpty()) {
+            throw IllegalArgumentException("Meal name input cannot be empty.")
+        }
+
+        val isOnlyLettersAndSpaces = userInput.matches(Regex("^[A-Za-z ]+$"))
+        if (!isOnlyLettersAndSpaces) {
+            throw IllegalArgumentException("Meal name must contain only letters and spaces.")
+        }
+
+        return userInput
+    }
+
+    private fun showMealsSearchResult(results: List<Meal>, query: String) {
+        if (results.isEmpty()) {
+            println("No meals found matching \"$query\".")
+        } else {
+            println("Meals found:")
+            results.forEach { meal ->
+                println(meal.name)
+            }
+        }
+    }
 //endregion
 
     // region search by add date && see details by id feature (8)
@@ -91,7 +91,7 @@ private fun showMealsSearchResult(results: List<Meal>, query: String) {
             val mealId = getIdInput()
             try {
                 val meal = searchMeals.getMealByDateAndId(date, mealId)
-                viewMealDetails(meal)
+                viewMealDetails.displayMealDetails(meal)
             } catch (exception: Exception) {
                 println(exception.message)
                 return
@@ -141,50 +141,6 @@ private fun showMealsSearchResult(results: List<Meal>, query: String) {
         }
     }
 
-    fun viewMealDetails(meal: Meal) {
-        println("╔════════════════════════════════════╗")
-        println("║          🍽️ Meal Details           ║")
-        println("╚════════════════════════════════════╝")
-        println("🍽 Name : ${meal.name}")
-        println("⏱️ Preparation Time : ${meal.minutes} minutes")
-        println("\n📊 Nutrition Facts:")
-        displayNutrition(meal.nutrition)
-        println()
-        displaySteps(meal.steps)
-        println("\n📄 Description:")
-        if (meal.description.isNullOrBlank()) {
-            println("  • No Description Available.")
-        } else {
-            println("  • ${meal.description}")
-        }
-        println()
-        displayIngredients(meal.ingredients)
-        println("══════════════════════════════════════")
-    }
-
-private fun displayNutrition(nutrition: Nutrition) {
-    println("   • Calories       : ${nutrition.caloriesKcal} kcal")
-    println("   • Total Fat      : ${nutrition.totalFatGrams} g")
-    println("   • Sugar          : ${nutrition.sugarGrams} g")
-    println("   • Sodium         : ${nutrition.sodiumGrams} mg")
-    println("   • Protein        : ${nutrition.proteinGrams} g")
-    println("   • Saturated Fat  : ${nutrition.saturatedFatGrams} g")
-    println("   • Carbohydrates  : ${nutrition.carbohydratesGrams} g")
-}
-
-    private fun displaySteps(steps: List<String>) {
-        println("📝 Steps (${steps.size}):")
-        steps.forEachIndexed { index, step ->
-            println("   ${index + 1}. $step")
-        }
-    }
-
-    private fun displayIngredients(ingredients: List<String>) {
-        println("🧂 Ingredients (${ingredients.size}):")
-        ingredients.forEach { ingredient ->
-            println("   - $ingredient")
-        }
-    }
 // endregion
 
     // region gym helper
@@ -222,11 +178,11 @@ private fun displayNutrition(nutrition: Nutrition) {
 
             println("🕒 Duration: ${currentMeal.minutes} minutes")
 
-        println("\n🥗 Nutrition Info:")
-        with(currentMeal.nutrition) {
-            println("\t⚡ Calories: $caloriesKcal kcal")
-            println("\t💪 Protein: $proteinGrams g")
-        }
+            println("\n🥗 Nutrition Info:")
+            with(currentMeal.nutrition) {
+                println("\t⚡ Calories: $caloriesKcal kcal")
+                println("\t💪 Protein: $proteinGrams g")
+            }
 
             println("\n🛒 Ingredients:")
             currentMeal.ingredients.forEachIndexed { index, ingredient ->
