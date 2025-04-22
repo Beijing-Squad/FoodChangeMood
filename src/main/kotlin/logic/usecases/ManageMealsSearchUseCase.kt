@@ -2,7 +2,7 @@ package org.beijing.logic.usecases
 
 import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
-import org.beijing.logic.usecases.utils.KmpSubstringSearch
+import org.beijing.logic.usecases.utils.KmpSearch
 import org.beijing.model.Meal
 import kotlin.math.abs
 
@@ -48,7 +48,7 @@ class ManageMealsSearchUseCase(
     fun getMealByName(searchQuery: String): List<Meal> {
         validateSearchQuery(searchQuery)
 
-        val allMeals = getAllMealsOrThrow()
+        val allMeals = fetchAllMeals()
 
         return filterMealsByName(allMeals, searchQuery)
     }
@@ -59,7 +59,7 @@ class ManageMealsSearchUseCase(
         }
     }
 
-    private fun getAllMealsOrThrow(): List<Meal> {
+    private fun fetchAllMeals(): List<Meal> {
         val meals = mealRepository.getAllMeals()
         if (meals.isEmpty()) {
             throw IllegalStateException(NO_FOOD_DATA)
@@ -69,7 +69,7 @@ class ManageMealsSearchUseCase(
 
     private fun filterMealsByName(meals: List<Meal>, query: String): List<Meal> {
         return meals.filter { meal ->
-            KmpSubstringSearch.doesTextContainPattern(
+            KmpSearch.containsPattern(
                 meal.name.lowercase(),
                 query.lowercase()
             )
