@@ -2,39 +2,30 @@ package org.beijing.logic.usecases
 
 import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
-import org.beijing.util.Constant
 
 class ManageMealsSuggestionsUseCase(
     private val mealRepository: MealRepository
 ) {
+    private val seen = mutableSetOf<Int>()
 
     //region suggest sweets with no eggs
     fun suggestSweetsWithNoEggs(): Meal? {
-        val meals = mealRepository.getAllMeals()
-        val seen = mutableSetOf<Int>()
-        val sweetsWithoutEggs = meals
-            .filter { meal ->
-                meal.tags.any { it.contains("sweet", ignoreCase = true) }
-            }
-            .filterNot { meal ->
-                meal.ingredients.any { it.contains("egg", ignoreCase = true) }
-            }
-            .filterNot { seen.contains(it.id) }
-
-        val nextMeal = sweetsWithoutEggs.firstOrNull()
-        nextMeal?.let { seen.add(it.id) }
-
-        return nextMeal
+        return mealRepository.getAllMeals().firstOrNull { meal ->
+            meal.tags.any { it.contains(SWEET, ignoreCase = true) }
+                    && !meal.ingredients.any { it.contains(EGG, ignoreCase = true) }
+                    && !seen.contains(meal.id)
+        }
+            .also { it?.let { seen.add(it.id) } }
     }
     //endregion
 
     //region suggest ten random meals contains potato in ingredients
     fun suggestTenRandomMealsContainsPotato(): List<Meal> {
-        return mealRepository.getAllMeals().asSequence().filter { meal ->
+        return mealRepository.getAllMeals().filter { meal ->
             meal.ingredients.any { ingredient ->
-                ingredient.contains("Potato", true)
+                ingredient.contains(POTATO, true)
             }
-        }.shuffled().take(10).toList()
+        }.shuffled().take(MEALS_SUGGESTION_TEN_LIMIT).toList()
     }
     //endregion
 
@@ -42,8 +33,8 @@ class ManageMealsSuggestionsUseCase(
     fun suggestItalianLargeGroupsMeals(): List<Meal> {
         return mealRepository.getAllMeals()
             .filter {
-                "for-large-groups" in it.tags.map(String::lowercase) &&
-                        "italian" in it.tags.map(String::lowercase)
+                FOR_LARGE_GROUP in it.tags.map(String::lowercase) &&
+                        ITALIAN in it.tags.map(String::lowercase)
             }
     }//endregion
 
@@ -54,8 +45,8 @@ class ManageMealsSuggestionsUseCase(
         return meals
             .asSequence()
             .filter { meal ->
-                meal.nutrition.carbohydrates < maxCarbs &&
-                        meal.nutrition.totalFat > meal.nutrition.protein
+                meal.nutrition.carbohydratesGrams < maxCarbs &&
+                        meal.nutrition.totalFatGrams > meal.nutrition.proteinGrams
             }
             .filterNot { it.id in usedMealIds }
             .shuffled()
@@ -67,9 +58,9 @@ class ManageMealsSuggestionsUseCase(
     // region suggest easy prepared meal
     fun suggestEasyPreparedMeal(): List<Meal> {
         return mealRepository.getAllMeals().asSequence()
-            .filter { it.nSteps <= Constant.N_STEP && it.nIngredients <= Constant.N_INGREDIENTS && it.minutes <= Constant.MINUTES }
+            .filter { it.nSteps <= N_STEP && it.nIngredients <= N_INGREDIENTS && it.minutes <= MINUTES }
             .shuffled()
-            .take(Constant.N_EASY_MEAL)
+            .take(N_EASY_MEAL)
             .toList()
     }
     // endregion easy food suggestions
@@ -82,12 +73,22 @@ class ManageMealsSuggestionsUseCase(
     }
 
     fun checkMealCaloriesContent(meal: Meal): Boolean {
-        return meal.nutrition.calories >= CALORIES_CONTENT_NEEDED
+        return meal.nutrition.caloriesKcal >= CALORIES_CONTENT_NEEDED
     }
     //endregion
 
     private companion object {
-        val CALORIES_CONTENT_NEEDED = 700
+        const val CALORIES_CONTENT_NEEDED = 700
+        const val N_STEP = 6
+        const val N_INGREDIENTS = 5
+        const val MINUTES = 30
+        const val N_EASY_MEAL = 10
+        const val MEALS_SUGGESTION_TEN_LIMIT = 10
+        const val SWEET = "sweet"
+        const val EGG = "egg"
+        const val POTATO = "potato"
+        const val FOR_LARGE_GROUP = "for-large-groups"
+        const val ITALIAN = "italian"
 
     }
 }

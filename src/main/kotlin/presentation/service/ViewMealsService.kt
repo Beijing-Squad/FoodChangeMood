@@ -52,9 +52,9 @@ class ViewMealsService : MealService() {
                     "${(index + 1).toString().padEnd(5)}| " +
                             meal.name.padEnd(70) + "| " +
                             "${meal.minutes}m".padEnd(6) + "| " +
-                            "${meal.nutrition.totalFat}".padEnd(8) + "| " +
-                            "${meal.nutrition.saturatedFat}".padEnd(15) + "| " +
-                            "${meal.nutrition.carbohydrates}"
+                            "${meal.nutrition.totalFatGrams}".padEnd(8) + "| " +
+                            "${meal.nutrition.saturatedFatGrams}".padEnd(15) + "| " +
+                            "${meal.nutrition.carbohydratesGrams}"
                 )
             }
         }
@@ -68,7 +68,7 @@ class ViewMealsService : MealService() {
         println(String.format("%-6s| %-70s | %-14s", "Rank", "Meal Name", "Protein Content"))
         println("----------------------------------------------------------------------------------------------------")
         viewMeals.getSortedSeaFoodByProtein().forEachIndexed { index, meal ->
-            println(String.format("%-6d| %-70s | %-14d", index + 1, meal.name, meal.nutrition.protein.toInt()))
+            println(String.format("%-6d| %-70s | %-14d", index + 1, meal.name, meal.nutrition.proteinGrams.toInt()))
         }
     }
 //endregion

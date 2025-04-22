@@ -11,31 +11,19 @@ class ManageMealsViewUseCase(
     fun getHealthyQuickPreparedMeals(): List<Meal> {
         val (fatAvg, saturatedFatAvg, carbsAvg) = calculateNutritionAverages(mealRepository.getAllMeals())
 
-        return mealRepository.getAllMeals().asSequence().filter { currentMeal ->
-            currentMeal.minutes <= 15 && isMealHealthy(
-                currentMeal,
-                fatAvg,
-                saturatedFatAvg,
-                carbsAvg
-            )
-        }.toList()
-    }
-
-    private fun isMealHealthy(meal: Meal, fatAvg: Double, saturatedFatAvg: Double, carbsAvg: Double): Boolean {
-        return meal.nutrition.totalFat < fatAvg &&
-                meal.nutrition.saturatedFat < saturatedFatAvg &&
-                meal.nutrition.carbohydrates < carbsAvg
-    }
-
-    private fun calculateAverage(values: List<Double>): Double {
-        return if (values.isNotEmpty()) values.sum() / values.size else 0.0
+        return mealRepository.getAllMeals().filter { meal ->
+            meal.minutes <= MINUTES_15
+                    && meal.nutrition.totalFatGrams < fatAvg
+                    && meal.nutrition.saturatedFatGrams < saturatedFatAvg
+                    && meal.nutrition.carbohydratesGrams < carbsAvg
+        }
     }
 
     private fun calculateNutritionAverages(meals: List<Meal>): Triple<Double, Double, Double> {
         return Triple(
-            calculateAverage(meals.map { it.nutrition.totalFat }),
-            calculateAverage(meals.map { it.nutrition.saturatedFat }),
-            calculateAverage(meals.map { it.nutrition.carbohydrates })
+            meals.map { it.nutrition.totalFatGrams }.average(),
+            meals.map { it.nutrition.saturatedFatGrams }.average(),
+            meals.map { it.nutrition.carbohydratesGrams }.average()
         )
     }
     //endregion
@@ -45,8 +33,12 @@ class ManageMealsViewUseCase(
     fun getSortedSeaFoodByProtein(): List<Meal> {
         val sortedSeaFood = mealRepository.getAllMeals()
             .filter { it.tags.contains("seafood") }
-            .sortedByDescending { it.nutrition.protein }
+            .sortedByDescending { it.nutrition.proteinGrams }
         return sortedSeaFood
     }
     //endregion
+
+    private companion object {
+        const val MINUTES_15 = 15
+    }
 }
