@@ -10,18 +10,12 @@ class ManageMealsSuggestionsUseCase(
 
     //region suggest sweets with no eggs
     fun suggestSweetsWithNoEggs(): Meal? {
-        val meals = mealRepository.getAllMeals()
-            .filter { meal ->
-                meal.tags.any { it.contains(SWEET, ignoreCase = true) }
-            }
-            .filterNot { meal ->
-                meal.ingredients.any { it.contains(EGG, ignoreCase = true) }
-            }
-            .filterNot { seen.contains(it.id) }
-        val nextMeal = meals.firstOrNull()
-        nextMeal?.let { seen.add(it.id) }
-
-        return nextMeal
+        return mealRepository.getAllMeals().firstOrNull { meal ->
+            meal.tags.any { it.contains(SWEET, ignoreCase = true) }
+                    && !meal.ingredients.any { it.contains(EGG, ignoreCase = true) }
+                    && !seen.contains(meal.id)
+        }
+            .also { it?.let { seen.add(it.id) } }
     }
     //endregion
 
