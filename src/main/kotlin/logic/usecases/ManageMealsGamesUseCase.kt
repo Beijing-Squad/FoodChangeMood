@@ -4,8 +4,6 @@ import model.GameRound
 import org.beijing.logic.MealRepository
 import org.beijing.model.IngredientGameRound
 import org.beijing.model.IngredientGameState
-import org.beijing.util.FeedbackStatus
-import org.beijing.util.GuessStatus
 import kotlin.random.Random
 
 class ManageMealsGamesUseCase(
@@ -126,4 +124,16 @@ class ManageMealsGamesUseCase(
         private const val INCORRECT_OPTION_COUNT = 2
     }
     // endregion
+
+    enum class FeedbackStatus(val message: String) {
+        NO_ATTEMPTS_LEFT("No Attempts Left, The Actual Preparation Time is: %d minutes."),
+        ROUND_ALREADY_COMPLETED("This round is already Completed, Start A new Round."),
+        GAME_OVER("GameOver! The actual preparation time is %d minutes."),
+    }
+
+    enum class GuessStatus(val message: String) {
+        TOO_HIGH("Too high! Try a lower number."),
+        TOO_LOW("Too low! Try a higher number."),
+        CORRECT("Correct!! The preparation time is indeed %d minutes.")
+    }
 }

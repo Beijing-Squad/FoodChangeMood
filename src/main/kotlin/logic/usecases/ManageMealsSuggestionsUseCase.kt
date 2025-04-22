@@ -2,7 +2,6 @@ package org.beijing.logic.usecases
 
 import org.beijing.logic.MealRepository
 import org.beijing.model.Meal
-import org.beijing.util.Constant
 
 class ManageMealsSuggestionsUseCase(
     private val mealRepository: MealRepository
@@ -67,9 +66,9 @@ class ManageMealsSuggestionsUseCase(
     // region suggest easy prepared meal
     fun suggestEasyPreparedMeal(): List<Meal> {
         return mealRepository.getAllMeals().asSequence()
-            .filter { it.nSteps <= Constant.N_STEP && it.nIngredients <= Constant.N_INGREDIENTS && it.minutes <= Constant.MINUTES }
+            .filter { it.nSteps <= N_STEP && it.nIngredients <= N_INGREDIENTS && it.minutes <= MINUTES }
             .shuffled()
-            .take(Constant.N_EASY_MEAL)
+            .take(N_EASY_MEAL)
             .toList()
     }
     // endregion easy food suggestions
@@ -87,7 +86,11 @@ class ManageMealsSuggestionsUseCase(
     //endregion
 
     private companion object {
-        val CALORIES_CONTENT_NEEDED = 700
+        const val CALORIES_CONTENT_NEEDED = 700
+        const val N_STEP : Int = 6
+        const val N_INGREDIENTS : Int =5
+        const val MINUTES : Int =30
+        const val N_EASY_MEAL =10
 
     }
 }

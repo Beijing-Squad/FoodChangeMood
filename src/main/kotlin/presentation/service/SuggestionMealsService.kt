@@ -107,7 +107,7 @@ fun launchSweetWithoutEggs() {
         println("Description: ${sweet.description ?: "No description"}")
         print("Do you like it? (yes to view details / no to see another / exit): ")
 
-        when (readlnOrNull()?.lowercase()) {
+        when (readlnOrNull()?.lowercase()?.trim()) {
             "yes" -> {
                 viewMealDetails(sweet)
                 break
