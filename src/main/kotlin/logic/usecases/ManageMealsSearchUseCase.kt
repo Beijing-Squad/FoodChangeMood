@@ -108,8 +108,6 @@ class ManageMealsSearchUseCase(
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
         const val IRAQI = "Iraqi"
-        const val ERROR_MESSAGE = "\nPlease ensure that both Calories " +
-                "and Protein inputs are positive values."
         const val BLANK_SEARCH_EXCEPTION = "Search query must not be blank."
         const val NO_FOOD_DATA = "No food data available to search."
     }
