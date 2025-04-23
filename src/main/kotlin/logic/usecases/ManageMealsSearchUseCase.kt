@@ -10,20 +10,19 @@ class ManageMealsSearchUseCase(
     private val mealRepository: MealRepository
 ) {
 
-    // region search meal by date then see meal details by id
-    fun getMealsByDate(date: LocalDate): List<Pair<Int, String>> {
-        val mealsOnDate = mealRepository.getAllMeals()
+    // region search meal by date
+    fun getMealsByDate(date: LocalDate): List<Meal> {
+        return mealRepository.getAllMeals()
             .filter { it.submitted == date }
-            .map { it.id to it.name }
-
-        return mealsOnDate.ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
+            .ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
+    // endregion
 
-    fun getMealByDateAndId(date: LocalDate, id: Int): Meal {
-        val meal = mealRepository.getAllMeals()
-            .find { it.submitted == date && it.id == id }
-
-        return meal ?: throw Exception("❌ No Meal Found With ID [$id] On The Date $date.")
+    // region search meal by id
+    fun getMealById(id: Int): Meal {
+        return mealRepository.getAllMeals()
+            .find { it.id == id }
+            ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
     }
     // endregion
 
@@ -94,8 +93,6 @@ class ManageMealsSearchUseCase(
     }
     // endregion search meal by country
 
-    // end search meal by country
-
     //region iraqi meals
     fun getIraqiMeals(): List<Meal> {
         val allMeals = mealRepository.getAllMeals()
@@ -111,8 +108,6 @@ class ManageMealsSearchUseCase(
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
         const val IRAQI = "Iraqi"
-        const val ERROR_MESSAGE = "\nPlease ensure that both Calories " +
-                "and Protein inputs are positive values."
         const val BLANK_SEARCH_EXCEPTION = "Search query must not be blank."
         const val NO_FOOD_DATA = "No food data available to search."
     }

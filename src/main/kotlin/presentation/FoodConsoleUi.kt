@@ -3,8 +3,13 @@ package org.beijing.presentation
 
 import org.beijing.presentation.service.*
 
-class FoodConsoleUi {
-    fun start() {
+class FoodConsoleUi(
+    private val searchMealService: SearchMealService,
+    private val viewMealsService: ViewMealsService,
+    private val gameMealsService: GameMealsService,
+    private val suggestionMealsService: SuggestionMealsService
+) : FoodUi {
+    override fun start() {
         showWelcome()
 
         try {
@@ -20,34 +25,17 @@ class FoodConsoleUi {
 
     private fun presentFeatures() {
         showOptions()
-        when (val input = getUserInput()) {
-            1 -> onSuggestionMealClick()
-            2 -> onSearchMealClick()
-            3 -> onGameMealClick()
-            4 -> onViewMealClick()
-            0 -> return
-
+        when (getUserInput()) {
+            "1" -> suggestionMealsService.showService()
+            "2" -> searchMealService.showService()
+            "3" -> gameMealsService.showService()
+            "4" -> viewMealsService.showService()
+            "0" -> return
             else -> {
-                println("Invalid input: $input")
+                println("❌ Invalid input! Please enter a number between 0 and 4")
             }
         }
         presentFeatures()
-    }
-
-    private fun onGameMealClick() {
-        gameMealService()
-    }
-
-    private fun onSearchMealClick() {
-        searchMealService()
-    }
-
-    private fun onSuggestionMealClick() {
-        suggestionMealService()
-    }
-
-    private fun onViewMealClick() {
-        viewMealsService()
     }
 
     private fun showOptions() {
@@ -61,8 +49,8 @@ class FoodConsoleUi {
     }
 
 
-    private fun getUserInput(): Int? {
-        return readlnOrNull()?.toIntOrNull()
+    private fun getUserInput(): String? {
+        return readlnOrNull()
     }
 
 }
