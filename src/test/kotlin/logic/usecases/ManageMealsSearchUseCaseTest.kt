@@ -87,7 +87,30 @@ class ManageMealsSearchUseCaseTest {
             description = "Comfort food for winter",
             ingredients = listOf("beef", "potatoes", "carrots"),
             nIngredients = 3
+        ),
+        Meal(
+            name = "Triple Fire Chicken Sandwich",
+            id = 65,
+            minutes = 15,
+            contributorId = 989,
+            submitted = LocalDate.parse("2025-01-30"),
+            tags = listOf("spicy", "bowl"),
+            nutrition = Nutrition(
+                caloriesKcal = 300.0,
+                totalFatGrams = 10.0,
+                sugarGrams = 3.0,
+                sodiumGrams = 250.0,
+                proteinGrams = 30.0,
+                saturatedFatGrams = 2.0,
+                carbohydratesGrams = 20.0
+            ),
+            nSteps = 3,
+            steps = listOf("chicken", "Add chili sauce", "Serve"),
+            description = "A spicy and flavorful meal",
+            ingredients = listOf("chicken", "chili", "rice"),
+            nIngredients = 3
         )
+
     )
 
     @Test
@@ -100,8 +123,9 @@ class ManageMealsSearchUseCaseTest {
         val result = useCase.getMealByName(query)
 
         //Then
-        assertEquals(1, result.size)
-        assertEquals("Spicy Chili Chicken Bowl", result.first().name)
+        assertEquals(2, result.size)
+        assertTrue(result.any { it.name == "Spicy Chili Chicken Bowl" })
+        assertTrue(result.any { it.name == "Triple Fire Chicken Sandwich" })
 
     }
 
