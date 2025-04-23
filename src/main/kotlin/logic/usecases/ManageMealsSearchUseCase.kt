@@ -28,14 +28,24 @@ class ManageMealsSearchUseCase(
 
     //region search meal for gym helper by calories and protein
     fun getGymHelperMealsByCaloriesAndProtein(targetCalories: Double, targetProtein: Double): List<Meal> {
-        return mealRepository.getAllMeals().filter { currentMeal ->
-            isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
-        }
+        checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
+        return mealRepository.getAllMeals()
+            .filter { currentMeal ->
+                isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
+            }.ifEmpty { throw Exception("\n⚠️ No meals found!\n🍽️ Try searching again or check your filters.\n") }
+    }
+
+    private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
+        if (targetCalories <= 0 || targetProtein <= 0) throw Exception(
+            "\nPlease ensure that both Calories " + "and Protein inputs are positive values."
+        )
     }
 
     private fun isMealWithinNutritionTargets(meal: Meal, targetCalories: Double, targetProtein: Double): Boolean {
-        return calculateNutrition(meal.nutrition.caloriesKcal, targetCalories) <= MATCH_PERCENTAGE &&
-                calculateNutrition(meal.nutrition.proteinGrams, targetProtein) <= MATCH_PERCENTAGE
+        return calculateNutrition(
+            meal.nutrition.caloriesKcal,
+            targetCalories
+        ) <= MATCH_PERCENTAGE && calculateNutrition(meal.nutrition.proteinGrams, targetProtein) <= MATCH_PERCENTAGE
     }
 
     private fun calculateNutrition(currentNutrition: Double, targetNutrition: Double): Double {
