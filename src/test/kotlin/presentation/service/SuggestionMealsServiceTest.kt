@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test
 
 class SuggestionMealsServiceTest {
 
-@Test
- fun handleUserChoice() {}
+    //region handle user choice
+    @Test
+    fun handleUserChoice() {
+    }
+    //endregion
 }
