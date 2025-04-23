@@ -1,8 +1,8 @@
 package org.beijing.logic.usecases
 
-import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.utils.KmpSearch
+import org.beijing.logic.usecases.utils.parseDate
 import org.beijing.model.Meal
 import kotlin.math.abs
 
@@ -11,9 +11,9 @@ class ManageMealsSearchUseCase(
 ) {
 
     // region search meal by date
-    fun getMealsByDate(date: LocalDate): List<Meal> {
+    fun getMealsByDate(date: String): List<Meal> {
         return mealRepository.getAllMeals()
-            .filter { it.submitted == date }
+            .filter { it.submitted == date.parseDate() }
             .ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
     // endregion
