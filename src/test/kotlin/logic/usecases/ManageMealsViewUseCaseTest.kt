@@ -8,18 +8,24 @@ import org.junit.jupiter.api.Test
 
 class ManageMealsViewUseCaseTest {
 
- private lateinit var mealRepository: MealRepository
- private lateinit var useCase: ManageMealsViewUseCase
+    private lateinit var mealRepository: MealRepository
+    private lateinit var useCase: ManageMealsViewUseCase
 
- @BeforeEach
- fun setup(){
-  mealRepository = mockk()
-  useCase = ManageMealsViewUseCase(mealRepository)
- }
+    @BeforeEach
+    fun setup() {
+        mealRepository = mockk()
+        useCase = ManageMealsViewUseCase(mealRepository)
+    }
 
-@Test
- fun getHealthyQuickPreparedMeals() {}
+    //region get healthy quick prepared meals
+    @Test
+    fun getHealthyQuickPreparedMeals() {
+    }
+//endregion
 
-@Test
- fun getSortedSeaFoodByProtein() {}
+    //region get sorted seafood by protein
+    @Test
+    fun getSortedSeaFoodByProtein() {
+    }
+    //endregion
 }

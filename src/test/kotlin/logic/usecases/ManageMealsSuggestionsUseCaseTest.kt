@@ -8,33 +8,54 @@ import org.junit.jupiter.api.Test
 
 class ManageMealsSuggestionsUseCaseTest {
 
- private lateinit var mealRepository: MealRepository
- private lateinit var useCase: ManageMealsSuggestionsUseCase
+    private lateinit var mealRepository: MealRepository
+    private lateinit var useCase: ManageMealsSuggestionsUseCase
 
- @BeforeEach
- fun setup(){
-  mealRepository = mockk()
-  useCase = ManageMealsSuggestionsUseCase(mealRepository)
- }
+    @BeforeEach
+    fun setup() {
+        mealRepository = mockk()
+        useCase = ManageMealsSuggestionsUseCase(mealRepository)
+    }
 
-@Test
- fun suggestSweetsWithNoEggs() {}
+    //region suggest sweets with no eggs
+    @Test
+    fun suggestSweetsWithNoEggs() {
+    }
+//endregion
 
-@Test
- fun suggestTenRandomMealsContainsPotato() {}
+    //region suggest ten random meals contains potato
+    @Test
+    fun suggestTenRandomMealsContainsPotato() {
+    }
+//endregion
 
-@Test
- fun suggestItalianLargeGroupsMeals() {}
+    //region suggest italian large group meals
+    @Test
+    fun suggestItalianLargeGroupsMeals() {
+    }
+//endregion
 
-@Test
- fun suggestKetoMeal() {}
+    //region suggest keto meal
+    @Test
+    fun suggestKetoMeal() {
+    }
+//endregion
 
-@Test
- fun suggestEasyPreparedMeal() {}
+    //region suggest easy prepared meal
+    @Test
+    fun suggestEasyPreparedMeal() {
+    }
+//endregion
 
-@Test
- fun suggestMealHaveMoreThanSevenHundredCalories() {}
+    //region suggest meal have more than seven hundred calories
+    @Test
+    fun suggestMealHaveMoreThanSevenHundredCalories() {
+    }
+//endregion
 
-@Test
- fun checkMealCaloriesContent() {}
+    //region check meal calories content
+    @Test
+    fun checkMealCaloriesContent() {
+    }
+    //endregion
 }

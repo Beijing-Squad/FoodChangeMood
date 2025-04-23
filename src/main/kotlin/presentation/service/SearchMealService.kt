@@ -132,10 +132,10 @@ class SearchMealService(
     }
 
     private fun getSeeDetailsAnswer(): Boolean {
-        consoleIO.viewWithLine("Do You Want To See Details Of A Specific Meal? (yes/no)")
-        consoleIO.view("Enter Your Answer: ")
-        val answer = consoleIO.readInput()?.trim()?.lowercase()
-        return answer?.get(0) == 'y' || answer?.get(1) == '1'
+        println("Do You Want To See Details Of A Specific Meal? (yes/no)")
+        print("Enter Your Answer: ")
+        val answer = readln().trim().lowercase()
+        return answer[0] == 'y'
     }
 
     private fun getIdInput(): Int {
