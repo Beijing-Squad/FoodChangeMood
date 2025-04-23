@@ -72,84 +72,83 @@ class SearchMealService() : MealService() {
             }
         }
     }
-//endregion
+    //endregion
 
-// region search by add date and see details by id
-private fun launchMealsByDate() {
-    val date = getDateInput()
-    val mealsOnDate = try {
-        searchMeals.getMealsByDate(date)
-    } catch (exception: Exception) {
-        println(exception.message)
-        return
-    }
-    viewMealsOnDate(mealsOnDate)
-    seeMealDetailsById(mealsOnDate)
-}
-
-private fun getDateInput(): LocalDate {
-    while (true) {
-        println("Please Enter The Date In Format YYYY-MM-DD")
-        print("Enter Date (YYYY-MM-DD): ")
-        val input = readln().trim()
-        try {
-            return LocalDate.parse(input)
-        } catch (e: Exception) {
-            println("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
-        }
-    }
-}
-
-private fun viewMealsOnDate(meals: List<Meal>) {
-    println("=== Meals On [${meals[0].submitted}] ===")
-    meals.forEach { meal ->
-        println("- ID: ${meal.id}, Name: ${meal.name}")
-    }
-    println("========================================")
-}
-
-fun seeMealDetailsById(mealsOnDate: List<Meal>) {
-    val wantsToSeeDetails = getSeeDetailsAnswer()
-    if (wantsToSeeDetails) {
-        val id = getIdInput()
-        try {
-            val meal = searchMeals.getMealById(id)
-                .takeIf { foundMeal ->
-                    foundMeal in mealsOnDate
-                }
-                ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
-
-            viewMealDetails.displayMealDetails(meal)
-
+    // region search by add date and see details by id
+    private fun launchMealsByDate() {
+        val date = getDateInput()
+        val mealsOnDate = try {
+            searchMeals.getMealsByDate(date)
         } catch (exception: Exception) {
             println(exception.message)
+            return
         }
-    } else {
-        println("Exiting...")
+        viewMealsOnDate(mealsOnDate)
+        seeMealDetailsById(mealsOnDate)
     }
-}
 
-private fun getSeeDetailsAnswer(): Boolean {
-    println("Do You Want To See Details Of A Specific Meal? (yes/no)")
-    print("Enter Your Answer: ")
-    val answer = readln().trim().lowercase()
-    return answer[0] == 'y' || answer[0] == '1'
-}
-
-private fun getIdInput(): Int {
-    while (true) {
-        println("Please Enter The Meal ID")
-        print("Enter Meal ID: ")
-        val input = readln().trim()
-        try {
-            return input.toInt()
-        } catch (e: Exception) {
-            println("Invalid ID Format, Please Use A Number.")
+    private fun getDateInput(): LocalDate {
+        while (true) {
+            println("Please Enter The Date In Format YYYY-MM-DD")
+            print("Enter Date (YYYY-MM-DD): ")
+            val input = readln().trim()
+            try {
+                return LocalDate.parse(input)
+            } catch (e: Exception) {
+                println("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
+            }
         }
     }
-}
 
-// endregion
+    private fun viewMealsOnDate(meals: List<Meal>) {
+        println("=== Meals On [${meals[0].submitted}] ===")
+        meals.forEach { meal ->
+            println("- ID: ${meal.id}, Name: ${meal.name}")
+        }
+        println("========================================")
+    }
+
+    private fun seeMealDetailsById(mealsOnDate: List<Meal>) {
+        val wantsToSeeDetails = getSeeDetailsAnswer()
+        if (wantsToSeeDetails) {
+            val id = getIdInput()
+            try {
+                val meal = searchMeals.getMealById(id)
+                    .takeIf { foundMeal ->
+                        foundMeal in mealsOnDate
+                    }
+                    ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
+
+                viewMealDetails.displayMealDetails(meal)
+
+            } catch (exception: Exception) {
+                println(exception.message)
+            }
+        } else {
+            println("Exiting...")
+        }
+    }
+
+    private fun getSeeDetailsAnswer(): Boolean {
+        println("Do You Want To See Details Of A Specific Meal? (yes/no)")
+        print("Enter Your Answer: ")
+        val answer = readln().trim().lowercase()
+        return answer[0] == 'y' || answer[0] == '1'
+    }
+
+    private fun getIdInput(): Int {
+        while (true) {
+            println("Please Enter The Meal ID")
+            print("Enter Meal ID: ")
+            val input = readln().trim()
+            try {
+                return input.toInt()
+            } catch (e: Exception) {
+                println("Invalid ID Format, Please Use A Number.")
+            }
+        }
+    }
+    // endregion
 
     // region gym helper
     private fun launchGymHelper() {
@@ -223,7 +222,7 @@ private fun getIdInput(): Int {
             }
         }
     }
-//endregion
+    //endregion
 
     // region search meal by country
     fun launchSearchByCountry() {
@@ -266,7 +265,7 @@ private fun getIdInput(): Int {
             }
         }
     }
-// endregion search meal by country
+    // endregion search meal by country
 
     // region iraqi meals
     private fun launchIraqiMeals() {
@@ -287,6 +286,6 @@ private fun getIdInput(): Int {
             println("${index + 1}. ${meal.name}")
         }
     }
-// endregion
+    // endregion
 
 }
