@@ -29,7 +29,7 @@ class ViewMealsService : MealService() {
     }
 
     // region healthy fast food meals
-    fun launchHealthyQuickPreparedMeals() {
+    private fun launchHealthyQuickPreparedMeals() {
         val healthyQuickMeals = viewMeals.getHealthyQuickPreparedMeals()
 
         if (healthyQuickMeals.isEmpty()) {
@@ -63,7 +63,7 @@ class ViewMealsService : MealService() {
 
 // region get a list of seafood sorted by protein content
 
-    fun showSortedSeaFoodByProtein() {
+    private fun showSortedSeaFoodByProtein() {
         println("List Of SeaFood Sorted By Protein:")
         println(String.format("%-6s| %-70s | %-14s", "Rank", "Meal Name", "Protein Content"))
         println("----------------------------------------------------------------------------------------------------")

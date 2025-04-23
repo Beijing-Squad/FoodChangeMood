@@ -26,11 +26,11 @@ class FoodConsoleUi(
     private fun presentFeatures() {
         showOptions()
         when (getUserInput()) {
-            1 -> suggestionMealsService.showService()
-            2 -> searchMealService.showService()
-            3 -> gameMealsService.showService()
-            4 -> viewMealsService.showService()
-            0 -> return
+            "1" -> suggestionMealsService.showService()
+            "2" -> searchMealService.showService()
+            "3" -> gameMealsService.showService()
+            "4" -> viewMealsService.showService()
+            "0" -> return
             else -> {
                 println("❌ Invalid input! Please enter a number between 0 and 4")
             }
@@ -49,8 +49,8 @@ class FoodConsoleUi(
     }
 
 
-    private fun getUserInput(): Int? {
-        return readlnOrNull()?.toIntOrNull()
+    private fun getUserInput(): String? {
+        return readlnOrNull()
     }
 
 }

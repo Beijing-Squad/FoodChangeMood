@@ -72,7 +72,7 @@ class SuggestionMealsService() : MealService() {
 // endregion
 
     //region ten random meals contains potato
-    fun launchTenRandomPotatoMeals() {
+    private fun launchTenRandomPotatoMeals() {
         val tenRandomPotatoMeals = suggestionMeals.suggestTenRandomMealsContainsPotato()
 
         if (tenRandomPotatoMeals.isEmpty()) {
@@ -95,7 +95,7 @@ class SuggestionMealsService() : MealService() {
 //endregion
 
     //region sweets with no eggs
-    fun launchSweetWithoutEggs() {
+    private fun launchSweetWithoutEggs() {
         println("🍬 Welcome to the Egg-Free Sweets Suggester!")
         while (true) {
             val sweet = suggestionMeals.suggestSweetsWithNoEggs()
@@ -123,7 +123,7 @@ class SuggestionMealsService() : MealService() {
 //endregion
 
     // region Italian Large Group Meals
-    fun launchItalianLargeGroupMeals() {
+    private fun launchItalianLargeGroupMeals() {
         val meals = suggestionMeals.suggestItalianLargeGroupsMeals()
         if (meals.isEmpty()) {
             println("❌ No Italian meals found for large groups.")
@@ -137,7 +137,7 @@ class SuggestionMealsService() : MealService() {
 // endregion
 
     // region easy meal service
-    fun launchEasyMeals() {
+    private fun launchEasyMeals() {
         println("🥗 Easy Meal Suggestions")
         println("------------------------")
         println("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
@@ -154,7 +154,7 @@ class SuggestionMealsService() : MealService() {
 // end region easy meal service
 
     // region Suggest Meal With more than 700 calories
-    fun launchSoThinMeals() {
+    private fun launchSoThinMeals() {
         val suggestedMeals = mutableListOf<Meal>()
         var meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
         var choice: String?
