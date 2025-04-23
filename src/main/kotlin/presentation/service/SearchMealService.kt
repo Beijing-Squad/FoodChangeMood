@@ -218,7 +218,7 @@ class SearchMealService() : MealService() {
 //endregion
 
     // region search meal by country
-    fun launchSearchByCountry() {
+    private fun launchSearchByCountry() {
         println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
         println("------------------------------------------------------")
         println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
