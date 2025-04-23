@@ -74,40 +74,26 @@ class SearchMealService(
             }
         }
     }
-//endregion
+    //endregion
 
-    // region search by add date && see details by id feature (8)
+    // region search by add date and see details by id
     private fun launchMealsByDate() {
         val date = getDateInput()
-        val meals = try {
+        val mealsOnDate = try {
             searchMeals.getMealsByDate(date)
         } catch (exception: Exception) {
             consoleIO.viewWithLine(exception.message)
             return
         }
-
-        viewMealsOnDate(date, meals)
-
-        val seeDetailsAnswer = getSeeDetailsAnswer()
-        if (seeDetailsAnswer) {
-            val mealId = getIdInput()
-            try {
-                val meal = searchMeals.getMealByDateAndId(date, mealId)
-                viewMealDetails.displayMealDetails(meal)
-            } catch (exception: Exception) {
-                consoleIO.viewWithLine(exception.message)
-                return
-            }
-        } else {
-            consoleIO.viewWithLine("Exiting...")
-        }
+        viewMealsOnDate(mealsOnDate)
+        seeMealDetailsById(mealsOnDate)
     }
 
     private fun getDateInput(): LocalDate {
         while (true) {
             consoleIO.viewWithLine("Please Enter The Date In Format YYYY-MM-DD")
             consoleIO.view("Enter Date (YYYY-MM-DD): ")
-            val input = consoleIO.readInput()
+            val input = consoleIO.readInput()?.trim()
             try {
                 return LocalDate.parse(input.toString())
             } catch (e: Exception) {
@@ -116,25 +102,47 @@ class SearchMealService(
         }
     }
 
-    private fun viewMealsOnDate(date: LocalDate, meals: List<Pair<Int, String>>) {
-        consoleIO.viewWithLine("=== Meals On [$date] ===")
+    private fun viewMealsOnDate(meals: List<Meal>) {
+        println("=== Meals On [${meals[0].submitted}] ===")
         meals.forEach { meal ->
-            consoleIO.viewWithLine("- ID: ${meal.first}, Name: ${meal.second}")
+            println("- ID: ${meal.id}, Name: ${meal.name}")
+        }
+        println("========================================")
+    }
+
+    private fun seeMealDetailsById(mealsOnDate: List<Meal>) {
+        val wantsToSeeDetails = getSeeDetailsAnswer()
+        if (wantsToSeeDetails) {
+            val id = getIdInput()
+            try {
+                val meal = searchMeals.getMealById(id)
+                    .takeIf { foundMeal ->
+                        foundMeal in mealsOnDate
+                    }
+                    ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
+
+                viewMealDetails.displayMealDetails(meal)
+
+            } catch (exception: Exception) {
+                println(exception.message)
+            }
+        } else {
+            println("Exiting...")
         }
     }
 
     private fun getSeeDetailsAnswer(): Boolean {
-        consoleIO.viewWithLine("Do You Want To See Details Of A Specific Meal? (yes/no)")
-        consoleIO.view("Enter Your Answer: ")
-        val answer = consoleIO.readInput()?.trim()?.lowercase()
-        return answer?.get(0) == 'y'
+        println("Do You Want To See Details Of A Specific Meal? (yes/no)")
+        print("Enter Your Answer: ")
+        val answer = readln().trim().lowercase()
+        return answer[0] == 'y' || answer[0] == '1'
     }
 
     private fun getIdInput(): Int {
         while (true) {
-            consoleIO.viewWithLine("Please Enter The Meal ID")
-            consoleIO.view("Enter Meal ID: ")
-            val input = consoleIO.readInput()
+            println("Please Enter The Meal ID")
+            print("Enter Meal ID: ")
+            val input = readln().trim()
             try {
                 if (input != null) {
                     return input.toInt()
@@ -144,8 +152,7 @@ class SearchMealService(
             }
         }
     }
-
-// endregion
+    // endregion
 
     // region gym helper
     private fun launchGymHelper() {
@@ -219,14 +226,14 @@ class SearchMealService(
             }
         }
     }
-//endregion
+    //endregion
 
     // region search meal by country
-    fun launchSearchByCountry() {
-        consoleIO.viewWithLine("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
-        consoleIO.viewWithLine("------------------------------------------------------")
-        consoleIO.viewWithLine("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
-        consoleIO.viewWithLine("🌍 For example, try entering 'Italy', 'India', or 'Mexico'.")
+    private fun launchSearchByCountry() {
+        println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
+        println("------------------------------------------------------")
+        println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
+        println("🌍 For example, try entering 'Italy', 'India', or 'Mexico'.")
 
         while (true) {
             consoleIO.viewWithLine("\n🔎 Enter a country name (or type 'exit' to quit):")
@@ -262,7 +269,7 @@ class SearchMealService(
             }
         }
     }
-// endregion search meal by country
+    // endregion search meal by country
 
     // region iraqi meals
     private fun launchIraqiMeals() {
@@ -283,6 +290,6 @@ class SearchMealService(
             consoleIO.viewWithLine("${index + 1}. ${meal.name}")
         }
     }
-// endregion
+    // endregion
 
 }
