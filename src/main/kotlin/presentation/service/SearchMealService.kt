@@ -158,7 +158,7 @@ class SearchMealService(
     private fun launchGymHelper() {
         consoleIO.view("enter target of Calories: ")
         val targetCalories = consoleIO.readInput()?.trim()?.toDoubleOrNull()
-        consoleIO.view("enter target of Protein:")
+        consoleIO.view("enter target of Protein: ")
         val targetProtein = consoleIO.readInput()?.trim()?.toDoubleOrNull()
         if (targetProtein != null && targetCalories != null) {
             checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
