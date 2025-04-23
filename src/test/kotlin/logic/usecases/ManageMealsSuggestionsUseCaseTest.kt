@@ -2,8 +2,7 @@ package logic.usecases
 
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
- class ManageMealsSuggestionsUseCaseTest {
+class ManageMealsSuggestionsUseCaseTest {
 
 @Test
  fun suggestSweetsWithNoEggs() {}
