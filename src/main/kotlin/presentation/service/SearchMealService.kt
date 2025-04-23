@@ -81,7 +81,7 @@ private fun showMealsSearchResult(results: List<Meal>, query: String) {
 private fun launchMealsByDate() {
     val date = getDateInput()
     val mealsOnDate = try {
-        getMealsOnDate(date)
+        searchMeals.getMealsByDate(date)
     } catch (exception: Exception) {
         println(exception.message)
         return
@@ -100,14 +100,6 @@ private fun getDateInput(): LocalDate {
         } catch (e: Exception) {
             println("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
         }
-    }
-}
-
-private fun getMealsOnDate(date: LocalDate): List<Meal> {
-    try {
-        return searchMeals.getMealsByDate(date)
-    } catch (exception: Exception) {
-        throw exception
     }
 }
 
