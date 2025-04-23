@@ -1,6 +1,5 @@
 package org.beijing.presentation.service
 
-import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.model.Meal
 import org.beijing.presentation.ViewMealDetails
@@ -79,6 +78,10 @@ class SearchMealService() : MealService() {
         val date = getDateInput()
         val mealsOnDate = try {
             searchMeals.getMealsByDate(date)
+        } catch (exception: IllegalArgumentException) {
+            println(exception.message)
+            launchMealsByDate()
+            return
         } catch (exception: Exception) {
             println(exception.message)
             return
@@ -87,17 +90,10 @@ class SearchMealService() : MealService() {
         seeMealDetailsById(mealsOnDate)
     }
 
-    private fun getDateInput(): LocalDate {
-        while (true) {
-            println("Please Enter The Date In Format YYYY-MM-DD")
-            print("Enter Date (YYYY-MM-DD): ")
-            val input = readln().trim()
-            try {
-                return LocalDate.parse(input)
-            } catch (e: Exception) {
-                println("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
-            }
-        }
+    private fun getDateInput(): String {
+        println("Please Enter The Date In Format YYYY-MM-DD")
+        print("Enter Date (YYYY-MM-DD): ")
+        return readln().trim()
     }
 
     private fun viewMealsOnDate(meals: List<Meal>) {
@@ -117,7 +113,7 @@ class SearchMealService() : MealService() {
                     .takeIf { foundMeal ->
                         foundMeal in mealsOnDate
                     }
-                    ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
+                    ?: throw Exception("❌ Meal with ID [$id] Not Found On That Date.")
 
                 viewMealDetails.displayMealDetails(meal)
 
@@ -143,8 +139,8 @@ class SearchMealService() : MealService() {
             val input = readln().trim()
             try {
                 return input.toInt()
-            } catch (e: Exception) {
-                println("Invalid ID Format, Please Use A Number.")
+            } catch (exception: Exception) {
+                println("❌ Invalid ID Format, Please Use A Number.")
             }
         }
     }
