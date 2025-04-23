@@ -17,7 +17,8 @@ class FoodConsoleUi(
         try {
             presentFeatures()
         } catch (e: Exception) {
-            consoleIO.viewWithLine(e.message)
+            val errorMessage = e.message ?: "An unknown error occurred"
+            consoleIO.viewWithLine(errorMessage)
         }
     }
 
