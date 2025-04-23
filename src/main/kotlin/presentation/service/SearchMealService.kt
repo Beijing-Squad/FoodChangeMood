@@ -95,7 +95,7 @@ class SearchMealService(
     private fun getDateInput(): String {
         consoleIO.viewWithLine("Please Enter The Date In Format YYYY-MM-DD")
         consoleIO.view("Enter Date (YYYY-MM-DD): ")
-        return consoleIO.readInput()?.trim()
+        return consoleIO.readInput()?.trim().toString()
     }
 
     private fun viewMealsOnDate(meals: List<Meal>) {
@@ -140,8 +140,8 @@ class SearchMealService(
             consoleIO.view("Enter Meal ID: ")
             val input = consoleIO.readInput()?.trim()
             try {
-                if (input != null){
-                return input.toInt()
+                if (input != null) {
+                    return input.toInt()
                 }
             } catch (exception: Exception) {
                 consoleIO.viewWithLine("❌ Invalid ID Format, Please Use A Number.")
