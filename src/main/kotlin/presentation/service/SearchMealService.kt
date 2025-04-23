@@ -119,7 +119,7 @@ fun seeMealDetailsById(mealsOnDate: List<Meal>) {
                 }
                 ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
 
-            viewMealDetails(meal)
+            viewMealDetails.displayMealDetails(meal)
 
         } catch (exception: Exception) {
             println(exception.message)
