@@ -103,11 +103,11 @@ class SearchMealService(
     }
 
     private fun viewMealsOnDate(meals: List<Meal>) {
-        println("=== Meals On [${meals[0].submitted}] ===")
+        consoleIO.viewWithLine("=== Meals On [${meals[0].submitted}] ===")
         meals.forEach { meal ->
-            println("- ID: ${meal.id}, Name: ${meal.name}")
+            consoleIO.viewWithLine("- ID: ${meal.id}, Name: ${meal.name}")
         }
-        println("========================================")
+        consoleIO.viewWithLine("========================================")
     }
 
     private fun seeMealDetailsById(mealsOnDate: List<Meal>) {
@@ -124,25 +124,25 @@ class SearchMealService(
                 viewMealDetails.displayMealDetails(meal)
 
             } catch (exception: Exception) {
-                println(exception.message)
+                consoleIO.viewWithLine(exception.message)
             }
         } else {
-            println("Exiting...")
+            consoleIO.viewWithLine("Exiting...")
         }
     }
 
     private fun getSeeDetailsAnswer(): Boolean {
-        println("Do You Want To See Details Of A Specific Meal? (yes/no)")
-        print("Enter Your Answer: ")
-        val answer = readln().trim().lowercase()
-        return answer[0] == 'y' || answer[0] == '1'
+        consoleIO.viewWithLine("Do You Want To See Details Of A Specific Meal? (yes/no)")
+        consoleIO.view("Enter Your Answer: ")
+        val answer = consoleIO.readInput()?.trim()?.lowercase()
+        return answer?.get(0) == 'y' || answer?.get(1) == '1'
     }
 
     private fun getIdInput(): Int {
         while (true) {
-            println("Please Enter The Meal ID")
-            print("Enter Meal ID: ")
-            val input = readln().trim()
+            consoleIO.viewWithLine("Please Enter The Meal ID")
+            consoleIO.view("Enter Meal ID: ")
+            val input = consoleIO.readInput()?.trim()
             try {
                 if (input != null) {
                     return input.toInt()
@@ -230,14 +230,14 @@ class SearchMealService(
 
     // region search meal by country
     private fun launchSearchByCountry() {
-        println("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
-        println("------------------------------------------------------")
-        println("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
-        println("🌍 For example, try entering 'Italy', 'India', or 'Mexico'.")
+        consoleIO.viewWithLine("🎌 Welcome to 'Explore Other Countries' Food Culture'!")
+        consoleIO.viewWithLine("------------------------------------------------------")
+        consoleIO.viewWithLine("🍱 In this mini-game, you enter a country name and discover up to 20 random meals from that region.")
+        consoleIO.viewWithLine("🌍 For example, try entering 'Italy', 'India', or 'Mexico'.")
 
         while (true) {
             consoleIO.viewWithLine("\n🔎 Enter a country name (or type 'exit' to quit):")
-            val country = readlnOrNull()?.trim()
+            val country = consoleIO.readInput()?.trim()
 
             when {
                 country.equals("exit", ignoreCase = true) -> {
