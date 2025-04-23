@@ -3,26 +3,29 @@ package org.beijing.presentation.service
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.beijing.model.Meal
 import org.beijing.presentation.ViewMealDetails
-import org.koin.mp.KoinPlatform.getKoin
+import presentation.view_read.ConsoleIO
 
-class SuggestionMealsService() : MealService() {
-    private val suggestionMeals: ManageMealsSuggestionsUseCase = getKoin().get()
-    private val viewMealDetails: ViewMealDetails = getKoin().get()
+class SuggestionMealsService(
+    private val suggestionMeals: ManageMealsSuggestionsUseCase,
+    private val viewMealDetails: ViewMealDetails,
+    private val consoleIO: ConsoleIO
+
+) : MealService(consoleIO) {
 
     override fun showOptionService() {
-        println("\n\n===Please enter one of the numbers listed below===\n")
-        println("1. Suggest a Keto Meal \uD83E\uDD51 ")
-        println("2. Suggest Sweets with No Eggs \uD83C\uDF70")
-        println("3. Suggest Easy Food \uD83C\uDF2D")
-        println("4. Suggest Italian Meals for Large Groups \uD83C\uDF55")
-        println("5. Suggest Ten Meals Contains Potato In Ingredients \uD83E\uDD54")
-        println("6. Suggest Meal With more than 700 calories \uD83C\uDF54")
-        println("0. Exit")
+        consoleIO.println("\n\n===Please enter one of the numbers listed below===\n")
+        consoleIO.println("1. Suggest a Keto Meal \uD83E\uDD51 ")
+        consoleIO.println("2. Suggest Sweets with No Eggs \uD83C\uDF70")
+        consoleIO.println("3. Suggest Easy Food \uD83C\uDF2D")
+        consoleIO.println("4. Suggest Italian Meals for Large Groups \uD83C\uDF55")
+        consoleIO.println("5. Suggest Ten Meals Contains Potato In Ingredients \uD83E\uDD54")
+        consoleIO.println("6. Suggest Meal With more than 700 calories \uD83C\uDF54")
+        consoleIO.println("0. Exit")
     }
 
     override fun handleUserChoice() {
-        print("\nhere: ")
-        when (getUserInput()) {
+        consoleIO.print("\nhere: ")
+        when (consoleIO.readInput()) {
             "1" -> launchKetoMealHelper()
             "2" -> launchSweetWithoutEggs()
             "3" -> launchEasyMeals()
@@ -30,7 +33,7 @@ class SuggestionMealsService() : MealService() {
             "5" -> launchTenRandomPotatoMeals()
             "6" -> launchSoThinMeals()
             "0" -> return
-            else -> println("❌ Invalid input! Please enter a number between 0 and 6")
+            else -> consoleIO.println("❌ Invalid input! Please enter a number between 0 and 6")
         }
     }
 
@@ -40,22 +43,22 @@ class SuggestionMealsService() : MealService() {
         while (true) {
             val meal = suggestionMeals.suggestKetoMeal(usedKetoMealIds)
             if (meal == null) {
-                println("\uD83D\uDE14 No more keto meals to suggest.")
+                consoleIO.println("\uD83D\uDE14 No more keto meals to suggest.")
                 return
             }
 
-            println("\n🥑 Keto Meal: ${meal.name}")
-            println("Short Description: ${meal.description}")
+            consoleIO.println("\n🥑 Keto Meal: ${meal.name}")
+            consoleIO.println("Short Description: ${meal.description}")
 
-            println("Do you like it? ❤")
-            print("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
-            when (readlnOrNull()?.trim()?.lowercase()) {
+            consoleIO.println("Do you like it? ❤")
+            consoleIO.print("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            when (consoleIO.readInput()?.trim()?.lowercase()) {
                 "yes" -> {
                     viewMealDetails.displayMealDetails(meal)
                 }
 
                 "no" -> {
-                    println("🔄 Okay! Let's try another one.")
+                    consoleIO.println("🔄 Okay! Let's try another one.")
                     continue
                 }
 
@@ -64,7 +67,7 @@ class SuggestionMealsService() : MealService() {
                 }
 
                 else -> {
-                    println("⚠️ Please type 'yes' or 'no'")
+                    consoleIO.println("⚠️ Please type 'yes' or 'no'")
                 }
             }
         }
@@ -76,17 +79,17 @@ class SuggestionMealsService() : MealService() {
         val tenRandomPotatoMeals = suggestionMeals.suggestTenRandomMealsContainsPotato()
 
         if (tenRandomPotatoMeals.isEmpty()) {
-            println("There is no meals contains potato in their ingredients")
+            consoleIO.println("There is no meals contains potato in their ingredients")
         } else {
-            println("-".repeat(70))
-            println("\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57List of ten random Meals with potato in their ingredients\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57")
-            println("-".repeat(70))
-            println(
+            consoleIO.println("-".repeat(70))
+            consoleIO.println("\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57List of ten random Meals with potato in their ingredients\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57")
+            consoleIO.println("-".repeat(70))
+            consoleIO.println(
                 "Rank".padEnd(5) + "| " + "Meal Name".padEnd(70)
             )
 
             tenRandomPotatoMeals.forEachIndexed { index, meal ->
-                println(
+                consoleIO.println(
                     "${index + 1}".padEnd(5) + "| " + meal.name
                 )
             }
@@ -96,19 +99,19 @@ class SuggestionMealsService() : MealService() {
 
     //region sweets with no eggs
     fun launchSweetWithoutEggs() {
-        println("🍬 Welcome to the Egg-Free Sweets Suggester!")
+        consoleIO.println("🍬 Welcome to the Egg-Free Sweets Suggester!")
         while (true) {
             val sweet = suggestionMeals.suggestSweetsWithNoEggs()
 
             if (sweet == null) {
-                println("🚫 No more unique sweets without eggs found.")
+                consoleIO.println("🚫 No more unique sweets without eggs found.")
                 break
             }
-            println("Try this sweet: ${sweet.name}")
-            println("Description: ${sweet.description ?: "No description"}")
-            print("Do you like it? (yes to view details / no to see another / exit): ")
+            consoleIO.println("Try this sweet: ${sweet.name}")
+            consoleIO.println("Description: ${sweet.description ?: "No description"}")
+            consoleIO.print("Do you like it? (yes to view details / no to see another / exit): ")
 
-            when (readlnOrNull()?.lowercase()?.trim()) {
+            when (consoleIO.readInput()?.lowercase()?.trim()) {
                 "yes" -> {
                     viewMealDetails.displayMealDetails(sweet)
                     break
@@ -116,7 +119,7 @@ class SuggestionMealsService() : MealService() {
 
                 "no" -> continue
                 "exit" -> break
-                else -> println("Unknown input.")
+                else -> consoleIO.println("Unknown input.")
             }
         }
     }
@@ -126,11 +129,11 @@ class SuggestionMealsService() : MealService() {
     fun launchItalianLargeGroupMeals() {
         val meals = suggestionMeals.suggestItalianLargeGroupsMeals()
         if (meals.isEmpty()) {
-            println("❌ No Italian meals found for large groups.")
+            consoleIO.println("❌ No Italian meals found for large groups.")
         } else {
-            println("🍝 Meals from Italy suitable for large groups:\n")
+            consoleIO.println("🍝 Meals from Italy suitable for large groups:\n")
             meals.forEachIndexed { index, meal ->
-                println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} minutes |")
+                consoleIO.println("${index + 1}. ${meal.name} | 🕒 ${meal.minutes} minutes |")
             }
         }
     }
@@ -138,16 +141,16 @@ class SuggestionMealsService() : MealService() {
 
     // region easy meal service
     fun launchEasyMeals() {
-        println("🥗 Easy Meal Suggestions")
-        println("------------------------")
-        println("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
+        consoleIO.println("🥗 Easy Meal Suggestions")
+        consoleIO.println("------------------------")
+        consoleIO.println("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
         val meals = suggestionMeals.suggestEasyPreparedMeal()
         if (meals.isEmpty()) {
-            println("😔 Sorry, no meals found for '. Try again later!")
+            consoleIO.println("😔 Sorry, no meals found for '. Try again later!")
         } else {
-            println("\n🍽️ Found ${meals.size} meal(s):\n")
+            consoleIO.println("\n🍽️ Found ${meals.size} meal(s):\n")
             meals.forEachIndexed { index, meal ->
-                println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mints • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
+                consoleIO.println("${index + 1}. ${meal.name} • ⏱️ ${meal.minutes} mints • 🧂 ${meal.nIngredients} ingredients • 🔧 ${meal.nSteps} steps")
             }
         }
     }
@@ -167,10 +170,10 @@ class SuggestionMealsService() : MealService() {
             suggestedMeals.add(meal)
             showMeal(meal)
 
-            println("Do You Like This Meal?")
-            print("write 'yes' to get details or 'no' to get another meal Or 'exit':")
-            print("\nhere: ")
-            choice = readlnOrNull()?.trim()?.lowercase()
+            consoleIO.println("Do You Like This Meal?")
+            consoleIO.print("write 'yes' to get details or 'no' to get another meal Or 'exit':")
+            consoleIO.print("\nhere: ")
+            choice = consoleIO.readInput()?.trim()?.lowercase()
             when (choice) {
                 "yes" -> {
                     showMealDetails(meal)
@@ -180,44 +183,44 @@ class SuggestionMealsService() : MealService() {
                 "no" -> continue
                 "exit" -> return
                 else -> {
-                    println("Invalid input! Please choose 1, 2 or 0.")
+                    consoleIO.println("Invalid input! Please choose 1, 2 or 0.")
                 }
             }
         }
     }
 
     private fun showMeal(meal: Meal) {
-        println("Below Meal With More Than 700 Calories")
-        println("Meal Name: ${meal.name}")
-        println("Meal Desc: ${meal.description ?: "No Description"}")
+        consoleIO.println("Below Meal With More Than 700 Calories")
+        consoleIO.println("Meal Name: ${meal.name}")
+        consoleIO.println("Meal Desc: ${meal.description ?: "No Description"}")
 
     }
 
     private fun showMealDetails(meal: Meal) {
-        println("Below Meal Details:")
-        println("Meal ID: ${meal.id}")
-        println("Meal Name: ${meal.name}")
-        println("Meal Desc: ${meal.description ?: "No Description"}")
-        println("Meal Protein: ${meal.nutrition.proteinGrams}")
-        println("Meal Sodium: ${meal.nutrition.sodiumGrams}")
-        println("Meal Sugar: ${meal.nutrition.sugarGrams}")
-        println("Meal Calories: ${meal.nutrition.caloriesKcal}")
-        println("Meal TotalFat: ${meal.nutrition.totalFatGrams}")
-        println("Meal Carbohydrates: ${meal.nutrition.carbohydratesGrams}")
-        println("Meal Saturated: ${meal.nutrition.saturatedFatGrams}")
-        println("Meal Tags: ${meal.tags}")
-        println("Meal ContributorId: ${meal.contributorId}")
-        println("Meal Ingredients:")
+        consoleIO.println("Below Meal Details:")
+        consoleIO.println("Meal ID: ${meal.id}")
+        consoleIO.println("Meal Name: ${meal.name}")
+        consoleIO.println("Meal Desc: ${meal.description ?: "No Description"}")
+        consoleIO.println("Meal Protein: ${meal.nutrition.proteinGrams}")
+        consoleIO.println("Meal Sodium: ${meal.nutrition.sodiumGrams}")
+        consoleIO.println("Meal Sugar: ${meal.nutrition.sugarGrams}")
+        consoleIO.println("Meal Calories: ${meal.nutrition.caloriesKcal}")
+        consoleIO.println("Meal TotalFat: ${meal.nutrition.totalFatGrams}")
+        consoleIO.println("Meal Carbohydrates: ${meal.nutrition.carbohydratesGrams}")
+        consoleIO.println("Meal Saturated: ${meal.nutrition.saturatedFatGrams}")
+        consoleIO.println("Meal Tags: ${meal.tags}")
+        consoleIO.println("Meal ContributorId: ${meal.contributorId}")
+        consoleIO.println("Meal Ingredients:")
         meal.ingredients.forEach { ingredient ->
-            println("   • $ingredient")
+            consoleIO.println("   • $ingredient")
         }
-        println("Meal Steps ((${meal.nSteps} total) :")
+        consoleIO.println("Meal Steps ((${meal.nSteps} total) :")
         meal.steps.forEachIndexed { index, step ->
-            println("   ${index + 1}. $step")
+            consoleIO.println("   ${index + 1}. $step")
         }
-        println("Meal NIngredients: ${meal.nIngredients}")
-        println("Meal Minutes: ${meal.minutes}")
-        println("Meal Submitted: ${meal.submitted}")
+        consoleIO.println("Meal NIngredients: ${meal.nIngredients}")
+        consoleIO.println("Meal Minutes: ${meal.minutes}")
+        consoleIO.println("Meal Submitted: ${meal.submitted}")
 
     }
 
