@@ -161,20 +161,12 @@ class SearchMealService(
         consoleIO.view("enter target of Protein: ")
         val targetProtein = consoleIO.readInput()?.trim()?.toDoubleOrNull()
         if (targetProtein != null && targetCalories != null) {
-            checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
             val meals = searchMeals.getGymHelperMealsByCaloriesAndProtein(
                 targetCalories, targetProtein
             )
             showGymHelperResult(meals)
 
         }
-    }
-
-    private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
-        if (targetCalories <= 0 || targetProtein <= 0) throw Exception(
-            "\nPlease ensure that both Calories " +
-                    "and Protein inputs are positive values."
-        )
     }
 
     private fun showGymHelperResult(meals: List<Meal>) {
