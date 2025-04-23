@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test
 
 class FoodConsoleUiTest {
 
-@Test
- fun start() {}
+    //region start
+    @Test
+    fun start() {
+    }
+    //endregion
 }

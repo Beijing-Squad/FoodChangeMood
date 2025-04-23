@@ -4,9 +4,15 @@ import org.junit.jupiter.api.Test
 
 class ManageMealsViewUseCaseTest {
 
-@Test
- fun getHealthyQuickPreparedMeals() {}
+    //region get healthy quick prepared meals
+    @Test
+    fun getHealthyQuickPreparedMeals() {
+    }
+//endregion
 
-@Test
- fun getSortedSeaFoodByProtein() {}
+    //region get sorted seafood by protein
+    @Test
+    fun getSortedSeaFoodByProtein() {
+    }
+    //endregion
 }
