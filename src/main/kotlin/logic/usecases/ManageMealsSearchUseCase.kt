@@ -12,16 +12,14 @@ class ManageMealsSearchUseCase(
 
     // region search meal by date
     fun getMealsByDate(date: LocalDate): List<Meal> {
-        return mealRepository.getAllMeals()
-            .filter { it.submitted == date }
+        return mealRepository.getAllMeals().filter { it.submitted == date }
             .ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
     // endregion
 
     // region search meal by id
     fun getMealById(id: Int): Meal {
-        return mealRepository.getAllMeals()
-            .find { it.id == id }
+        return mealRepository.getAllMeals().find { it.id == id }
             ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
     }
     // endregion
@@ -29,21 +27,23 @@ class ManageMealsSearchUseCase(
     //region search meal for gym helper by calories and protein
     fun getGymHelperMealsByCaloriesAndProtein(targetCalories: Double, targetProtein: Double): List<Meal> {
         checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
-        return mealRepository.getAllMeals().filter { currentMeal ->
-            isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
-        }
+        return mealRepository.getAllMeals()
+            .filter { currentMeal ->
+                isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
+            }.ifEmpty { throw Exception("\n⚠️ No meals found!\n🍽️ Try searching again or check your filters.\n") }
     }
 
     private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
         if (targetCalories <= 0 || targetProtein <= 0) throw Exception(
-            "\nPlease ensure that both Calories " +
-                    "and Protein inputs are positive values."
+            "\nPlease ensure that both Calories " + "and Protein inputs are positive values."
         )
     }
 
     private fun isMealWithinNutritionTargets(meal: Meal, targetCalories: Double, targetProtein: Double): Boolean {
-        return calculateNutrition(meal.nutrition.caloriesKcal, targetCalories) <= MATCH_PERCENTAGE &&
-                calculateNutrition(meal.nutrition.proteinGrams, targetProtein) <= MATCH_PERCENTAGE
+        return calculateNutrition(
+            meal.nutrition.caloriesKcal,
+            targetCalories
+        ) <= MATCH_PERCENTAGE && calculateNutrition(meal.nutrition.proteinGrams, targetProtein) <= MATCH_PERCENTAGE
     }
 
     private fun calculateNutrition(currentNutrition: Double, targetNutrition: Double): Double {
@@ -77,8 +77,7 @@ class ManageMealsSearchUseCase(
     private fun filterMealsByName(meals: List<Meal>, query: String): List<Meal> {
         return meals.filter { meal ->
             KmpSearch.containsPattern(
-                meal.name.lowercase(),
-                query.lowercase()
+                meal.name.lowercase(), query.lowercase()
             )
         }
     }
@@ -87,17 +86,12 @@ class ManageMealsSearchUseCase(
     // region search meal by country
     fun getMealByCountry(countryQuery: String): List<Meal> {
         val query = countryQuery.lowercase()
-        return mealRepository.getAllMeals()
-            .asSequence()
-            .filter { meal ->
-                meal.tags.any {
-                    it.lowercase().contains(query)
-                    meal.tags.joinToString(" ").lowercase().contains(query)
-                }
+        return mealRepository.getAllMeals().asSequence().filter { meal ->
+            meal.tags.any {
+                it.lowercase().contains(query)
+                meal.tags.joinToString(" ").lowercase().contains(query)
             }
-            .shuffled()
-            .take(20)
-            .toList()
+        }.shuffled().take(20).toList()
     }
     // endregion search meal by country
 
@@ -106,8 +100,12 @@ class ManageMealsSearchUseCase(
         val allMeals = mealRepository.getAllMeals()
 
         return allMeals.filter { meal ->
-            (meal.tags?.any { tag -> tag.equals(IRAQI, ignoreCase = true) } == true) ||
-                    meal.description?.contains(IRAQI, ignoreCase = true) == true
+            (meal.tags?.any { tag ->
+                tag.equals(
+                    IRAQI,
+                    ignoreCase = true
+                )
+            } == true) || meal.description?.contains(IRAQI, ignoreCase = true) == true
         }
     }
     //endregion
