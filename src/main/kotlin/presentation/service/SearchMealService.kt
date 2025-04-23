@@ -1,6 +1,5 @@
 package org.beijing.presentation.service
 
-import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.model.Meal
 import org.beijing.presentation.ViewMealDetails
@@ -81,6 +80,10 @@ class SearchMealService(
         val date = getDateInput()
         val mealsOnDate = try {
             searchMeals.getMealsByDate(date)
+        } catch (exception: IllegalArgumentException) {
+            println(exception.message)
+            launchMealsByDate()
+            return
         } catch (exception: Exception) {
             consoleIO.viewWithLine(exception.message)
             return
@@ -89,17 +92,10 @@ class SearchMealService(
         seeMealDetailsById(mealsOnDate)
     }
 
-    private fun getDateInput(): LocalDate {
-        while (true) {
-            consoleIO.viewWithLine("Please Enter The Date In Format YYYY-MM-DD")
-            consoleIO.view("Enter Date (YYYY-MM-DD): ")
-            val input = consoleIO.readInput()?.trim()
-            try {
-                return LocalDate.parse(input.toString())
-            } catch (e: Exception) {
-                consoleIO.viewWithLine("❌ Invalid Date Format, Please Use (YYYY-MM-DD).")
-            }
-        }
+    private fun getDateInput(): String {
+        consoleIO.viewWithLine("Please Enter The Date In Format YYYY-MM-DD")
+        consoleIO.view("Enter Date (YYYY-MM-DD): ")
+        return consoleIO.readInput()?.trim()
     }
 
     private fun viewMealsOnDate(meals: List<Meal>) {
@@ -119,7 +115,7 @@ class SearchMealService(
                     .takeIf { foundMeal ->
                         foundMeal in mealsOnDate
                     }
-                    ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
+                    ?: throw Exception("❌ Meal with ID [$id] Not Found On That Date.")
 
                 viewMealDetails.displayMealDetails(meal)
 
@@ -144,11 +140,11 @@ class SearchMealService(
             consoleIO.view("Enter Meal ID: ")
             val input = consoleIO.readInput()?.trim()
             try {
-                if (input != null) {
-                    return input.toInt()
+                if (input != null){
+                return input.toInt()
                 }
-            } catch (e: Exception) {
-                consoleIO.viewWithLine("Invalid ID Format, Please Use A Number.")
+            } catch (exception: Exception) {
+                consoleIO.viewWithLine("❌ Invalid ID Format, Please Use A Number.")
             }
         }
     }

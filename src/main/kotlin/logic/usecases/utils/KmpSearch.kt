@@ -2,55 +2,66 @@ package org.beijing.logic.usecases.utils
 
 object KmpSearch {
 
-    fun containsPattern(text: String, pattern: String): Boolean {
-        if (pattern.isEmpty()) return true
+    fun containsPattern(searchedFullText: String, searchedPattern: String): Boolean {
+        val textLower = searchedFullText.lowercase()
+        val patternLower = searchedPattern.lowercase()
 
-        val longestPrefixSuffix = computeLpsArray(pattern)
+        if (patternLower.isEmpty()) return true
+
+        val longestPrefixSuffix = computeLpsArray(patternLower)
         var textIndex = 0
         var patternIndex = 0
 
-        while (textIndex < text.length) {
-            if (pattern[patternIndex] == text[textIndex]) {
-                textIndex++
-                patternIndex++
-            }
-
-            if (patternIndex == pattern.length) {
-                return true
-            } else if (textIndex < text.length && pattern[patternIndex] != text[textIndex]) {
-                if (patternIndex != 0) {
-                    // Use LPS array to avoid redundant comparisons
-                    patternIndex = longestPrefixSuffix[patternIndex - 1]
-                } else {
+        while (textIndex < textLower.length) {
+            when {
+                patternLower[patternIndex] == textLower[textIndex] -> {
                     textIndex++
+                    patternIndex++
+                }
+
+                patternIndex == patternLower.length -> {
+                    return true
+                }
+
+                textIndex < textLower.length && patternLower[patternIndex] != textLower[textIndex] -> {
+                    when {
+                        patternIndex != 0 -> {
+                            patternIndex = longestPrefixSuffix[patternIndex - 1]
+                        }
+                        else -> {
+                            textIndex++
+                        }
+                    }
                 }
             }
         }
 
-        return false
+        return patternIndex == searchedPattern.length
     }
 
-    private fun computeLpsArray(pattern: String): IntArray {
-        val lps = IntArray(pattern.length)
-        var length = 0
-        var i = 1
+    private fun computeLpsArray(wordToSearchBy: String): IntArray {
+        val lps = IntArray(wordToSearchBy.length)
+        var prefixLength = 0
+        var currentIndex = 1
 
-        while (i < pattern.length) {
-            if (pattern[i] == pattern[length]) {
-                length++
-                lps[i] = length
-                i++
-            } else {
-                if (length != 0) {
-                    // Fall back to previous LPS value
-                    length = lps[length - 1]
-                } else {
-                    lps[i] = 0
-                    i++
+        while (currentIndex < wordToSearchBy.length) {
+            when {
+                wordToSearchBy[currentIndex] == wordToSearchBy[prefixLength] -> {
+                    prefixLength++
+                    lps[currentIndex] = prefixLength
+                    currentIndex++
+                }
+
+                prefixLength != 0 -> {
+                    prefixLength = lps[prefixLength - 1]
+                }
+
+                else -> {
+                    lps[currentIndex] = 0
+                    currentIndex++
                 }
             }
         }
-
         return lps
     }
 }

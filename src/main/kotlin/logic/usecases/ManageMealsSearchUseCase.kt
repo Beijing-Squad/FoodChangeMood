@@ -1,8 +1,8 @@
 package org.beijing.logic.usecases
 
-import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.utils.KmpSearch
+import org.beijing.logic.usecases.utils.parseDate
 import org.beijing.model.Meal
 import kotlin.math.abs
 
@@ -11,15 +11,17 @@ class ManageMealsSearchUseCase(
 ) {
 
     // region search meal by date
-    fun getMealsByDate(date: LocalDate): List<Meal> {
-        return mealRepository.getAllMeals().filter { it.submitted == date }
+    fun getMealsByDate(date: String): List<Meal> {
+        return mealRepository.getAllMeals()
+            .filter { it.submitted == date.parseDate() }
             .ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
     // endregion
 
     // region search meal by id
     fun getMealById(id: Int): Meal {
-        return mealRepository.getAllMeals().find { it.id == id }
+        return mealRepository.getAllMeals()
+            .find { it.id == id }
             ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
     }
     // endregion
@@ -77,7 +79,8 @@ class ManageMealsSearchUseCase(
     private fun filterMealsByName(meals: List<Meal>, query: String): List<Meal> {
         return meals.filter { meal ->
             KmpSearch.containsPattern(
-                meal.name.lowercase(), query.lowercase()
+                meal.name.lowercase(),
+                query.lowercase()
             )
         }
     }
@@ -86,12 +89,17 @@ class ManageMealsSearchUseCase(
     // region search meal by country
     fun getMealByCountry(countryQuery: String): List<Meal> {
         val query = countryQuery.lowercase()
-        return mealRepository.getAllMeals().asSequence().filter { meal ->
-            meal.tags.any {
-                it.lowercase().contains(query)
-                meal.tags.joinToString(" ").lowercase().contains(query)
+        return mealRepository.getAllMeals()
+            .asSequence()
+            .filter { meal ->
+                meal.tags.any {
+                    it.lowercase().contains(query)
+                    meal.tags.joinToString(" ").lowercase().contains(query)
+                }
             }
-        }.shuffled().take(20).toList()
+            .shuffled()
+            .take(20)
+            .toList()
     }
     // endregion search meal by country
 
@@ -100,12 +108,8 @@ class ManageMealsSearchUseCase(
         val allMeals = mealRepository.getAllMeals()
 
         return allMeals.filter { meal ->
-            (meal.tags?.any { tag ->
-                tag.equals(
-                    IRAQI,
-                    ignoreCase = true
-                )
-            } == true) || meal.description?.contains(IRAQI, ignoreCase = true) == true
+            (meal.tags?.any { tag -> tag.equals(IRAQI, ignoreCase = true) } == true) ||
+                    meal.description?.contains(IRAQI, ignoreCase = true) == true
         }
     }
     //endregion
