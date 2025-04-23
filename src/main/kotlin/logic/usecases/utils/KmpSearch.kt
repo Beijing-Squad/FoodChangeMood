@@ -3,24 +3,27 @@ package org.beijing.logic.usecases.utils
 object KmpSearch {
 
     fun containsPattern(searchedFullText: String, searchedPattern: String): Boolean {
-        if (searchedPattern.isEmpty()) return true
+        val textLower = searchedFullText.lowercase()
+        val patternLower = searchedPattern.lowercase()
 
-        val longestPrefixSuffix = computeLpsArray(searchedPattern)
+        if (patternLower.isEmpty()) return true
+
+        val longestPrefixSuffix = computeLpsArray(patternLower)
         var textIndex = 0
         var patternIndex = 0
 
-        while (textIndex < searchedFullText.length) {
+        while (textIndex < textLower.length) {
             when {
-                searchedPattern[patternIndex] == searchedFullText[textIndex] -> {
+                patternLower[patternIndex] == textLower[textIndex] -> {
                     textIndex++
                     patternIndex++
                 }
 
-                patternIndex == searchedPattern.length -> {
+                patternIndex == patternLower.length -> {
                     return true
                 }
 
-                textIndex < searchedFullText.length && searchedPattern[patternIndex] != searchedFullText[textIndex] -> {
+                textIndex < textLower.length && patternLower[patternIndex] != textLower[textIndex] -> {
                     when {
                         patternIndex != 0 -> {
                             patternIndex = longestPrefixSuffix[patternIndex - 1]
