@@ -133,7 +133,7 @@ class SearchMealService() : MealService() {
         println("Do You Want To See Details Of A Specific Meal? (yes/no)")
         print("Enter Your Answer: ")
         val answer = readln().trim().lowercase()
-        return answer[0] == 'y' || answer[0] == '1'
+        return answer[0] == 'y'
     }
 
     private fun getIdInput(): Int {
