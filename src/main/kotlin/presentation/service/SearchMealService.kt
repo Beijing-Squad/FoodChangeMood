@@ -161,10 +161,15 @@ class SearchMealService(
         consoleIO.view("enter target of Protein: ")
         val targetProtein = consoleIO.readInput()?.trim()?.toDoubleOrNull()
         if (targetProtein != null && targetCalories != null) {
-            val meals = searchMeals.getGymHelperMealsByCaloriesAndProtein(
-                targetCalories, targetProtein
-            )
-            showGymHelperResult(meals)
+            try {
+                val meals = searchMeals.getGymHelperMealsByCaloriesAndProtein(
+                    targetCalories, targetProtein
+                )
+                showGymHelperResult(meals)
+            }catch (e: Exception){
+                consoleIO.viewWithLine(e.message)
+                launchGymHelper()
+            }
 
         }
     }
