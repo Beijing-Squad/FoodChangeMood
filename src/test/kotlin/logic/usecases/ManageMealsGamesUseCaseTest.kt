@@ -8,27 +8,42 @@ import org.junit.jupiter.api.Test
 
 class ManageMealsGamesUseCaseTest {
 
- private lateinit var mealRepository: MealRepository
- private lateinit var useCase: ManageMealsGamesUseCase
+    private lateinit var mealRepository: MealRepository
+    private lateinit var useCase: ManageMealsGamesUseCase
 
- @BeforeEach
- fun setup(){
-  mealRepository = mockk()
-  useCase = ManageMealsGamesUseCase(mealRepository)
- }
+    @BeforeEach
+    fun setup() {
+        mealRepository = mockk()
+        useCase = ManageMealsGamesUseCase(mealRepository)
+    }
 
-@Test
- fun startNewRound() {}
+    //region start new round
+    @Test
+    fun startNewRound() {
+    }
+    //endregion
 
-@Test
- fun makeGuess() {}
+    // region make guess
+    @Test
+    fun makeGuess() {
+    }
+    //endregion
 
-@Test
- fun startIngredientGame() {}
+    //region start ingredient game
+    @Test
+    fun startIngredientGame() {
+    }
+//endregion
 
-@Test
- fun checkAnswer() {}
+    //region check answer
+    @Test
+    fun checkAnswer() {
+    }
+//endregion
 
-@Test
- fun isGameOver() {}
+    //region is game over
+    @Test
+    fun isGameOver() {
+    }
+    //endregion
 }

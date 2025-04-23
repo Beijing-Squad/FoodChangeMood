@@ -8,30 +8,48 @@ import org.junit.jupiter.api.Test
 
 class ManageMealsSearchUseCaseTest {
 
- private lateinit var mealRepository: MealRepository
- private lateinit var useCase: ManageMealsSearchUseCase
+    private lateinit var mealRepository: MealRepository
+    private lateinit var useCase: ManageMealsSearchUseCase
 
- @BeforeEach
- fun setup(){
-  mealRepository = mockk()
-  useCase = ManageMealsSearchUseCase(mealRepository)
- }
+    @BeforeEach
+    fun setup() {
+        mealRepository = mockk()
+        useCase = ManageMealsSearchUseCase(mealRepository)
+    }
 
-@Test
- fun getMealsByDate() {}
+    //region get meal by date
+    @Test
+    fun getMealsByDate() {
+    }
+//endregion
 
-@Test
- fun getMealByDateAndId() {}
+    //region get meal by date and id
+    @Test
+    fun getMealByDateAndId() {
+    }
+//endregion
 
-@Test
- fun getGymHelperMealsByCaloriesAndProtein() {}
+    //region get gym helper meals by calories
+    @Test
+    fun getGymHelperMealsByCaloriesAndProtein() {
+    }
+//endregion
 
-@Test
- fun getMealByName() {}
+    // region get meal by name
+    @Test
+    fun getMealByName() {
+    }
+//endregion
 
-@Test
- fun getMealByCountry() {}
+    //region get meal by country
+    @Test
+    fun getMealByCountry() {
+    }
+//endregion
 
-@Test
- fun getIraqiMeals() {}
+    //region get iraqi meals
+    @Test
+    fun getIraqiMeals() {
+    }
+    //endregion
 }
