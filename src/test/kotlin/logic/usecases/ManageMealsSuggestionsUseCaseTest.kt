@@ -62,6 +62,21 @@ class ManageMealsSuggestionsUseCaseTest {
 
         Assertions.assertTrue(result.isEmpty())
     }
+    @Test
+    fun `should Match Tags Case Insensitively when Tags Have Different Cases`() {
+        val meals = listOf(
+            mealWithTags(1, listOf("ITALIAN", "FOR-LARGE-GROUPS")),
+            mealWithTags(2, listOf("Italian", "For-Large-Groups")),
+            mealWithTags(3, listOf("ITALIAN")),
+            mealWithTags(4, listOf("for-large-groups"))
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        Assertions.assertEquals(2, result.size)
+        }
 
 //endregion
 
