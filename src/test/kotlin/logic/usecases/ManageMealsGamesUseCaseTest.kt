@@ -178,9 +178,9 @@ class ManageMealsGamesUseCaseTest {
 
     @ParameterizedTest
     @CsvSource(
-        "1,true,1000,1",  // Correct answer
-        "2,false,0,0",    // Wrong answer
-        "3,false,0,0"     // Wrong answer
+        "1,true,1000,1",
+        "2,false,0,0",
+        "3,false,0,0"
     )
     fun `should return correct validation result when checking different answer options`(
         userChoice: Int,
@@ -229,9 +229,9 @@ class ManageMealsGamesUseCaseTest {
     //region Game Over Tests
     @ParameterizedTest
     @CsvSource(
-        "14,false",  // Not game over
-        "15,true",   // Game over
-        "16,true"    // Game over
+        "14,false",
+        "15,true",
+        "16,true"
     )
     fun `should return correct game over state when checking different correct answer counts`(
         correctAnswers: Int,
