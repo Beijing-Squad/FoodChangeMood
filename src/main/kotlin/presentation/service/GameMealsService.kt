@@ -56,7 +56,7 @@ class GameMealsService(
 // endregion
 
     // region Ingredient Game
-    private fun launchIngredientGame() {
+    fun launchIngredientGame() {
         consoleIO.viewWithLine("\uD83D\uDC69\u200D\uD83C\uDF73 Welcome to the Ingredient Game!")
         consoleIO.viewWithLine("Guess the correct ingredient for each meal. One wrong answer ends the game!")
         var ingredientGameState = IngredientGameState()
