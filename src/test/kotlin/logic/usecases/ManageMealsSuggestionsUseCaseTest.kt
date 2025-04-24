@@ -77,6 +77,19 @@ class ManageMealsSuggestionsUseCaseTest {
 
         Assertions.assertEquals(2, result.size)
         }
+    @Test
+    fun `should Return Meals With Extra Tags when They Still Contain Required Tags`() {
+        val meals = listOf(
+            mealWithTags(1, listOf("italian", "for-large-groups", "holiday")),
+            mealWithTags(2, listOf("italian", "for-large-groups"))
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        Assertions.assertEquals(2, result.size)
+    }
 
 //endregion
 
