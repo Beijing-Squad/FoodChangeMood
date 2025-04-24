@@ -1,7 +1,11 @@
+package fake
+
 import kotlinx.datetime.LocalDate
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 
+
+//region fake meals for get ten random potato meals
 val mealsWithoutPotato = listOf(
     Meal(
         name = "Grilled Chicken Salad",
@@ -417,3 +421,4 @@ val nineMealsContainsPotato = listOf(
         nIngredients = 5
     )
 )
+//endregion
