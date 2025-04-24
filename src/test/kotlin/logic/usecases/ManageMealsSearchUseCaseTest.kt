@@ -3,6 +3,9 @@ package logic.usecases
 
 import helper.createMeal
 import io.mockk.every
+import com.google.common.truth.Truth.assertThat
+import fake.meals
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
@@ -139,9 +142,60 @@ class ManageMealsSearchUseCaseTest {
     }
     //endregion
 
-    //region get gym helper meals by calories
+    //region gets gym helper
+    @ParameterizedTest
+    @CsvSource(
+        "-1000.0, 50.0",
+        "20.0,-1000.0"
+    )
+    fun `should throw exception when target calories or target protein is less than zero`(
+        targetCalories: Double,
+        targetProtein: Double
+    ) {
+        // Given
+        every { mealRepository.getAllMeals() } returns meals
+
+        // Then && When
+        assertThrows<Exception> {
+            useCase
+                .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "1500.0, 100.0",
+        "300.0, 10200.0",
+    )
+    fun `should throw exception when no have gym helper meals`(
+        targetCalories: Double,
+        targetProtein: Double
+    ) {
+        // Given
+        every { mealRepository.getAllMeals() } returns meals
+
+        // Then && When
+        assertThrows<Exception> {
+            useCase
+                .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
+        }
+
+    }
+
     @Test
-    fun getGymHelperMealsByCaloriesAndProtein() {
+    fun `should return gym helper meals when target calories and target protein are vaild`() {
+        // Given
+        val targetCalories = 250.0
+        val targetProtein = 5.0
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase
+            .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
+
+        // Then
+        assertThat(result.size).isEqualTo(2)
+
     }
     //endregion
 

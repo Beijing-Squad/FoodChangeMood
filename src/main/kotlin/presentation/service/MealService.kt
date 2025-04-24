@@ -1,6 +1,10 @@
 package org.beijing.presentation.service
 
-abstract class MealService {
+import presentation.view_read.ConsoleIO
+
+abstract class MealService(
+    private val consoleIO: ConsoleIO
+) {
     open fun showService() {
         showOptionService()
         handleUserChoice()
@@ -11,6 +15,6 @@ abstract class MealService {
     abstract fun handleUserChoice()
 
     protected fun getUserInput(): String? {
-        return readlnOrNull()?.trim()
+        return consoleIO.readInput()?.trim()
     }
 }
