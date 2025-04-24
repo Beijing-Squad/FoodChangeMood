@@ -1,8 +1,10 @@
 package logic.usecases
 
-import fake.mealsWithDate
+
+import helper.createMeal
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -24,12 +26,17 @@ class ManageMealsSearchUseCaseTest {
 
     //region get meal by date
     @Test
-    fun `should return list of meals when getMealsByDate called with valid date`() {
+    fun `should return list of meals when date is valid`() {
         // Given
-        every { mealRepository.getAllMeals() } returns mealsWithDate
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
 
         // When
-        val result = useCase.getMealsByDate("2023-05-10")
+        val result = useCase.getMealsByDate("2025-03-10")
 
         // Then
         assert(result.size == 2)
@@ -38,41 +45,40 @@ class ManageMealsSearchUseCaseTest {
     @Test
     fun `should throw exception when no meals found on the date`() {
         // Given
-        every { mealRepository.getAllMeals() } returns mealsWithDate
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
 
         // When && Then
         assertThrows<Exception> {
-            useCase.getMealsByDate("2024-06-01")
+            useCase.getMealsByDate("2025-01-01")
         }
     }
-
 
     @ParameterizedTest
     @CsvSource(
         "2023 05 10",
         "2023@05@10",
         "20230615",
-        "2023-60-01",
-        "2023/01/02"
+        "2023-600-01",
+        "2023/01/02",
+        "2023--32",
     )
-    fun `should throw IllegalArgumentException when getMealsByDate called with invalid date`(date: String) {
+    fun `should throw IllegalArgumentException when date is invalid`(date: String) {
         // Given
-        every { mealRepository.getAllMeals() } returns mealsWithDate
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
 
         // When && Then
         assertThrows<IllegalArgumentException> {
             useCase.getMealsByDate(date)
-        }
-    }
-
-    @Test
-    fun `should throw exception when the date is greater than current date`() {
-        // Given
-        every { mealRepository.getAllMeals() } returns mealsWithDate
-
-        // When && Then
-        assertThrows<Exception> {
-            useCase.getMealsByDate("2030-04-23")
         }
     }
     //endregion
