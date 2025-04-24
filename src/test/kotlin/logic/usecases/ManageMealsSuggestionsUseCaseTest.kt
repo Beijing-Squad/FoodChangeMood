@@ -90,6 +90,16 @@ class ManageMealsSuggestionsUseCaseTest {
 
         Assertions.assertEquals(2, result.size)
     }
+    @Test
+    fun `should Not Include Duplicate Meals when Repository Returns Duplicates`() {
+        val meal = mealWithTags(1, listOf("italian", "for-large-groups"))
+
+        every { mealRepository.getAllMeals() } returns listOf(meal, meal)
+
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        Assertions.assertEquals(1, result.distinctBy { it.id }.size)
+    }
 
 //endregion
 
