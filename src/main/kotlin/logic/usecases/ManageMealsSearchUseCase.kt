@@ -1,8 +1,8 @@
 package org.beijing.logic.usecases
 
-import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.utils.KmpSearch
+import org.beijing.logic.usecases.utils.parseDate
 import org.beijing.model.Meal
 import kotlin.math.abs
 
@@ -11,9 +11,9 @@ class ManageMealsSearchUseCase(
 ) {
 
     // region search meal by date
-    fun getMealsByDate(date: LocalDate): List<Meal> {
+    fun getMealsByDate(date: String): List<Meal> {
         return mealRepository.getAllMeals()
-            .filter { it.submitted == date }
+            .filter { it.submitted == date.parseDate() }
             .ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
     // endregion
@@ -28,14 +28,24 @@ class ManageMealsSearchUseCase(
 
     //region search meal for gym helper by calories and protein
     fun getGymHelperMealsByCaloriesAndProtein(targetCalories: Double, targetProtein: Double): List<Meal> {
-        return mealRepository.getAllMeals().filter { currentMeal ->
-            isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
-        }
+        checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
+        return mealRepository.getAllMeals()
+            .filter { currentMeal ->
+                isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
+            }.ifEmpty { throw Exception("\n⚠️ No meals found!\n🍽️ Try searching again or check your filters.\n") }
+    }
+
+    private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
+        if (targetCalories <= 0 || targetProtein <= 0) throw Exception(
+            "\nPlease ensure that both Calories " + "and Protein inputs are positive values."
+        )
     }
 
     private fun isMealWithinNutritionTargets(meal: Meal, targetCalories: Double, targetProtein: Double): Boolean {
-        return calculateNutrition(meal.nutrition.caloriesKcal, targetCalories) <= MATCH_PERCENTAGE &&
-                calculateNutrition(meal.nutrition.proteinGrams, targetProtein) <= MATCH_PERCENTAGE
+        return calculateNutrition(
+            meal.nutrition.caloriesKcal,
+            targetCalories
+        ) <= MATCH_PERCENTAGE && calculateNutrition(meal.nutrition.proteinGrams, targetProtein) <= MATCH_PERCENTAGE
     }
 
     private fun calculateNutrition(currentNutrition: Double, targetNutrition: Double): Double {
