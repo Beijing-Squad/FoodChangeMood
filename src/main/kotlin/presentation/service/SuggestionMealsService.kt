@@ -35,7 +35,7 @@ class SuggestionMealsService() : MealService() {
     }
 
     // region Keto Diet
-    private fun launchKetoMealHelper() {
+    fun launchKetoMealHelper() {
         val usedKetoMealIds = mutableSetOf<Int>()
         while (true) {
             val meal = suggestionMeals.suggestKetoMeal(usedKetoMealIds)
