@@ -104,10 +104,38 @@ class ManageMealsSearchUseCaseTest {
 
     //region get meal by id
     @Test
-    fun `should return meal when id is valid`() {
+    fun `should return the matched meal when id is valid`() {
         // Given
+        val id = 1
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(id = 1),
+            createMeal(id = 2),
+            createMeal(id = 3),
+            createMeal(id = 4),
+        )
 
+        // When
+        val result = useCase.getMealById(id)
 
+        // Then
+        assert(result.id == id)
+    }
+
+    @Test
+    fun `should throw exception when no found meal for the id`() {
+        // Given
+        val id = 5
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(id = 1),
+            createMeal(id = 2),
+            createMeal(id = 3),
+            createMeal(id = 4),
+        )
+
+        // When && Then
+        assertThrows<Exception> {
+            useCase.getMealById(id)
+        }
     }
     //endregion
 
