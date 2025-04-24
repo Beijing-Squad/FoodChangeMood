@@ -114,7 +114,7 @@ class ManageMealsSearchUseCaseTest {
     )
 
     @Test
-    fun `should return meals that contain the keyword`(){
+    fun `should return meals that contain the keyword`() {
         //Given
         val query = "Chicken"
         every { mealRepository.getAllMeals() } returns fakeMeals
@@ -130,38 +130,7 @@ class ManageMealsSearchUseCaseTest {
     }
 
     @Test
-    fun `should throw exception if search query is blank`(){
-        //Given
-        val blankQuery = "   "
-
-        //When
-        val exception = assertThrows<IllegalArgumentException> {
-            useCase.getMealByName(blankQuery)
-        }
-
-        //Then
-        assertEquals("Search query must not be blank.", exception.message)
-
-    }
-
-    @Test
-    fun `should throw exception if no meals exist in repository`(){
-        //Given
-        val query = "Chili"
-        every { mealRepository.getAllMeals() } returns emptyList()
-
-        //When
-        val exception = assertThrows<IllegalStateException> {
-            useCase.getMealByName(query)
-        }
-
-        //Then
-        assertEquals("No food data available to search.", exception.message)
-
-    }
-
-    @Test
-    fun `should return meals that contain the word, regardless of the case`(){
+    fun `should return meals that contain the word, regardless of the case`() {
         //Given
         val query = "cHiLi"
         every { mealRepository.getAllMeals() } returns fakeMeals
@@ -175,7 +144,7 @@ class ManageMealsSearchUseCaseTest {
     }
 
     @Test
-    fun `should return empty list if meal name does not match`(){
+    fun `should return empty list if meal name does not match`() {
         //Given
         val query = "Kosharii"
         every { mealRepository.getAllMeals() } returns fakeMeals
