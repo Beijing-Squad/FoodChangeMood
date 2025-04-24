@@ -92,12 +92,10 @@ class ManageMealsSearchUseCase(
         return mealRepository.getAllMeals()
             .asSequence()
             .filter { meal ->
-                meal.tags.any {
-                    it.lowercase().contains(query)
-                    meal.tags.joinToString(" ").lowercase().contains(query)
-                }
+                meal.tags.any { it.lowercase().contains(query) } ||
+                        meal.tags.joinToString(" ").lowercase().contains(query)
             }
-            .shuffled()
+            .sortedBy { it.name }
             .take(20)
             .toList()
     }
