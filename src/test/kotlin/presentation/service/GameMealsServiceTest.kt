@@ -23,13 +23,13 @@ class GameMealsServiceTest {
     }
 
     @AfterEach
-    fun tearDown() {
+    fun clear() {
         unmockkAll()
     }
 
     //region Ingredient Game Tests
     @Test
-    fun `should handle successful ingredient game round`() {
+    fun `should handle successful ingredient game round when user provides correct answer`() {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val initialState = IngredientGameState()
@@ -53,7 +53,7 @@ class GameMealsServiceTest {
     }
 
     @Test
-    fun `should handle game over with maximum score`() {
+    fun `should handle game over when user reaches maximum score`() {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val gameOverState = IngredientGameState(correctAnswers = 15, score = 15000)
@@ -74,7 +74,7 @@ class GameMealsServiceTest {
     }
 
     @Test
-    fun `should handle wrong answer in ingredient game`() {
+    fun `should handle wrong answer when user provides incorrect option`() {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val state = IngredientGameState()
@@ -97,7 +97,7 @@ class GameMealsServiceTest {
     }
 
     @Test
-    fun `should handle invalid numeric input in ingredient game`() {
+    fun `should handle invalid input when user provides out of range number`() {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val state = IngredientGameState()
@@ -118,7 +118,7 @@ class GameMealsServiceTest {
     }
 
     @Test
-    fun `should handle non-numeric input in ingredient game`() {
+    fun `should handle non-numeric input when user provides text instead of number`() {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val state = IngredientGameState()
@@ -139,7 +139,7 @@ class GameMealsServiceTest {
     }
 
     @Test
-    fun `should handle null input in ingredient game`() {
+    fun `should handle null input when user provides no input`() {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val state = IngredientGameState()
@@ -158,6 +158,96 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine(match { it.contains("Invalid input") })
         }
     }
+
+    @Test
+    fun `should handle failure when game fails to start`() {
+        // Given
+        val errorMessage = "Test error message"
+        every { gamesMealsUseCase.isGameOver(any()) } returns false
+        every { gamesMealsUseCase.startIngredientGame(any()) } returns Result.failure(Exception(errorMessage))
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+
+        // When
+        gameMealsService.launchIngredientGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine(match { it.contains("⚠ $errorMessage") })
+            consoleIO.viewWithLine(match { it.contains("Final Score: 0") })
+        }
+    }
+
+    @Test
+    fun `should handle empty input when user provides only spaces`() {
+        // Given
+        val round = createIngredientRound("Pizza", "Cheese")
+        val state = IngredientGameState()
+        
+        every { gamesMealsUseCase.isGameOver(any()) } returns false
+        every { gamesMealsUseCase.startIngredientGame(any()) } returns Result.success(round to state)
+        every { consoleIO.readInput() } returns ""
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+
+        // When
+        gameMealsService.launchIngredientGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine(match { it.contains("Invalid input") })
+            consoleIO.viewWithLine(match { it.contains("Game Over") })
+        }
+    }
+
+    @Test
+    fun `should handle valid numeric input when user provides correct number`() {
+        // Given
+        val round = createIngredientRound("Pizza", "Cheese")
+        val state = IngredientGameState()
+        val updatedState = IngredientGameState(score = 1000, correctAnswers = 1)
+        
+        every { gamesMealsUseCase.isGameOver(any()) } returnsMany listOf(false, true)
+        every { gamesMealsUseCase.startIngredientGame(any()) } returns Result.success(round to state)
+        every { gamesMealsUseCase.checkAnswer(1, round, state) } returns (true to updatedState)
+        every { consoleIO.readInput() } returns "1"
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+
+        // When
+        gameMealsService.launchIngredientGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine(match { it.contains("Correct!") })
+            consoleIO.viewWithLine(match { it.contains("Score: 1000") })
+        }
+    }
+
+    @Test
+    fun `should handle input with spaces when user provides number with leading and trailing spaces`() {
+        // Given
+        val round = createIngredientRound("Pizza", "Cheese")
+        val state = IngredientGameState()
+        val updatedState = IngredientGameState(score = 1000, correctAnswers = 1)
+        
+        every { gamesMealsUseCase.isGameOver(any()) } returnsMany listOf(false, true)
+        every { gamesMealsUseCase.startIngredientGame(any()) } returns Result.success(round to state)
+        every { gamesMealsUseCase.checkAnswer(1, round, state) } returns (true to updatedState)
+        every { consoleIO.readInput() } returns "  1  "
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+
+        // When
+        gameMealsService.launchIngredientGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine(match { it.contains("Correct!") })
+            consoleIO.viewWithLine(match { it.contains("Score: 1000") })
+        }
+    }
+    
     //endregion
 
     private fun createIngredientRound(

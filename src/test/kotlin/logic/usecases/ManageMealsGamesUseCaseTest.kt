@@ -137,9 +137,20 @@ class ManageMealsGamesUseCaseTest {
         assertThat(selectedMeals).containsAtLeast("Pizza", "Burger")
     }
 
-//endregion
+    @Test
+    fun `should return failure when randomOrNull returns null`() {
+        // Given
+        val mealWithOneIngredient = createMeal(id = 1, name = "Test Meal", ingredients = listOf("Ingredient1"))
+        every { mealRepository.getAllMeals() } returns listOf(mealWithOneIngredient)
+        useCase = ManageMealsGamesUseCase(mealRepository)
 
-    //region Check Answer Tests
+        // When
+        val result = useCase.startIngredientGame(IngredientGameState())
+
+        // Then
+        assertThat(result.isSuccess).isTrue()
+    }
+
     @Test
     fun `should return false when checking answer with invalid option index`() {
         // Given
@@ -226,7 +237,6 @@ class ManageMealsGamesUseCaseTest {
         assertThat(state.correctAnswers).isEqualTo(3)
     }
 
-    //region Game Over Tests
     @ParameterizedTest
     @CsvSource(
         "14,false",
@@ -248,7 +258,7 @@ class ManageMealsGamesUseCaseTest {
     }
 
     @Test
-    fun `should transition to game over when reaching maximum correct answers`() {
+    fun `should  game over when reaching maximum correct answers`() {
         // Given
         val round = IngredientGameRound(
             mealName = "Pizza",
@@ -267,7 +277,7 @@ class ManageMealsGamesUseCaseTest {
     }
 
     @Test
-    fun `should return correct number of options when starting game with complex meal`() {
+    fun `should return correct number of options when starting game with many ingredients meal`() {
         // Given
         val meal = createMeal(
             id = 1,
@@ -288,7 +298,8 @@ class ManageMealsGamesUseCaseTest {
             assertThat(round.options.distinct()).hasSize(3)
         }
     }
-//endregion
+    //endregion
+
 
     private fun createMeal(id: Int, name: String, ingredients: List<String>): Meal {
         return Meal(
