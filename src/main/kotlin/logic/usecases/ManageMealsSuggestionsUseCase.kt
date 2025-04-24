@@ -77,13 +77,7 @@ class ManageMealsSuggestionsUseCase(
 
     // region suggest meals have more than seven hundred calories
     fun suggestMealHaveMoreThanSevenHundredCalories(): List<Meal> {
-
-        val filteredMeals = mealRepository.getAllMeals().filter(::checkMealCaloriesContent)
-        return filteredMeals
-    }
-
-    fun checkMealCaloriesContent(meal: Meal): Boolean {
-        return meal.nutrition.caloriesKcal >= CALORIES_CONTENT_NEEDED
+        return mealRepository.getAllMeals().filter { meal -> meal.nutrition.caloriesKcal >= CALORIES_CONTENT_NEEDED }
     }
     //endregion
 
