@@ -81,15 +81,12 @@ class ManageMealsGamesUseCase(
             .firstOrNull()
 
         return availableMeal?.let { meal ->
-            val correct = meal.ingredients.randomOrNull()
-                ?: return Result.failure(Exception(NO_INGREDIENTS))
-
+            val correct = meal.ingredients.random()
             val options = generateOptions(correct)
             val updatedState = state.copy(usedMeals = state.usedMeals + meal.id)
             Result.success(IngredientGameRound(meal.name, correct, options) to updatedState)
         } ?: Result.failure(Exception(NO_MEALS))
     }
-
     fun checkAnswer(
         userChoice: Int,
         round: IngredientGameRound,
