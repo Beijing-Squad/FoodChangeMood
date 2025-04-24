@@ -226,7 +226,7 @@ class SuggestionMealsServiceTest {
     // Update the existing mockUserInput function to handle empty and blank inputs
     private fun mockUserInput(vararg inputs: String) {
         val inputIterator = inputs.iterator()
-        mockkStatic("kotlin.io.ConsoleKt")
+        mockkStatic("")
         every { readlnOrNull() } answers {
             when {
                 inputIterator.hasNext() -> {
