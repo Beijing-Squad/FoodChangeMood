@@ -21,11 +21,21 @@ class ManageMealsSuggestionsUseCase(
 
     //region suggest ten random meals contains potato in ingredients
     fun suggestTenRandomMealsContainsPotato(): List<Meal> {
-        return mealRepository.getAllMeals().filter { meal ->
-            meal.ingredients.any { ingredient ->
-                ingredient.contains(POTATO, true)
+        return mealRepository.getAllMeals()
+            .filter { meal ->
+                meal.ingredients.any { ingredient ->
+                    ingredient.contains(POTATO, true)
+                }
             }
-        }.shuffled().take(MEALS_SUGGESTION_TEN_LIMIT).toList()
+            .also { mealsWithPotato ->
+                if (mealsWithPotato.isEmpty()) {
+                    throw IllegalArgumentException("There are no meals that contain potato.")
+                } else if (mealsWithPotato.size < 10) {
+                    throw IllegalArgumentException("There are not enough $MEALS_SUGGESTION_TEN_LIMIT meals containing potato.")
+                }
+            }
+            .shuffled()
+            .take(MEALS_SUGGESTION_TEN_LIMIT)
     }
     //endregion
 
@@ -67,13 +77,7 @@ class ManageMealsSuggestionsUseCase(
 
     // region suggest meals have more than seven hundred calories
     fun suggestMealHaveMoreThanSevenHundredCalories(): List<Meal> {
-
-        val filteredMeals = mealRepository.getAllMeals().filter(::checkMealCaloriesContent)
-        return filteredMeals
-    }
-
-    fun checkMealCaloriesContent(meal: Meal): Boolean {
-        return meal.nutrition.caloriesKcal >= CALORIES_CONTENT_NEEDED
+        return mealRepository.getAllMeals().filter { meal -> meal.nutrition.caloriesKcal >= CALORIES_CONTENT_NEEDED }
     }
     //endregion
 
