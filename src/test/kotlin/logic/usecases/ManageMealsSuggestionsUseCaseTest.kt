@@ -1,8 +1,11 @@
 package logic.usecases
 
+import helper.mealWithTags
+import io.mockk.every
 import io.mockk.mockk
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -31,7 +34,19 @@ class ManageMealsSuggestionsUseCaseTest {
 
     //region suggest italian large group meals
     @Test
-    fun suggestItalianLargeGroupsMeals() {
+    fun `should Return Meals With Both Tags when Meals Contain Italian And Large Group Tags`() {
+        val meals = listOf(
+            mealWithTags(1, listOf("italian", "for-large-groups")),
+            mealWithTags(2, listOf("italian")),
+            mealWithTags(3, listOf("for-large-groups")),
+            mealWithTags(4, listOf("dessert"))
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        assert(result.size == 1&&result.first().id==1)
     }
 //endregion
 
