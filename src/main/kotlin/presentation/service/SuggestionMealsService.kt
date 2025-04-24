@@ -79,7 +79,9 @@ class SuggestionMealsService(
         val tenRandomPotatoMeals = suggestionMeals.suggestTenRandomMealsContainsPotato()
 
         if (tenRandomPotatoMeals.isEmpty()) {
-            consoleIO.viewWithLine("There is no meals contains potato in their ingredients")
+            consoleIO.viewWithLine("❌ There is no meals found contains potato in their ingredients")
+        } else if (tenRandomPotatoMeals.size < 10) {
+            consoleIO.viewWithLine("😔 Sorry, no enough meals found for suggestion, you can try another service")
         } else {
             consoleIO.viewWithLine("-".repeat(70))
             consoleIO.viewWithLine("\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57List of ten random Meals with potato in their ingredients\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57")
