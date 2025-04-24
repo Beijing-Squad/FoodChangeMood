@@ -55,6 +55,7 @@ class SuggestionMealsService(
             when (consoleIO.readInput()?.trim()?.lowercase()) {
                 "yes" -> {
                     viewMealDetails.displayMealDetails(meal)
+                    break
                 }
 
                 "no" -> {

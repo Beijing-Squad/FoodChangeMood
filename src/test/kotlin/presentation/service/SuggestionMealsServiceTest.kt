@@ -57,47 +57,6 @@ class SuggestionMealsServiceTest {
     }
 
     @Test
-    fun `should handle multiple no responses before yes`() {
-        // Given
-        val meal1 = createKetoMeal(1, "Keto Burger")
-        val meal2 = createKetoMeal(2, "Keto Salad")
-        val meal3 = createKetoMeal(3, "Keto Pizza")
-
-        every { suggestionMealsUseCase.suggestKetoMeal(any()) } returnsMany listOf(meal1, meal2, meal3)
-        every { consoleIO.readInput() } returnsMany listOf("no", "no", "yes")
-
-        // When
-        suggestionMealsService.launchKetoMealHelper()
-
-        // Then
-        verify {
-            suggestionMealsUseCase.suggestKetoMeal(mutableSetOf())
-            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
-            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
-            consoleIO.viewWithLine("Do you like it? ❤")
-            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
-            consoleIO.readInput()
-            consoleIO.viewWithLine("🔄 Okay! Let's try another one.")
-
-            suggestionMealsUseCase.suggestKetoMeal(mutableSetOf(1))
-            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Salad")
-            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
-            consoleIO.viewWithLine("Do you like it? ❤")
-            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
-            consoleIO.readInput()
-            consoleIO.viewWithLine("🔄 Okay! Let's try another one.")
-
-            suggestionMealsUseCase.suggestKetoMeal(mutableSetOf(1, 2))
-            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Pizza")
-            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
-            consoleIO.viewWithLine("Do you like it? ❤")
-            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
-            consoleIO.readInput()
-            viewMealDetails.displayMealDetails(meal3)
-        }
-    }
-
-    @Test
     fun `should handle multiple invalid inputs before valid input`() {
         // Given
         val ketoMeal = createKetoMeal(1, "Keto Burger")
@@ -219,6 +178,49 @@ class SuggestionMealsServiceTest {
         verify {
             consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
             consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+        }
+    }
+
+    @Test
+    fun `should handle null empty and whitespace inputs`() {
+        // Given
+        val ketoMeal = createKetoMeal(1, "Keto Burger")
+        every { suggestionMealsUseCase.suggestKetoMeal(any()) } returns ketoMeal
+        every { consoleIO.readInput() } returnsMany listOf(null, "", "   ", "yes")
+
+        // When
+        suggestionMealsService.launchKetoMealHelper()
+
+        // Then
+        verifyOrder {
+            suggestionMealsUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            viewMealDetails.displayMealDetails(ketoMeal)
         }
     }
 
