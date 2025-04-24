@@ -28,6 +28,7 @@ class ManageMealsSearchUseCaseTest {
     @Test
     fun `should return list of meals when date is valid`() {
         // Given
+        val date = "2025-03-10"
         every { mealRepository.getAllMeals() } returns listOf(
             createMeal(submitted = LocalDate(2025, 2, 10)),
             createMeal(submitted = LocalDate(2025, 3, 10)),
@@ -36,7 +37,7 @@ class ManageMealsSearchUseCaseTest {
         )
 
         // When
-        val result = useCase.getMealsByDate("2025-03-10")
+        val result = useCase.getMealsByDate(date)
 
         // Then
         assert(result.size == 2)
@@ -45,6 +46,7 @@ class ManageMealsSearchUseCaseTest {
     @Test
     fun `should throw exception when no meals found on the date`() {
         // Given
+        val date = "2025-01-01"
         every { mealRepository.getAllMeals() } returns listOf(
             createMeal(submitted = LocalDate(2025, 2, 10)),
             createMeal(submitted = LocalDate(2025, 3, 10)),
@@ -54,7 +56,7 @@ class ManageMealsSearchUseCaseTest {
 
         // When && Then
         assertThrows<Exception> {
-            useCase.getMealsByDate("2025-01-01")
+            useCase.getMealsByDate(date)
         }
     }
 
@@ -81,11 +83,31 @@ class ManageMealsSearchUseCaseTest {
             useCase.getMealsByDate(date)
         }
     }
+
+    @Test
+    fun `should throw IllegalArgumentException when date is empty`() {
+        // Given
+        val date = ""
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
+
+        // When && Then
+        assertThrows<IllegalArgumentException> {
+            useCase.getMealsByDate(date)
+        }
+    }
     //endregion
 
-    //region get meal by date and id
+    //region get meal by id
     @Test
-    fun getMealByDateAndId() {
+    fun `should return meal when id is valid`() {
+        // Given
+
+
     }
     //endregion
 
