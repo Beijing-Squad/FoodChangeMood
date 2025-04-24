@@ -48,6 +48,21 @@ class ManageMealsSuggestionsUseCaseTest {
 
         assert(result.size == 1&&result.first().id==1)
     }
+    @Test
+    fun `should Return EmptyList when No Meal Matches Both Tags`() {
+        val meals = listOf(
+            mealWithTags(1, listOf("italian")),
+            mealWithTags(2, listOf("for-large-groups")),
+            mealWithTags(3, listOf("dessert"))
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        Assertions.assertTrue(result.isEmpty())
+    }
+
 //endregion
 
     //region suggest keto meal
