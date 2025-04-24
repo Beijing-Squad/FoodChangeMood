@@ -1,21 +1,49 @@
 package logic.usecases
 
+import io.mockk.mockk
+import org.beijing.logic.MealRepository
+import org.beijing.logic.usecases.ManageMealsGamesUseCase
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class ManageMealsGamesUseCaseTest {
 
-@Test
- fun startNewRound() {}
+    private lateinit var mealRepository: MealRepository
+    private lateinit var useCase: ManageMealsGamesUseCase
 
-@Test
- fun makeGuess() {}
+    @BeforeEach
+    fun setup() {
+        mealRepository = mockk()
+        useCase = ManageMealsGamesUseCase(mealRepository)
+    }
 
-@Test
- fun startIngredientGame() {}
+    //region start new round
+    @Test
+    fun startNewRound() {
+    }
+    //endregion
 
-@Test
- fun checkAnswer() {}
+    // region make guess
+    @Test
+    fun makeGuess() {
+    }
+    //endregion
 
-@Test
- fun isGameOver() {}
+    //region start ingredient game
+    @Test
+    fun startIngredientGame() {
+    }
+//endregion
+
+    //region check answer
+    @Test
+    fun checkAnswer() {
+    }
+//endregion
+
+    //region is game over
+    @Test
+    fun isGameOver() {
+    }
+    //endregion
 }
