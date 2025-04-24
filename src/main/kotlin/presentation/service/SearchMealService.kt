@@ -25,7 +25,7 @@ class SearchMealService(
         consoleIO.view("\nhere: ")
         when (consoleIO.readInput()) {
             "1" -> launchGymHelper()
-            "2" -> launchSearchByName()
+            "2" -> launchSearchMealByName()
             "3" -> launchMealsByDate()
             "4" -> launchSearchByCountry()
             "5" -> launchIraqiMeals()
@@ -35,9 +35,9 @@ class SearchMealService(
     }
 
     // region search by name
-    private fun launchSearchByName() {
+    private fun launchSearchMealByName() {
         try {
-            val mealNameQuery = getMealNameFromInput()
+            val mealNameQuery = readMealNameInput()
             val searchResults = searchMeals.getMealByName(mealNameQuery)
             showMealsSearchResult(searchResults, mealNameQuery)
         } catch (e: IllegalArgumentException) {
@@ -46,7 +46,7 @@ class SearchMealService(
         }
     }
 
-    private fun getMealNameFromInput(): String {
+    private fun readMealNameInput(): String {
         consoleIO.view("Enter meal name to search: ")
         val userInput = consoleIO.readInput()?.trim()
             ?: throw IllegalArgumentException("Meal name input cannot be null.")
