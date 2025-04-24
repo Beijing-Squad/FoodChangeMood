@@ -1,4 +1,4 @@
-package helper
+package fake
 
 import kotlinx.datetime.LocalDate
 import org.beijing.model.Meal
