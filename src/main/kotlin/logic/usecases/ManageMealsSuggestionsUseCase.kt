@@ -32,9 +32,9 @@ class ManageMealsSuggestionsUseCase(
     //region suggest italian large group meals
     fun suggestItalianLargeGroupsMeals(): List<Meal> {
         return mealRepository.getAllMeals()
-            .filter {
-                FOR_LARGE_GROUP in it.tags.map(String::lowercase) &&
-                        ITALIAN in it.tags.map(String::lowercase)
+            .filter { meal ->
+                meal.tags.any { it.equals(FOR_LARGE_GROUP, ignoreCase = true) } &&
+                        meal.tags.any { it.equals(ITALIAN, ignoreCase = true) }
             }
     }//endregion
 
