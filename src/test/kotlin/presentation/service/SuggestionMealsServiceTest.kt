@@ -32,10 +32,9 @@ class SuggestionMealsServiceTest {
     }
 
     @AfterEach
-    fun tearDown() {
+    fun clear() {
         outputStream.reset()
         unmockkAll()
-        System.setOut(System.out)
     }
 
 // region keto meal service
