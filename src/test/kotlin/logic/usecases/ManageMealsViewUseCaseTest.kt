@@ -3,9 +3,9 @@ package logic.usecases
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import logic.fakeData.meals
-import logic.fakeData.mealsWithNoSeaFood
-import logic.fakeData.seafoodMealOrders
+import fake.mealsListWithSeaFood
+import fake.mealsWithNoSeaFood
+import fake.seafoodMealOrders
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsViewUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -32,7 +32,7 @@ class ManageMealsViewUseCaseTest {
     @Test
     fun `should return sorted seaFood meals ordered by protein When give list of meals`() {
         //Given
-        every { mealRepository.getAllMeals() } returns meals
+        every { mealRepository.getAllMeals() } returns mealsListWithSeaFood
         //When
         val result = useCase.getSortedSeaFoodByProtein()
         //Then

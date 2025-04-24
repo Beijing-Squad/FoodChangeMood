@@ -1,11 +1,11 @@
-package logic.fakeData
+package fake
 
 import kotlinx.datetime.LocalDate
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
 
 
-val meals = listOf(
+val mealsListWithSeaFood = listOf(
     Meal(
         name = "Grilled Salmon",
         id = 1,
