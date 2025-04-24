@@ -76,7 +76,7 @@ class ManageMealsSearchUseCaseTest {
     }
 
     @Test
-    fun `should return gym helper meals when have it`() {
+    fun `should return gym helper meals when target calories and target protein are vaild`() {
         // Given
         val targetCalories = 250.0
         val targetProtein = 5.0
