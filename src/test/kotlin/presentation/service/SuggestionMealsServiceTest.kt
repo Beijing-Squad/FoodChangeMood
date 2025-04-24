@@ -26,7 +26,7 @@ class SuggestionMealsServiceTest {
 
     //region handle user choice
     @Test
-    fun `should show option of sub feature when suggest meal selected`() {
+    fun `should show options of sub feature when suggest meal option already selected`() {
         // When
         suggestMealService.showOptionService()
 
@@ -63,10 +63,9 @@ class SuggestionMealsServiceTest {
     }
 
     @Test
-    fun `should show the error message when throw an exception`() {
+    fun `should show an error message when throw an exception`() {
         // Given
         val errorMessage = "no meals contains potato found"
-
         every { manageMealsSuggest.suggestTenRandomMealsContainsPotato() } throws IllegalArgumentException(errorMessage)
 
         // When
