@@ -1,11 +1,11 @@
 package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
+import fake.mealsContainsPotato
+import fake.mealsWithoutPotato
+import fake.nineMealsContainsPotato
 import io.mockk.every
 import io.mockk.mockk
-import mealsWithoutPotato
-import nineMealsContainsPotato
-import mealsContainsPotato
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.junit.jupiter.api.BeforeEach
