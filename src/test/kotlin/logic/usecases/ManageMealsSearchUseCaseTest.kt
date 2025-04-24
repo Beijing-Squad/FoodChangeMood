@@ -1,9 +1,8 @@
 package logic.usecases
 
 
-import helper.createMeal
-import io.mockk.every
 import com.google.common.truth.Truth.assertThat
+import fake.createMeal
 import fake.meals
 import io.mockk.every
 import io.mockk.mockk
