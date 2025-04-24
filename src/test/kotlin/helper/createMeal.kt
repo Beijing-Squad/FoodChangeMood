@@ -1,4 +1,4 @@
-package fake
+package helper
 
 import kotlinx.datetime.LocalDate
 import org.beijing.model.Meal
@@ -41,10 +41,3 @@ fun createMeal(
         nIngredients = nIngredients
     )
 }
-
-val mealsWithDate = listOf(
-    createMeal(submitted = LocalDate(2023, 5, 10)),
-    createMeal(submitted = LocalDate(2023, 5, 10)),
-    createMeal(submitted = LocalDate(2023, 7, 20)),
-    createMeal(submitted = LocalDate(2023, 9, 12))
-)
