@@ -30,8 +30,8 @@ class ManageMealsSuggestionsUseCase(
             .also { mealsWithPotato ->
                 if (mealsWithPotato.isEmpty()) {
                     throw IllegalArgumentException("There are no meals that contain potato.")
-                } else if (mealsWithPotato.size < 10) {
-                    throw IllegalArgumentException("There are not enough $MEALS_SUGGESTION_TEN_LIMIT meals containing potato.")
+                } else if (mealsWithPotato.size < MEALS_SUGGESTION_TEN_LIMIT) {
+                    throw IllegalArgumentException("There are not enough meals containing potato to suggest, try another service.")
                 }
             }
             .shuffled()
