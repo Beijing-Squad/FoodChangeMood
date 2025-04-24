@@ -55,17 +55,10 @@ class ManageMealsSearchUseCase(
 
     //region search meal by name
     fun getMealByName(searchQuery: String): List<Meal> {
-        validateSearchQuery(searchQuery)
 
         val allMeals = fetchAllMeals()
 
         return filterMealsByName(allMeals, searchQuery)
-    }
-
-    private fun validateSearchQuery(query: String) {
-        if (query.isBlank()) {
-            throw IllegalArgumentException(BLANK_SEARCH_EXCEPTION)
-        }
     }
 
     private fun fetchAllMeals(): List<Meal> {
