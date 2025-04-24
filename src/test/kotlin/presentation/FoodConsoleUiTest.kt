@@ -64,7 +64,7 @@ class FoodConsoleUiTest {
         val inputChoice = "1"
         val exitChoice = "0"
         val titleOfFeature = "1. Suggestion Meal 🤔"
-        every { consoleIO.readInput() } returnsMany listOf(inputChoice, exitChoice)
+        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
 
         // When
         foodConsoleUi.start()
@@ -82,7 +82,7 @@ class FoodConsoleUiTest {
         val inputChoice = "2"
         val exitChoice = "0"
         val titleOfFeature = "2. Search Meal \uD83D\uDD0E"
-        every { consoleIO.readInput() } returnsMany listOf(inputChoice, exitChoice)
+        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
 
         // When
         foodConsoleUi.start()
@@ -99,7 +99,7 @@ class FoodConsoleUiTest {
         val inputChoice = "3"
         val exitChoice = "0"
         val titleOfFeature = "3. Game Meal \uD83C\uDFAE"
-        every { consoleIO.readInput() } returnsMany listOf(inputChoice, exitChoice)
+        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
 
         // When
         foodConsoleUi.start()
@@ -116,7 +116,7 @@ class FoodConsoleUiTest {
         val inputChoice = "4"
         val exitChoice = "0"
         val titleOfFeature = "4. View Meal \uD83E\uDD63"
-        every { consoleIO.readInput() } returnsMany listOf(inputChoice, exitChoice)
+        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
 
         // When
         foodConsoleUi.start()
@@ -137,7 +137,7 @@ class FoodConsoleUiTest {
         // Given
         val exitChoice = "0"
         val errorMessage = "❌ Invalid input! Please enter a number between 0 and 4"
-        every { consoleIO.readInput() } returnsMany listOf(inputChoice, exitChoice)
+        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
 
         // When
         foodConsoleUi.start()
