@@ -100,7 +100,21 @@ class ManageMealsSuggestionsUseCaseTest {
 
         Assertions.assertEquals(1, result.distinctBy { it.id }.size)
     }
+    @Test
+    fun ` should Ignore Meals With Empty Or Null Tags when Filtering For Required Tags`() {
+        val meals = listOf(
+            mealWithTags(1, listOf("italian", "for-large-groups")),
+            mealWithTags(2, emptyList()),
+            mealWithTags(3, listOf())
+        )
 
+        every { mealRepository.getAllMeals() } returns meals
+
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        Assertions.assertEquals(1, result.size)
+        Assertions.assertEquals(1, result.first().id)
+    }
 //endregion
 
     //region suggest keto meal
