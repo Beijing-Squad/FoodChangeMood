@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.view_read.ConsoleIO
 import kotlinx.datetime.LocalDate
+import org.junit.jupiter.api.AfterEach
 
 class SuggestionMealsServiceTest {
 
@@ -23,11 +24,21 @@ class SuggestionMealsServiceTest {
         suggestionMealsUseCase = mockk(relaxed = true)
         viewMealDetails = mockk(relaxed = true)
         consoleIO = mockk(relaxed = true)
+
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+        every { viewMealDetails.displayMealDetails(any()) } just Runs
+
         suggestionMealsService = SuggestionMealsService(
             suggestionMeals = suggestionMealsUseCase,
             viewMealDetails = viewMealDetails,
             consoleIO = consoleIO
         )
+    }
+
+    @AfterEach
+    fun clear() {
+        unmockkAll()
     }
 
     @Test
@@ -45,7 +56,7 @@ class SuggestionMealsServiceTest {
         }
     }
 
-   @Test
+    @Test
     fun `should handle multiple no responses before yes`() {
         // Given
         val meal1 = createKetoMeal(1, "Keto Burger")
@@ -163,16 +174,17 @@ class SuggestionMealsServiceTest {
             viewMealDetails.displayMealDetails(ketoMeal)
         }
     }
-  @Test
-  fun `should break when no more keto meals are available`() {
-      every { suggestionMealsUseCase.suggestKetoMeal(any()) } returns null
 
-      suggestionMealsService.launchKetoMealHelper()
+    @Test
+    fun `should break when no more keto meals are available`() {
+        every { suggestionMealsUseCase.suggestKetoMeal(any()) } returns null
 
-      verify {
-          consoleIO.viewWithLine("😔 No more keto meals to suggest.")
-      }
-  }
+        suggestionMealsService.launchKetoMealHelper()
+
+        verify {
+            consoleIO.viewWithLine("😔 No more keto meals to suggest.")
+        }
+    }
 
     @Test
     fun `should handle no response and show next meal`() {
