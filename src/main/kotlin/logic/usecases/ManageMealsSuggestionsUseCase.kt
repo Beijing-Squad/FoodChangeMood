@@ -21,20 +21,30 @@ class ManageMealsSuggestionsUseCase(
 
     //region suggest ten random meals contains potato in ingredients
     fun suggestTenRandomMealsContainsPotato(): List<Meal> {
-        return mealRepository.getAllMeals().filter { meal ->
-            meal.ingredients.any { ingredient ->
-                ingredient.contains(POTATO, true)
+        return mealRepository.getAllMeals()
+            .filter { meal ->
+                meal.ingredients.any { ingredient ->
+                    ingredient.contains(POTATO, true)
+                }
             }
-        }.shuffled().take(MEALS_SUGGESTION_TEN_LIMIT).toList()
+            .also { mealsWithPotato ->
+                if (mealsWithPotato.isEmpty()) {
+                    throw IllegalArgumentException("There are no meals that contain potato.")
+                } else if (mealsWithPotato.size < 10) {
+                    throw IllegalArgumentException("There are not enough $MEALS_SUGGESTION_TEN_LIMIT meals containing potato.")
+                }
+            }
+            .shuffled()
+            .take(MEALS_SUGGESTION_TEN_LIMIT)
     }
     //endregion
 
     //region suggest italian large group meals
     fun suggestItalianLargeGroupsMeals(): List<Meal> {
         return mealRepository.getAllMeals()
-            .filter {
-                FOR_LARGE_GROUP in it.tags.map(String::lowercase) &&
-                        ITALIAN in it.tags.map(String::lowercase)
+            .filter { meal ->
+                meal.tags.any { it.equals(FOR_LARGE_GROUP, ignoreCase = true) } &&
+                        meal.tags.any { it.equals(ITALIAN, ignoreCase = true) }
             }
     }//endregion
 
