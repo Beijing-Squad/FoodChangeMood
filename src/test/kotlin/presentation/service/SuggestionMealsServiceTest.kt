@@ -1,18 +1,11 @@
 package presentation.service
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import logic.usecases.fakedata.mealsListWithHighCaloriesMeals
-import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
-import org.beijing.presentation.ViewMealDetails
-import org.beijing.presentation.service.SuggestionMealsService
-import org.junit.jupiter.api.BeforeEach
 import fake.createMeal
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
+import fake.mealsListWithHighCaloriesMeals
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.beijing.presentation.ViewMealDetails
 import org.beijing.presentation.service.SuggestionMealsService
@@ -222,10 +215,10 @@ class SuggestionMealsServiceTest {
             choiceSuggestionFeature,
             unLikeMeal, unLikeMeal, likeMeal, likeMeal
         )
-        every { useCase.suggestMealHaveMoreThanSevenHundredCalories() } returns mealsListWithHighCaloriesMeals
+        every { suggestUseCase.suggestMealHaveMoreThanSevenHundredCalories() } returns mealsListWithHighCaloriesMeals
 
         // When
-        service.handleUserChoice()
+        suggestMealService.handleUserChoice()
 
         // Then
         verify {
@@ -241,10 +234,10 @@ class SuggestionMealsServiceTest {
         val invalidChoice = "qwerty"
         val finishLoop = "exit"
         every { consoleIO.readInput()?.trim()?.lowercase() } returns invalidChoice andThen finishLoop
-        every { useCase.suggestMealHaveMoreThanSevenHundredCalories() } returns mealsListWithHighCaloriesMeals
+        every { suggestUseCase.suggestMealHaveMoreThanSevenHundredCalories() } returns mealsListWithHighCaloriesMeals
 
         // When
-        service.launchSoThinMeals()
+        suggestMealService.launchSoThinMeals()
 
         // Then
         verify { consoleIO.viewWithLine("Invalid input! Please choose 'Yes','No' or 'Exit'.") }

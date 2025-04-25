@@ -2,13 +2,11 @@ package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
-import com.google.common.truth.Truth.assertThat
 import fake.createMeal
-import io.mockk.every
 import io.mockk.mockk
-import logic.usecases.fakedata.mealsListWithHighCaloriesMeals
-import logic.usecases.fakedata.mealsWithHighCalories
-import logic.usecases.fakedata.mealsWithNoHighCalories
+import fake.mealsListWithHighCaloriesMeals
+import fake.mealsWithHighCalories
+import fake.mealsWithNoHighCalories
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.junit.jupiter.api.BeforeEach

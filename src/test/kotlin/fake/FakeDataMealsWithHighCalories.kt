@@ -1,4 +1,4 @@
-package logic.usecases.fakedata
+package fake
 
 
 import kotlinx.datetime.LocalDate
