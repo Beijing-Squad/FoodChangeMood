@@ -1,13 +1,12 @@
 package presentation.service
 
 import fake.createMeal
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.presentation.ViewMealDetails
 import org.beijing.presentation.service.SearchMealService
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -149,13 +148,16 @@ class SearchMealServiceTest {
         // Given
         val searchByDateFeature = "3"
         val date = "2025-03-10"
-        every { consoleIO.readInput() } returns searchByDateFeature andThen date
-        every { manageMealsSearch.getMealsByDate(date) } returns listOf(
-            createMeal(submitted = LocalDate(2025, 2, 10)),
+        val expectedMeals = listOf(
             createMeal(submitted = LocalDate(2025, 3, 10)),
-            createMeal(submitted = LocalDate(2025, 3, 10)),
-            createMeal(submitted = LocalDate(2025, 4, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10))
         )
+        every { consoleIO.readInput() } returnsMany listOf(searchByDateFeature, date)
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+        every { manageMealsSearch.getMealsByDate(date) } returns expectedMeals
+        every { manageMealsSearch.getMealById(any()) } returns expectedMeals.first()
+        every { consoleIO.readInput() } returnsMany listOf(searchByDateFeature, date, "no")
 
         // When
         searchMealService.handleUserChoice()
@@ -170,14 +172,10 @@ class SearchMealServiceTest {
         val searchByDateFeature = "3"
         val date = "2025-01-05"
         val errorMessage = "❌ No Meals Found For The Date [$date]."
-        every { consoleIO.readInput() } returns searchByDateFeature andThen date
-        every { manageMealsSearch.getMealsByDate(date) } returns listOf(
-            createMeal(submitted = LocalDate(2025, 2, 10)),
-            createMeal(submitted = LocalDate(2025, 3, 10)),
-            createMeal(submitted = LocalDate(2025, 3, 10)),
-            createMeal(submitted = LocalDate(2025, 4, 10)),
-        )
-        every { manageMealsSearch.getMealsByDate(date) } throws Exception(errorMessage)
+        every { consoleIO.readInput() } returnsMany listOf(searchByDateFeature, date)
+        every { consoleIO.view(any()) } just Runs
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { manageMealsSearch.getMealsByDate(date) } returns emptyList()
 
         // When
         searchMealService.handleUserChoice()
@@ -195,18 +193,21 @@ class SearchMealServiceTest {
         "2023/01/02",
         "2023--32",
     )
-    fun `should display error message and call itself while date is invalid`(date: String) {
+    fun `should display error and re-ask date until valid`(invalidDate: String) {
         // Given
-        val searchByDateFeature = "3"
-        val errorMessage = "❌ Invalid date format. Please use (YYYY-MM-DD)."
-        every { consoleIO.readInput() } returns searchByDateFeature andThen date
-        every { manageMealsSearch.getMealsByDate(date) } throws IllegalArgumentException(errorMessage)
+        every { consoleIO.readInput() } returnsMany listOf(invalidDate, "2023-04-25")
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+
+        every { manageMealsSearch.getMealsByDate(invalidDate) } throws IllegalArgumentException("❌ Invalid date format. Please use (YYYY-MM-DD).")
+        every { manageMealsSearch.getMealsByDate("2023-04-25") } returns listOf(mockk(relaxed = true))
 
         // When
-        searchMealService.handleUserChoice()
+        val result = searchMealService.getValidDate()
 
         // Then
-        verify { consoleIO.viewWithLine(errorMessage) }
+        Assertions.assertEquals("2023-04-25", result)
+        verify { consoleIO.viewWithLine("❌ Invalid date format. Please use (YYYY-MM-DD).") }
     }
 
     @Test
@@ -232,27 +233,55 @@ class SearchMealServiceTest {
     }
 
     @Test
-    fun `should ask for meal details after viewing meal list`() {
+    fun `should display meal details when user selects to see details of a meal`() {
         // Given
         val searchByDateFeature = "3"
         val date = "2025-03-10"
-        val questionForMealDetails = "Do You Want To See Details Of A Specific Meal? (yes/no)"
-        every { consoleIO.readInput() } returns searchByDateFeature andThen date
-        every { manageMealsSearch.getMealsByDate(date) } returns listOf(
-            createMeal(submitted = LocalDate(2025, 2, 10)),
-            createMeal(submitted = LocalDate(2025, 3, 10)),
-            createMeal(submitted = LocalDate(2025, 3, 10)),
-            createMeal(submitted = LocalDate(2025, 4, 10)),
+        val mealId = 1
+        val meal = createMeal(id = mealId, submitted = LocalDate(2025, 3, 10))
+        val mealsOnDate = listOf(meal)
+        val wantsToSeeDetails = "yes"
+
+        every { consoleIO.readInput() } returnsMany listOf(
+            searchByDateFeature,
+            date,
+            wantsToSeeDetails,
+            mealId.toString()
         )
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+        every { manageMealsSearch.getMealsByDate(date) } returns mealsOnDate
+        every { manageMealsSearch.getMealById(mealId) } returns meal
+        every { viewMealDetails.displayMealDetails(meal) } just Runs
 
         // When
         searchMealService.handleUserChoice()
 
         // Then
-        verify {
-            consoleIO.viewWithLine(questionForMealDetails)
-        }
+        verify { viewMealDetails.displayMealDetails(meal) }
+    }
+
+    @Test
+    fun `should display error message when meal ID not found on the date`() {
+        // Given
+        val searchByDateFeature = "3"
+        val date = "2025-03-10"
+        val invalidMealId = 999
+        val errorMessage = "❌ Meal with ID [$invalidMealId] Not Found On That Date."
+        val mealsOnDate = listOf(createMeal(id = 1, submitted = LocalDate(2025, 3, 10)))
+
+        every { consoleIO.readInput() } returnsMany listOf(searchByDateFeature, date, "yes", invalidMealId.toString())
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+        every { manageMealsSearch.getMealsByDate(date) } returns mealsOnDate
+
+        // When
+        searchMealService.handleUserChoice()
+
+        // Then
+        verify { consoleIO.viewWithLine(errorMessage) }
     }
     // endregion
+
 
 }
