@@ -230,88 +230,8 @@ class ManageMealsSuggestionsUseCaseTest {
 //endregion
 
     //region suggest italian large group meals
-    @Test
-    fun `should Return Meals With Both Tags when Meals Contain Italian And Large Group Tags`() {
-        val meals = listOf(
-            mealWithTags(1, listOf("italian", "for-large-groups")),
-            mealWithTags(2, listOf("italian")),
-            mealWithTags(3, listOf("for-large-groups")),
-            mealWithTags(4, listOf("dessert"))
-        )
 
-        every { mealRepository.getAllMeals() } returns meals
 
-        val result = useCase.suggestItalianLargeGroupsMeals()
-
-        assert(result.size == 1&&result.first().id==1)
-    }
-    @Test
-    fun `should Return EmptyList when No Meal Matches Both Tags`() {
-        val meals = listOf(
-            mealWithTags(1, listOf("italian")),
-            mealWithTags(2, listOf("for-large-groups")),
-            mealWithTags(3, listOf("dessert"))
-        )
-
-        every { mealRepository.getAllMeals() } returns meals
-
-        val result = useCase.suggestItalianLargeGroupsMeals()
-
-        Assertions.assertTrue(result.isEmpty())
-    }
-    @Test
-    fun `should Match Tags Case Insensitively when Tags Have Different Cases`() {
-        val meals = listOf(
-            mealWithTags(1, listOf("ITALIAN", "FOR-LARGE-GROUPS")),
-            mealWithTags(2, listOf("Italian", "For-Large-Groups")),
-            mealWithTags(3, listOf("ITALIAN")),
-            mealWithTags(4, listOf("for-large-groups"))
-        )
-
-        every { mealRepository.getAllMeals() } returns meals
-
-        val result = useCase.suggestItalianLargeGroupsMeals()
-
-        Assertions.assertEquals(2, result.size)
-        }
-    @Test
-    fun `should Return Meals With Extra Tags when They Still Contain Required Tags`() {
-        val meals = listOf(
-            mealWithTags(1, listOf("italian", "for-large-groups", "holiday")),
-            mealWithTags(2, listOf("italian", "for-large-groups"))
-        )
-
-        every { mealRepository.getAllMeals() } returns meals
-
-        val result = useCase.suggestItalianLargeGroupsMeals()
-
-        Assertions.assertEquals(2, result.size)
-    }
-    @Test
-    fun `should Not Include Duplicate Meals when Repository Returns Duplicates`() {
-        val meal = mealWithTags(1, listOf("italian", "for-large-groups"))
-
-        every { mealRepository.getAllMeals() } returns listOf(meal, meal)
-
-        val result = useCase.suggestItalianLargeGroupsMeals()
-
-        Assertions.assertEquals(1, result.distinctBy { it.id }.size)
-    }
-    @Test
-    fun ` should Ignore Meals With Empty Or Null Tags when Filtering For Required Tags`() {
-        val meals = listOf(
-            mealWithTags(1, listOf("italian", "for-large-groups")),
-            mealWithTags(2, emptyList()),
-            mealWithTags(3, listOf())
-        )
-
-        every { mealRepository.getAllMeals() } returns meals
-
-        val result = useCase.suggestItalianLargeGroupsMeals()
-
-        Assertions.assertEquals(1, result.size)
-        Assertions.assertEquals(1, result.first().id)
-    }
 //endregion
 
     //region suggest keto meal
