@@ -1,9 +1,12 @@
 package logic.usecases
 
+
 import com.google.common.truth.Truth.assertThat
+import fake.createMeal
 import fake.meals
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -25,15 +28,118 @@ class ManageMealsSearchUseCaseTest {
 
     //region get meal by date
     @Test
-    fun getMealsByDate() {
-    }
-//endregion
+    fun `should return list of meals when date is valid`() {
+        // Given
+        val date = "2025-03-10"
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
 
-    //region get meal by date and id
-    @Test
-    fun getMealByDateAndId() {
+        // When
+        val result = useCase.getMealsByDate(date)
+
+        // Then
+        assert(result.size == 2)
     }
-//endregion
+
+    @Test
+    fun `should throw exception when no meals found on the date`() {
+        // Given
+        val date = "2025-01-01"
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
+
+        // When && Then
+        assertThrows<Exception> {
+            useCase.getMealsByDate(date)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "2023 05 10",
+        "2023@05@10",
+        "20230615",
+        "2023-600-01",
+        "2023/01/02",
+        "2023--32",
+    )
+    fun `should throw IllegalArgumentException when date is invalid`(date: String) {
+        // Given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
+
+        // When && Then
+        assertThrows<IllegalArgumentException> {
+            useCase.getMealsByDate(date)
+        }
+    }
+
+    @Test
+    fun `should throw IllegalArgumentException when date is empty`() {
+        // Given
+        val date = ""
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
+
+        // When && Then
+        assertThrows<IllegalArgumentException> {
+            useCase.getMealsByDate(date)
+        }
+    }
+    //endregion
+
+    //region get meal by id
+    @Test
+    fun `should return the matched meal when id is valid`() {
+        // Given
+        val id = 1
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(id = 1),
+            createMeal(id = 2),
+            createMeal(id = 3),
+            createMeal(id = 4),
+        )
+
+        // When
+        val result = useCase.getMealById(id)
+
+        // Then
+        assert(result.id == id)
+    }
+
+    @Test
+    fun `should throw exception when no found meal for the id`() {
+        // Given
+        val id = 5
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(id = 1),
+            createMeal(id = 2),
+            createMeal(id = 3),
+            createMeal(id = 4),
+        )
+
+        // When && Then
+        assertThrows<Exception> {
+            useCase.getMealById(id)
+        }
+    }
+    //endregion
 
     //region gets gym helper
     @ParameterizedTest
@@ -96,13 +202,13 @@ class ManageMealsSearchUseCaseTest {
     @Test
     fun getMealByName() {
     }
-//endregion
+    //endregion
 
     //region get meal by country
     @Test
     fun getMealByCountry() {
     }
-//endregion
+    //endregion
 
     //region get iraqi meals
     @Test
