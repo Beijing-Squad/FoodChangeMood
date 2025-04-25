@@ -36,7 +36,6 @@ class FoodConsoleUiTest {
             gameMealsService,
             suggestionMealsService,
             consoleIO
-
         )
     }
 
@@ -52,8 +51,6 @@ class FoodConsoleUiTest {
 
         // When && Then
         verify { consoleIO.view(messageWelcome) }
-
-
     }
 
     @Test
@@ -131,7 +128,7 @@ class FoodConsoleUiTest {
         foodConsoleUi.start()
 
         // Then
-        verify { consoleIO.viewWithLine(errorMessage)}
+        verify { consoleIO.viewWithLine(errorMessage) }
     }
 
     @Test
@@ -161,5 +158,4 @@ class FoodConsoleUiTest {
         // Then
         verify { consoleIO.viewWithLine("An unknown error occurred") }
     }
-
 }

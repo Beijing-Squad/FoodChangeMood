@@ -60,7 +60,7 @@ val mealsListWithHighCaloriesMeals = listOf(
         nutrition = Nutrition(880.0, 34.0, 42.0, 950.0, 65.0, 7.0, 58.0),
         nSteps = 4,
         steps = listOf("Prepare dough", "Add sauce and toppings", "Bake", "Slice and serve"),
-        description ="Creamy Alfredo pasta loaded with shrimp and scallops.",
+        description = "Creamy Alfredo pasta loaded with shrimp and scallops.",
         ingredients = listOf("pizza dough", "shrimp", "squid", "mozzarella", "tomato sauce"),
         nIngredients = 5
     ),
@@ -150,7 +150,6 @@ val mealsListWithHighCaloriesMeals = listOf(
         nIngredients = 5
     ),
 )
-
 
 val mealsWithHighCalories = listOf(
     Meal(

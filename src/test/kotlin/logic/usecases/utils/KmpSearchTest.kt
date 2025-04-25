@@ -1,13 +1,14 @@
 package logic.usecases.utils
 
 import org.beijing.logic.usecases.utils.KmpSearch
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class KmpSearchTest {
 
     @Test
-    fun `should return true when pattern exists in the text`(){
+    fun `should return true when pattern exists in the text`() {
         //Given
         val text = "Hi, I'm Mohamed Ibrahim"
         val pattern = "mohamed"
@@ -18,8 +19,9 @@ class KmpSearchTest {
         //Then
         assertTrue(result)
     }
+
     @Test
-    fun `should return true when pattern is empty`(){
+    fun `should return true when pattern is empty`() {
         //Given
         val text = "Hello Guys"
         val pattern = ""
@@ -32,7 +34,7 @@ class KmpSearchTest {
     }
 
     @Test
-    fun `should return false when pattern doesn't exist`(){
+    fun `should return false when pattern doesn't exist`() {
         //Given
         val text = "Yesterday, Real Madrid's match was boring."
         val pattern = "Barcelona"
@@ -43,6 +45,7 @@ class KmpSearchTest {
         //Then
         assertFalse(result)
     }
+
     @Test
     fun `should return false when pattern is longer than text`() {
         //Given
@@ -55,6 +58,4 @@ class KmpSearchTest {
         //Then
         assertFalse(result)
     }
-
-
 }
