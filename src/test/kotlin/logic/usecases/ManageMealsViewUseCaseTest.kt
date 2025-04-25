@@ -27,44 +27,43 @@ class ManageMealsViewUseCaseTest {
     fun `getHealthyQuickPreparedMeals should return empty list when no meals meet criteria`() {
         // Given
         every { mealRepository.getAllMeals() } returns listOf(
-            // All meals will make averages: fat=18.75, saturatedFat=9.375, carbs=30
             createMeal(
-                name = "Slow Meal",  // Fails time (30 > 15)
+                name = "Slow Meal",
                 minutes = 30,
                 nutrition = Nutrition(0.0, 10.0, 0.0, 0.0, 0.0, 5.0, 20.0)
             ),
             createMeal(
-                name = "High Fat",  // Fats fat (20 > 18.75 avg)
+                name = "High Fat",
                 minutes = 10,
                 nutrition = Nutrition(0.0, 20.0, 0.0, 0.0, 0.0, 5.0, 20.0)
             ),
             createMeal(
-                name = "High Saturated Fat",  // Fails saturated fat (15 > 9.375 avg)
+                name = "High Saturated Fat",
                 minutes = 10,
                 nutrition = Nutrition(0.0, 10.0, 0.0, 0.0, 0.0, 15.0, 20.0)
             ),
             createMeal(
-                name = "High Carb",  // Fails carbs (60 > 30 avg)
+                name = "High Carb",
                 minutes = 10,
                 nutrition = Nutrition(0.0, 10.0, 0.0, 0.0, 0.0, 5.0, 60.0)
             ),
             createMeal(
-                name = "Slow High Fat",  // Fails time AND fat
+                name = "Slow High Fat",
                 minutes = 20,
                 nutrition = Nutrition(0.0, 25.0, 0.0, 0.0, 0.0, 5.0, 20.0)
             ),
             createMeal(
-                name = "High Everything",  // Fails all nutrition checks
+                name = "High Everything",
                 minutes = 10,
                 nutrition = Nutrition(0.0, 30.0, 0.0, 0.0, 0.0, 20.0, 50.0)
             ),
             createMeal(
-                name = "Barely Slow",  // Fails time (16 > 15)
+                name = "Barely Slow",
                 minutes = 16,
                 nutrition = Nutrition(0.0, 10.0, 0.0, 0.0, 0.0, 5.0, 20.0)
             ),
             createMeal(
-                name = "Fat Bomb",  // Fails fat and saturated fat
+                name = "Fat Bomb",
                 minutes = 10,
                 nutrition = Nutrition(0.0, 25.0, 0.0, 0.0, 0.0, 15.0, 10.0)
             )
@@ -85,26 +84,14 @@ class ManageMealsViewUseCaseTest {
                 name = "Quick Salad",
                 minutes = 10,
                 nutrition = Nutrition(
-                    0.0,
-                    5.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    2.0,
-                    10.0
+                    0.0, 5.0, 0.0, 0.0, 0.0, 2.0, 10.0
                 )
             ),
             createMeal(
                 name = "Fast Food Burger",
                 minutes = 10,
                 nutrition = Nutrition(
-                    0.0,
-                    20.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    10.0,
-                    30.0
+                    0.0, 20.0, 0.0, 0.0, 0.0, 10.0, 30.0
                 )
             )
         )
@@ -123,29 +110,17 @@ class ManageMealsViewUseCaseTest {
         val meals = listOf(
             createMeal(
                 name = "meal with saturated fat equals average",
+                minutes = 10,
                 nutrition = Nutrition(
-                    0.0,
-                    2.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    5.0,
-                    5.0
-                ),
-                minutes = 10
+                    0.0, 2.0, 0.0, 0.0, 0.0, 5.0, 5.0
+                )
             ),
             createMeal(
                 name = "meal with the same",
+                minutes = 10,
                 nutrition = Nutrition(
-                    0.0,
-                    4.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    5.0,
-                    10.0
-                ),
-                minutes = 10
+                    0.0, 4.0, 0.0, 0.0, 0.0, 5.0, 10.0
+                )
             )
         )
         every { mealRepository.getAllMeals() } returns meals
@@ -163,29 +138,17 @@ class ManageMealsViewUseCaseTest {
         val meals = listOf(
             createMeal(
                 name = "unValid Meal with carbs= carbAvg",
+                minutes = 10,
                 nutrition = Nutrition(
-                    0.0,
-                    2.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    2.0,
-                    20.0
-                ),
-                minutes = 10
+                    0.0, 2.0, 0.0, 0.0, 0.0, 2.0, 20.0
+                )
             ),
             createMeal(
                 name = "Avg Carbs",
+                minutes = 10,
                 nutrition = Nutrition(
-                    0.0,
-                    4.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    3.0,
-                    20.0
-                ),
-                minutes = 10
+                    0.0, 4.0, 0.0, 0.0, 0.0, 3.0, 20.0
+                )
             )
         )
         every { mealRepository.getAllMeals() } returns meals
@@ -203,13 +166,17 @@ class ManageMealsViewUseCaseTest {
         val meals = listOf(
             createMeal(
                 name = "low Carbs",
-                nutrition = Nutrition(0.0, 4.0, 0.0, 0.0, 0.0, 4.0, 19.0),
-                minutes = 10
+                minutes = 10,
+                nutrition = Nutrition(
+                    0.0, 4.0, 0.0, 0.0, 0.0, 4.0, 19.0
+                )
             ),
             createMeal(
                 name = "High Carbs",
-                nutrition = Nutrition(0.0, 4.0, 0.0, 0.0, 0.0, 2.0, 21.0),
-                minutes = 10
+                minutes = 10,
+                nutrition = Nutrition(
+                    0.0, 4.0, 0.0, 0.0, 0.0, 2.0, 21.0
+                )
             )
         )
         every { mealRepository.getAllMeals() } returns meals
