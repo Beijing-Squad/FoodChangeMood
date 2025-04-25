@@ -283,5 +283,4 @@ class SearchMealServiceTest {
     }
     // endregion
 
-
 }
