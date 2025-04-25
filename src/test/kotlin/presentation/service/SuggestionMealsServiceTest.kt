@@ -87,10 +87,15 @@ class SuggestionMealsServiceTest {
 
     // region launch easy meals
     @Test
-    fun `should call Suggest Easy Meal when selected`() {
+    fun `should show suggested easy meal when available`() {
         // Given
         val choiceSearchFeature = "3"
-        val easyMeal = createMeal(name = "Fast Toast", minutes = 5, ingredients = listOf("bread", "cheese"), steps = listOf("toast bread", "add cheese"))
+        val easyMeal = createMeal(
+            name = "Fast Toast",
+            minutes = 5,
+            ingredients = listOf("bread", "cheese"),
+            steps = listOf("toast bread", "add cheese")
+        )
 
         every { consoleIO.readInput() } returns choiceSearchFeature
         every { suggestUseCase.suggestEasyPreparedMeal() } returns listOf(easyMeal)
@@ -100,26 +105,30 @@ class SuggestionMealsServiceTest {
 
         // Then
         verify {
-            consoleIO.viewWithLine("Try this meal: ${easyMeal.name}")
+            consoleIO.viewWithLine("🥗 Easy Meal Suggestions")
+            consoleIO.viewWithLine("------------------------")
+            consoleIO.viewWithLine("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
+            consoleIO.viewWithLine("\n🍽️ Found 1 meal(s):\n")
+            consoleIO.viewWithLine("1. ${easyMeal.name} • ⏱️ ${easyMeal.minutes} mints • 🧂 ${easyMeal.nIngredients} ingredients • 🔧 ${easyMeal.nSteps} steps")
         }
     }
 
     @Test
-    fun `should handle invalid input gracefully`() {
+    fun `should show no meals message when no easy meals are found`() {
         // Given
-        val invalidChoice = "invalidChoice"
-        every { consoleIO.readInput() } returns invalidChoice
+        every { consoleIO.readInput() } returns "3"
+        every { suggestUseCase.suggestEasyPreparedMeal() } returns emptyList()
 
         // When
-        suggestMealService.showService()
+        suggestMealService.handleUserChoice()
 
         // Then
         verify {
-            consoleIO.viewWithLine("Unknown input.")
+            consoleIO.viewWithLine("😔 Sorry, no meals found for '. Try again later!")
         }
     }
+// endregion
 
-    // endregion
 
     //region sweets wit no eggs
     @Test
