@@ -231,6 +231,18 @@ class SuggestionMealsServiceTest {
         // Then
         verify { consoleIO.viewWithLine("❌ No Italian meals found for large groups.") }
     }
+    @Test
+    fun `should handle meals with empty name`() {
+        // Given
+        val unnamedMeal = createMeal(name = "")
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf(unnamedMeal)
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("1.  | 🕒 ${unnamedMeal.minutes} minutes |") }
+    }
 
     //endregion
 
