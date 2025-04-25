@@ -5,6 +5,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
+import fake.mealsListWithHighCaloriesMeals
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.beijing.presentation.ViewMealDetails
 import org.beijing.presentation.service.SuggestionMealsService
@@ -201,6 +202,47 @@ class SuggestionMealsServiceTest {
             consoleIO.viewWithLine("Try this sweet: ${secondSweet.name}")
         }
     }
+
+    //endregion
+    //region suggest meal have more than seven hundred calories
+    @Test
+    fun `should call launchSoThinMeals when suggest meal with more than 700 calories selected`() {
+        // Given
+        val choiceSuggestionFeature = "6"
+        val likeMeal = "yes"
+        val unLikeMeal = "no"
+        every { consoleIO.readInput()?.trim()?.lowercase() } returnsMany listOf(
+            choiceSuggestionFeature,
+            unLikeMeal, unLikeMeal, likeMeal, likeMeal
+        )
+        every { suggestUseCase.suggestMealHaveMoreThanSevenHundredCalories() } returns mealsListWithHighCaloriesMeals
+
+        // When
+        suggestMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Do You Like This Meal?")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal Or 'exit':")
+        }
+
+    }
+
+    @Test
+    fun `should show message when input invalid choice`() {
+        // Given
+        val invalidChoice = "qwerty"
+        val finishLoop = "exit"
+        every { consoleIO.readInput()?.trim()?.lowercase() } returns invalidChoice andThen finishLoop
+        every { suggestUseCase.suggestMealHaveMoreThanSevenHundredCalories() } returns mealsListWithHighCaloriesMeals
+
+        // When
+        suggestMealService.launchSoThinMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("Invalid input! Please choose 'Yes','No' or 'Exit'.") }
+    }
+
     //endregion
 
 }
