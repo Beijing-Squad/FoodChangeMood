@@ -31,10 +31,10 @@ class ManageMealsViewUseCase(
     // region get a list of seafood sorted by protein content
 
     fun getSortedSeaFoodByProtein(): List<Meal> {
-        val sortedSeaFood = mealRepository.getAllMeals()
+        return mealRepository.getAllMeals()
             .filter { it.tags.contains("seafood") }
             .sortedByDescending { it.nutrition.proteinGrams }
-        return sortedSeaFood
+
     }
     //endregion
 
