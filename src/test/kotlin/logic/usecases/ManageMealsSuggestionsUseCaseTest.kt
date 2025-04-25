@@ -31,7 +31,7 @@ class ManageMealsSuggestionsUseCaseTest {
     //region suggest ten random meals contains potato test
     @Test
     fun `should return a list of meals containing potato when have it`() {
-        //given
+        //Given
         every { mealRepository.getAllMeals() } returns listOf(
             createMeal(name = "Potato Onion Delight", ingredients = listOf("potato", "onion", "garlic")),
             createMeal(name = "Potato Chicken Stew", ingredients = listOf("potato", "carrot", "chicken")),
@@ -45,10 +45,10 @@ class ManageMealsSuggestionsUseCaseTest {
             createMeal(name = "Mushroom Potato Stir", ingredients = listOf("potato", "mushroom", "onion")),
             createMeal(name = "Spicy Beef Potato", ingredients = listOf("potato", "beef", "pepper"))
         )
-        //when
+        //When
         val result = useCase.suggestTenRandomMealsContainsPotato()
 
-        //then
+        //Then
         result.forEach { meal ->
             assertThat(meal.ingredients).contains("potato")
         }
@@ -57,7 +57,7 @@ class ManageMealsSuggestionsUseCaseTest {
 
     @Test
     fun `should return ten random meals when passed a list of meals contains potato`() {
-        //given
+        //Given
         every { mealRepository.getAllMeals() } returns listOf(
             createMeal(name = "Potato Onion Delight", ingredients = listOf("potato", "onion", "garlic")),
             createMeal(name = "Potato Chicken Stew", ingredients = listOf("potato", "carrot", "chicken")),
@@ -81,17 +81,17 @@ class ManageMealsSuggestionsUseCaseTest {
             createMeal(name = "Crispy Potato Skins", ingredients = listOf("potato", "bacon", "cheddar"))
         )
 
-        //when
+        //When
         val result = useCase.suggestTenRandomMealsContainsPotato()
 
-        //then
+        //Then
         assertThat(result.size).isEqualTo(10)
 
     }
 
     @Test
-    fun `suggestTenRandomMealsContainsPotato should throw exception when return empty list`() {
-        //given
+    fun `should throw exception when have a list of meals does not contain potato`() {
+        //Given
         every { mealRepository.getAllMeals() } returns listOf(
             createMeal(name = "Chicken Alfredo", ingredients = listOf("chicken", "pasta", "cream")),
             createMeal(name = "Beef Stir Fry", ingredients = listOf("beef", "broccoli", "soy sauce")),
@@ -106,30 +106,30 @@ class ManageMealsSuggestionsUseCaseTest {
             createMeal(name = "Tuna Pasta", ingredients = listOf("tuna", "pasta", "mayonnaise"))
         )
 
-        //when
+        //When
         val exception = assertFailsWith<IllegalArgumentException> {
             useCase.suggestTenRandomMealsContainsPotato()
         }
 
-        //then
+        //Then
         assertEquals("There are no meals that contain potato.", exception.message)
     }
 
     @Test
     fun `suggestTenRandomMealsContainsPotato should throw exception when a list with size smaller than ten`() {
-        //given
+        //Given
         every { mealRepository.getAllMeals() } returns listOf(
             createMeal(name = "Potato Onion Delight", ingredients = listOf("potato", "onion", "garlic")),
             createMeal(name = "Potato Chicken Stew", ingredients = listOf("potato", "carrot", "chicken")),
             createMeal(name = "Cheesy Potato Bake", ingredients = listOf("potato", "cheese", "cream")),
         )
 
-        //when
+        //When
         val exception = assertFailsWith<IllegalArgumentException> {
             useCase.suggestTenRandomMealsContainsPotato()
         }
 
-        //then
+        //Then
         assertEquals("There are not enough meals containing potato to suggest, try another service.", exception.message)
     }
 
