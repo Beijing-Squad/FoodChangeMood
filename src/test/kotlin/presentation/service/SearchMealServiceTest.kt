@@ -6,6 +6,7 @@ import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.presentation.ViewMealDetails
 import org.beijing.presentation.service.SearchMealService
+import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -281,6 +282,27 @@ class SearchMealServiceTest {
         // Then
         verify { consoleIO.viewWithLine(errorMessage) }
     }
+
+    @Test
+    fun `should show error and ask again when meal ID input is invalid`() {
+        // Given
+        val invalidInput = "abc"
+        val validInput = "2"
+
+        every { consoleIO.viewWithLine("Please Enter The Meal ID") } just Runs
+        every { consoleIO.view("Enter Meal ID: ") } just Runs
+        every { consoleIO.viewWithLine("❌ Invalid ID Format, Please Use A Number.") } just Runs
+
+        // أول إدخال غلط، التاني صح
+        every { consoleIO.readInput() } returnsMany listOf(invalidInput, validInput)
+
+        // When
+        val id = searchMealService.getIdInput()
+
+        // Then
+        assertEquals(2, id)
+        verify { consoleIO.viewWithLine("❌ Invalid ID Format, Please Use A Number.") }
+    }
     // endregion
 
     //region search by name
@@ -384,7 +406,6 @@ class SearchMealServiceTest {
             consoleIO.viewWithLine("❌ $errorMessage")
         }
     }
-
     //endregion
 
 }
