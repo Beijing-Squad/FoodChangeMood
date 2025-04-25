@@ -2,7 +2,8 @@ package org.beijing.presentation.service
 
 import io.mockk.*
 import org.beijing.logic.usecases.ManageMealsGamesUseCase
-import org.beijing.model.*
+import org.beijing.model.IngredientGameRound
+import org.beijing.model.IngredientGameState
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.view_read.ConsoleIO
@@ -20,8 +21,6 @@ class GameMealsServiceTest {
     }
 
     // region ingredient game
-
-
     @Test
     fun `should handle successful ingredient game round when user provides correct answer`() {
         // Given
@@ -51,7 +50,6 @@ class GameMealsServiceTest {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val state = IngredientGameState()
-
         every { gamesMealsUseCase.isGameOver(any()) } returns false
         every { gamesMealsUseCase.startIngredientGame(any()) } returns Result.success(round to state)
         every { gamesMealsUseCase.checkAnswer(2, round, state) } returns (false to state)
@@ -81,7 +79,6 @@ class GameMealsServiceTest {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val state = IngredientGameState()
-
         every { gamesMealsUseCase.isGameOver(any()) } returns false
         every { gamesMealsUseCase.startIngredientGame(any()) } returns Result.success(round to state)
         every { consoleIO.readInput() } returnsMany listOf("2", "a", "0") // Select option 2, answer "a", exit
@@ -112,7 +109,6 @@ class GameMealsServiceTest {
         // Given
         val round = createIngredientRound("Pizza", "Cheese")
         val state = IngredientGameState()
-
         every { gamesMealsUseCase.isGameOver(any()) } returns false
         every { gamesMealsUseCase.startIngredientGame(any()) } returns Result.success(round to state)
         every { consoleIO.readInput() } returnsMany listOf("2", "", "0")

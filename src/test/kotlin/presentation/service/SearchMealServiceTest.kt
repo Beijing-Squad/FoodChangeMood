@@ -41,7 +41,6 @@ class SearchMealServiceTest {
             consoleIO.viewWithLine("5. Iraqi Meals")
             consoleIO.viewWithLine("0. Exit")
         }
-
     }
     //endregion
 
@@ -317,6 +316,5 @@ class SearchMealServiceTest {
         // Then
         verify { consoleIO.viewWithLine("😔 Sorry, no meals found for '$country'. Try another country!") }
     }
-
     //endregion region search meal by country
 }

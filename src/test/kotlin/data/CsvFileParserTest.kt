@@ -59,7 +59,6 @@ class CsvFileParserTest {
 
         //Then
         assertThat(result[0]).isEqualTo(expectedMeal)
-
     }
 
     @Test
@@ -125,5 +124,4 @@ class CsvFileParserTest {
         //Then
         assertThat(result[0]).isEqualTo(expectedMeal)
     }
-
 }

@@ -25,7 +25,6 @@ class ManageMealsViewUseCaseTest {
     }
 
     //region get healthy quick prepared meals
-
     @Test
     fun `getHealthyQuickPreparedMeals should return empty list when no meals meet criteria`() {
         // Given
@@ -235,6 +234,5 @@ class ManageMealsViewUseCaseTest {
         //Then
         assertThat(result).isEmpty()
     }
-
     //endregion
 }

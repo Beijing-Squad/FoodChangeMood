@@ -635,10 +635,4 @@ class ManageMealsSuggestionsUseCaseTest {
         assertThat(result).isEmpty()
     }
     //endregion
-
-    //region check meal calories content
-    @Test
-    fun checkMealCaloriesContent() {
-    }
-    //endregion
 }
