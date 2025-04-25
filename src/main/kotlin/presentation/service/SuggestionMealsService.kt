@@ -77,31 +77,33 @@ class SuggestionMealsService(
 
     //region ten random meals contains potato
     fun launchTenRandomPotatoMeals() {
-        val tenRandomPotatoMeals = suggestionMeals.suggestTenRandomMealsContainsPotato()
+        val tenRandomPotatoMeals = try {
+            suggestionMeals.suggestTenRandomMealsContainsPotato()
+        } catch (e: IllegalArgumentException) {
+            consoleIO.viewWithLine("${e.message}")
+            return
+        } catch (e: Exception) {
+            consoleIO.viewWithLine("${e.message}")
+            return
+        }
 
-        if (tenRandomPotatoMeals.isEmpty()) {
-            consoleIO.viewWithLine("❌ There is no meals found contains potato in their ingredients")
-        } else if (tenRandomPotatoMeals.size < 10) {
-            consoleIO.viewWithLine("😔 Sorry, no enough meals found for suggestion, you can try another service")
-        } else {
-            consoleIO.viewWithLine("-".repeat(70))
-            consoleIO.viewWithLine("\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57List of ten random Meals with potato in their ingredients\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57")
-            consoleIO.viewWithLine("-".repeat(70))
+        consoleIO.viewWithLine("\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57List of ten random Meals with potato in their ingredients\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57")
+        consoleIO.viewWithLine("-".repeat(70))
+        consoleIO.viewWithLine(
+            "Rank".padEnd(5) + "| " + "Meal Name".padEnd(70)
+        )
+        consoleIO.viewWithLine("-".repeat(70))
+
+        tenRandomPotatoMeals.forEachIndexed { index, meal ->
             consoleIO.viewWithLine(
-                "Rank".padEnd(5) + "| " + "Meal Name".padEnd(70)
+                "${index + 1}".padEnd(5) + "| " + meal.name
             )
-
-            tenRandomPotatoMeals.forEachIndexed { index, meal ->
-                consoleIO.viewWithLine(
-                    "${index + 1}".padEnd(5) + "| " + meal.name
-                )
-            }
         }
     }
 //endregion
 
     //region sweets with no eggs
-    fun launchSweetWithoutEggs() {
+    private fun launchSweetWithoutEggs() {
         consoleIO.viewWithLine("🍬 Welcome to the Egg-Free Sweets Suggester!")
         while (true) {
             val sweet = suggestionMeals.suggestSweetsWithNoEggs()
@@ -114,14 +116,16 @@ class SuggestionMealsService(
             consoleIO.viewWithLine("Description: ${sweet.description ?: "No description"}")
             consoleIO.view("Do you like it? (yes to view details / no to see another / exit): ")
 
-            when (consoleIO.readInput()?.lowercase()?.trim()) {
+            when (consoleIO.readInput()!!.lowercase().trim()) {
                 "yes" -> {
                     viewMealDetails.displayMealDetails(sweet)
                     break
                 }
 
                 "no" -> continue
-                "exit" -> break
+                "exit" -> { consoleIO.viewWithLine("GoodBye")
+                    break
+                }
                 else -> consoleIO.viewWithLine("Unknown input.")
             }
         }
@@ -157,7 +161,7 @@ class SuggestionMealsService(
             }
         }
     }
-// end region easy meal service
+// endregion easy meal service
 
     // region Suggest Meal With more than 700 calories
     fun launchSoThinMeals() {

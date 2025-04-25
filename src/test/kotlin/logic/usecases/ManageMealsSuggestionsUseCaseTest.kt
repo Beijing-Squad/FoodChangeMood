@@ -26,14 +26,19 @@ class ManageMealsSuggestionsUseCaseTest {
         usedMealIds.clear()
     }
 
+    //region suggest sweets with no eggs
     @Test
     fun suggestSweetsWithNoEggs() {
     }
+//endregion
 
+    //region suggest ten random meals contains potato
     @Test
     fun suggestTenRandomMealsContainsPotato() {
     }
+//endregion
 
+    //region suggest italian large group meals
     @Test
     fun suggestItalianLargeGroupsMeals() {
     }
@@ -262,12 +267,17 @@ class ManageMealsSuggestionsUseCaseTest {
     @Test
     fun suggestEasyPreparedMeal() {
     }
+//endregion
 
+    //region suggest meal have more than seven hundred calories
     @Test
     fun suggestMealHaveMoreThanSevenHundredCalories() {
     }
+//endregion
 
+    //region check meal calories content
     @Test
     fun checkMealCaloriesContent() {
     }
+    //endregion
 }
