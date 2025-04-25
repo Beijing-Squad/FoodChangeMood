@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.view_read.ConsoleIO
 
+
 class SearchMealServiceTest {
     private lateinit var manageMealsSearch: ManageMealsSearchUseCase
     private lateinit var searchMealService: SearchMealService
@@ -139,5 +140,126 @@ class SearchMealServiceTest {
         }
     }
     //endregion
+
+    //region Iraqi Meals Tests
+    @Test
+    fun `should display Iraqi meal details correctly when selected`() {
+        // Given
+        val iraqiMeal = createMeal(
+            name = "Masgouf",
+            id = 1,
+            tags = listOf("Iraqi", "Grilled"),
+            description = "Traditional Iraqi grilled fish"
+        )
+        every { manageMealsSearch.getIraqiMeals() } returns listOf(iraqiMeal)
+        every { consoleIO.readInput() } returns "5" andThen "1" andThen "0" // Select Iraqi option, then meal, then exit
+
+        // When
+        searchMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Masgouf")
+            consoleIO.viewWithLine(match { it.contains("Traditional Iraqi grilled fish") })
+        }
+    }
+
+    @Test
+    fun `should show proper message when no Iraqi meals found`() {
+        // Given
+        every { manageMealsSearch.getIraqiMeals() } returns emptyList()
+        every { consoleIO.readInput() } returns "5" andThen "0"
+
+        // When
+        searchMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("\n⚠️ No Iraqi meals found!\n")
+        }
+    }
+
+    @Test
+    fun `should handle case insensitive Iraqi tags`() {
+        // Given
+        val meal1 = createMeal(
+            name = "Dolma",
+            tags = listOf("iraqi", "Vegetarian")
+        )
+        val meal2 = createMeal(
+            name = "Qoozi",
+            tags = listOf("IRAQI", "Meat")
+        )
+        every { manageMealsSearch.getIraqiMeals() } returns listOf(meal1, meal2)
+        every { consoleIO.readInput() } returns "5" andThen "0"
+
+        // When
+        searchMealService.handleUserChoice()
+
+        // Then
+        verify(exactly = 2) {
+            consoleIO.viewWithLine(any())
+        }
+    }
+
+    @Test
+    fun `should handle meals with Iraqi in description`() {
+        // Given
+        val meal = createMeal(
+            name = "Tashreeb",
+            description = "Traditional iraqi bread soup",
+            tags = listOf("Middle Eastern")
+        )
+        every { manageMealsSearch.getIraqiMeals() } returns listOf(meal)
+        every { consoleIO.readInput() } returns "5" andThen "0"
+
+        // When
+        searchMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Tashreeb")
+        }
+    }
+
+    @Test
+    fun `should show all matching Iraqi meals`() {
+        // Given
+        val meal1 = createMeal("Masgouf", tags = listOf("Iraqi"))
+        val meal2 = createMeal("Tashreeb", description = "Iraqi bread soup")
+        val meal3 = createMeal("Dolma", tags = listOf("iraqi"))
+
+        every { manageMealsSearch.getIraqiMeals() } returns listOf(meal1, meal2, meal3)
+        every { consoleIO.readInput() } returns "5" andThen "0"
+
+        // When
+        searchMealService.handleUserChoice()
+
+        // Then
+        verify(exactly = 3) {
+            consoleIO.viewWithLine(any())
+        }
+    }
+
+    @Test
+    fun `should handle special characters in Iraqi meals`() {
+        // Given
+        val meal = createMeal(
+            name = "Biryani Baghdadi",
+            description = "Iraqi-style biryani with special spices",
+            tags = listOf("Iraqi", "Spicy")
+        )
+        every { manageMealsSearch.getIraqiMeals() } returns listOf(meal)
+        every { consoleIO.readInput() } returns "5" andThen "0"
+
+        // When
+        searchMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Biryani Baghdadi")
+        }
+    }
+//endregion
 
 }
