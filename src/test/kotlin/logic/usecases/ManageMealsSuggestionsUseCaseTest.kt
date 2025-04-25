@@ -100,7 +100,7 @@ class ManageMealsSuggestionsUseCaseTest {
     }
 
     @Test
-    fun `should return suitable message when all keto meals are already used`() {
+    fun `should return null and display suitable message when all keto meals are already used`() {
         // Given
         val ketoMeal = createMeal(
             id = 3,
@@ -224,7 +224,7 @@ class ManageMealsSuggestionsUseCaseTest {
     }
 
     @Test
-    fun `should add returned meal ID to usedMealIds`() {
+    fun `should add returned meal ID to usedMealIds when it used`() {
         // Given
         val ketoMeal = createMeal(
             id = 1,
