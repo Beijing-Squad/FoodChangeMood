@@ -29,6 +29,7 @@ class SuggestionMealsServiceTest {
         )
     }
 
+//region keto meal test
     @Test
     fun `should handle multiple invalid inputs before valid input`() {
         // Given
@@ -242,4 +243,5 @@ class SuggestionMealsServiceTest {
             nIngredients = 2
         )
     }
+    //endregion
 }
