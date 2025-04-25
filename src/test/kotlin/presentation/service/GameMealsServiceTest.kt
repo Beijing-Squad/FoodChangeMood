@@ -58,6 +58,29 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine("🎮 Game Over! Returning to main menu.\n")
         }
     }
+    @Test
+    fun `should prompt again on non-numeric input and continue game`() {
+        // Given
+        val meal = createMeal(name = "Soup", minutes = 15)
+        val round1 = GameRound(meal, 3, false, null)
+        val round2 = round1.copy(
+            attemptsLeft = 2,
+            isCompleted = true,
+            lastFeedBack = "Correct!! The preparation time is indeed 15 minutes."
+        )
 
+        every { gamesMeals.startNewRound() } returns round1
+        every { consoleIO.readInput() } returnsMany listOf("abc", "15")
+        every { gamesMeals.makeGuess(round1, 15) } returns round2
+
+        // When
+        service.launchGuessGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Please enter a valid number.")
+            consoleIO.viewWithLine("Correct!! The preparation time is indeed 15 minutes.")
+        }
+    }
     //endregion
 }
