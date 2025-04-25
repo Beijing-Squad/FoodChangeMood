@@ -101,4 +101,9 @@ object RecordParserTestData {
         description = "A classic\nItalian pasta\ndish."
     )
 
+    fun recordWithFewerThanNumberOfFields() = """
+            name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description
+            "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']","[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]","4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']","A classic Italian pasta dish."
+        """.trimIndent()
+
 }
