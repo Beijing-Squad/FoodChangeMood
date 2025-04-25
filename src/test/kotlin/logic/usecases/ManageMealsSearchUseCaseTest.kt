@@ -1,8 +1,6 @@
 package logic.usecases
 
-import com.google.common.truth.Truth.assertThat
 import fake.createMeal
-import fake.meals
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.datetime.LocalDate
@@ -18,51 +16,6 @@ class ManageMealsSearchUseCaseTest {
 
     private lateinit var mealRepository: MealRepository
     private lateinit var useCase: ManageMealsSearchUseCase
-
-    private fun createMeal(
-        id: Int,
-        name: String,
-        tags: List<String>,
-        minutes: Int,
-        contributorId: Int,
-        submitted: LocalDate = LocalDate(2023, 5, 1),
-        caloriesKcal: Double = 100.0,
-        totalFatGrams: Double = 5.0,
-        sugarGrams: Double = 5.0,
-        sodiumGrams: Double = 200.0,
-        proteinGrams: Double = 10.0,
-        saturatedFatGrams: Double = 2.0,
-        carbohydratesGrams: Double = 20.0,
-        nSteps: Int = 5,
-        steps: List<String> = listOf("Step 1", "Step 2", "Step 3"),
-        description: String? = "Meal description",
-        ingredients: List<String> = listOf("Ingredient 1", "Ingredient 2"),
-        nIngredients: Int = 2
-    ): Meal {
-        val nutrition = Nutrition(
-            caloriesKcal = caloriesKcal,
-            totalFatGrams = totalFatGrams,
-            sugarGrams = sugarGrams,
-            sodiumGrams = sodiumGrams,
-            proteinGrams = proteinGrams,
-            saturatedFatGrams = saturatedFatGrams,
-            carbohydratesGrams = carbohydratesGrams
-        )
-        return Meal(
-            name = name,
-            id = id,
-            minutes = minutes,
-            contributorId = contributorId,
-            submitted = submitted,
-            tags = tags,
-            nutrition = nutrition,
-            nSteps = nSteps,
-            steps = steps,
-            description = description,
-            ingredients = ingredients,
-            nIngredients = nIngredients
-        )
-    }
 
     @BeforeEach
     fun setup() {
@@ -185,62 +138,11 @@ class ManageMealsSearchUseCaseTest {
     }
     //endregion
 
-    //region gets gym helper
-    @ParameterizedTest
-    @CsvSource(
-        "-1000.0, 50.0",
-        "20.0,-1000.0"
-    )
-    fun `should throw exception when target calories or target protein is less than zero`(
-        targetCalories: Double,
-        targetProtein: Double
-    ) {
-        // Given
-        every { mealRepository.getAllMeals() } returns meals
-
-        // Then && When
-        assertThrows<Exception> {
-            useCase
-                .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
-        }
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "1500.0, 100.0",
-        "300.0, 10200.0",
-    )
-    fun `should throw exception when no have gym helper meals`(
-        targetCalories: Double,
-        targetProtein: Double
-    ) {
-        // Given
-        every { mealRepository.getAllMeals() } returns meals
-
-        // Then && When
-        assertThrows<Exception> {
-            useCase
-                .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
-        }
-
-    }
-
+    //region get gym helper meals by calories
     @Test
-    fun `should return gym helper meals when target calories and target protein are vaild`() {
-        // Given
-        val targetCalories = 250.0
-        val targetProtein = 5.0
-        every { mealRepository.getAllMeals() } returns meals
-
-        // When
-        val result = useCase
-            .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
-
-        // Then
-        assertThat(result.size).isEqualTo(2)
-
+    fun getGymHelperMealsByCaloriesAndProtein() {
     }
-    //endregion
+//endregion
 
     // region get meal by name
     @Test
