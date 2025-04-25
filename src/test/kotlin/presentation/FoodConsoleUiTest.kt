@@ -59,30 +59,26 @@ class FoodConsoleUiTest {
     }
 
     @Test
-    fun `should present suggestion meals when choice one`() {
+    fun `should present suggestion meals when choice is one`() {
         // Given
         val inputChoice = "1"
-        val exitChoice = "0"
         val titleOfFeature = "1. Suggestion Meal 🤔"
-        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
+        every { consoleIO.readInput() } returns inputChoice
 
         // When
         foodConsoleUi.start()
 
-
         // Then
         verify { suggestionMealsService.showService() }
         verify { consoleIO.viewWithLine(titleOfFeature) }
-
     }
 
     @Test
-    fun `should present search meals when choice two`() {
+    fun `should present search meals when choice is two`() {
         // Given
         val inputChoice = "2"
-        val exitChoice = "0"
         val titleOfFeature = "2. Search Meal \uD83D\uDD0E"
-        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
+        every { consoleIO.readInput() } returns inputChoice
 
         // When
         foodConsoleUi.start()
@@ -90,16 +86,14 @@ class FoodConsoleUiTest {
         // Then
         verify { searchMealService.showService() }
         verify { consoleIO.viewWithLine(titleOfFeature) }
-
     }
 
     @Test
-    fun `should present game meals when choice three`() {
+    fun `should present game meals when choice is three`() {
         // Given
         val inputChoice = "3"
-        val exitChoice = "0"
         val titleOfFeature = "3. Game Meal \uD83C\uDFAE"
-        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
+        every { consoleIO.readInput() } returns inputChoice
 
         // When
         foodConsoleUi.start()
@@ -107,16 +101,14 @@ class FoodConsoleUiTest {
         // Then
         verify { gameMealsService.showService() }
         verify { consoleIO.viewWithLine(titleOfFeature) }
-
     }
 
     @Test
-    fun `should present view meals when choice four`() {
+    fun `should present view meals when choice is four`() {
         // Given
         val inputChoice = "4"
-        val exitChoice = "0"
         val titleOfFeature = "4. View Meal \uD83E\uDD63"
-        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
+        every { consoleIO.readInput() } returns inputChoice
 
         // When
         foodConsoleUi.start()
@@ -124,7 +116,6 @@ class FoodConsoleUiTest {
         // Then
         verify { viewMealsService.showService() }
         verify { consoleIO.viewWithLine(titleOfFeature) }
-
     }
 
     @ParameterizedTest
@@ -135,9 +126,8 @@ class FoodConsoleUiTest {
     )
     fun `should view message when write invalid option`(inputChoice: String) {
         // Given
-        val exitChoice = "0"
         val errorMessage = "❌ Invalid input! Please enter a number between 0 and 4"
-        every { consoleIO.readInput() } returns inputChoice andThen exitChoice
+        every { consoleIO.readInput() } returns inputChoice
 
         // When
         foodConsoleUi.start()
