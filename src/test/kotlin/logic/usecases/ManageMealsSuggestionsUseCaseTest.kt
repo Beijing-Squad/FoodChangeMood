@@ -259,8 +259,10 @@ class ManageMealsSuggestionsUseCaseTest {
         )
 
         every { mealRepository.getAllMeals() } returns meals
+
         //When
         val result = useCase.suggestItalianLargeGroupsMeals()
+
         //Then
         Assertions.assertTrue(result.isEmpty())
     }
@@ -276,8 +278,10 @@ class ManageMealsSuggestionsUseCaseTest {
         )
 
         every { mealRepository.getAllMeals() } returns meals
+
         //When
         val result = useCase.suggestItalianLargeGroupsMeals()
+
         //Then
         Assertions.assertEquals(2, result.size)
     }
@@ -291,8 +295,10 @@ class ManageMealsSuggestionsUseCaseTest {
         )
 
         every { mealRepository.getAllMeals() } returns meals
+
         //When
         val result = useCase.suggestItalianLargeGroupsMeals()
+
         //Then
         Assertions.assertEquals(2, result.size)
     }
@@ -303,8 +309,10 @@ class ManageMealsSuggestionsUseCaseTest {
         val meal = createMeal(id = 1, tags = listOf("italian", "for-large-groups"))
 
         every { mealRepository.getAllMeals() } returns listOf(meal, meal)
+
         //When
         val result = useCase.suggestItalianLargeGroupsMeals()
+
         //Then
         Assertions.assertEquals(1, result.distinctBy { it.id }.size)
     }
