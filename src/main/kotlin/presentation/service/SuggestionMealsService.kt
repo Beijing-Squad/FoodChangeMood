@@ -38,7 +38,7 @@ class SuggestionMealsService(
     }
 
     // region Keto Diet
-    private fun launchKetoMealHelper() {
+   private fun launchKetoMealHelper() {
         val usedKetoMealIds = mutableSetOf<Int>()
         while (true) {
             val meal = suggestionMeals.suggestKetoMeal(usedKetoMealIds)
@@ -52,9 +52,10 @@ class SuggestionMealsService(
 
             consoleIO.viewWithLine("Do you like it? ❤")
             consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
-            when (consoleIO.readInput()?.trim()?.lowercase()) {
+            when (consoleIO.readInput()!!.lowercase().trim()) {
                 "yes" -> {
                     viewMealDetails.displayMealDetails(meal)
+                    break
                 }
 
                 "no" -> {
@@ -62,7 +63,7 @@ class SuggestionMealsService(
                     continue
                 }
 
-                "exit" -> {
+                "exit" -> {consoleIO.viewWithLine("GoodBye")
                     break
                 }
 
