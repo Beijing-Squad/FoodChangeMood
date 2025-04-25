@@ -81,7 +81,7 @@ class SearchMealService(
 
     // region search by add date and see details by id
     fun launchMealsByDate() {
-        val date = getValidDate() ?: return
+        val date = getValidDate()
         val mealsOnDate = searchMeals.getMealsByDate(date)
 
         if (mealsOnDate.isEmpty()) {

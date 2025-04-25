@@ -6,7 +6,6 @@ import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.beijing.presentation.ViewMealDetails
 import org.beijing.presentation.service.SearchMealService
-import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
