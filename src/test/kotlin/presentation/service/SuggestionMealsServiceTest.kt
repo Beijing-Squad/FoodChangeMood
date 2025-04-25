@@ -13,24 +13,24 @@ import org.junit.jupiter.api.Test
 import presentation.view_read.ConsoleIO
 
 class SuggestionMealsServiceTest {
-    private lateinit var manageMealsSuggestionsUseCase: ManageMealsSuggestionsUseCase
-    private lateinit var suggestionMealsService: SuggestionMealsService
+    private lateinit var suggestUseCase: ManageMealsSuggestionsUseCase
+    private lateinit var suggestMealService: SuggestionMealsService
     private lateinit var viewMealDetails: ViewMealDetails
     private lateinit var consoleIO: ConsoleIO
 
     @BeforeEach
     fun setup() {
-        manageMealsSuggestionsUseCase = mockk(relaxed = true)
-        viewMealDetails = mockk(relaxed = true)
+        suggestUseCase = mockk(relaxed = true)
+        viewMealDetails = mockk()
         consoleIO = mockk(relaxed = true)
-        suggestionMealsService = SuggestionMealsService(manageMealsSuggestionsUseCase, viewMealDetails, consoleIO)
+        suggestMealService = SuggestionMealsService(manageMealsSuggest, viewMealDetails, consoleIO)
     }
 
     //region handle user choice
     @Test
-    fun `should show sub features when suggestion meal selected`() {
+    fun `should show options of sub feature when suggest meal option already selected`() {
         // When
-        suggestionMealsService.showOptionService()
+        suggestMealService.showOptionService()
 
         // Then
         verify {
@@ -46,6 +46,40 @@ class SuggestionMealsServiceTest {
     }
     //endregion
 
+    //region ten random potato meals ui test
+    @Test
+    fun `should call get ten random potato meals when selected`() {
+        // Given
+        val choiceSearchFeature = "5"
+        val exitInput = "0"
+
+        every { consoleIO.readInput() } returns choiceSearchFeature andThen exitInput
+
+        // When
+        suggestMealService.handleUserChoice()
+
+        // Then
+        verify {
+            suggestUseCase.suggestTenRandomMealsContainsPotato()
+        }
+    }
+
+    @Test
+    fun `should show an error message when throw an exception`() {
+        // Given
+        val errorMessage = "no meals contains potato found"
+        every { suggestUseCase.suggestTenRandomMealsContainsPotato() } throws IllegalArgumentException(errorMessage)
+
+        // When
+        suggestMealService.launchTenRandomPotatoMeals()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine(errorMessage)
+        }
+    }
+    //endregion
+
     //region sweets wit no eggs
     @Test
     fun `should call Suggest Sweets with No Eggs when it selected`() {
@@ -54,10 +88,10 @@ class SuggestionMealsServiceTest {
         val firstSweet = createMeal(name = "mahalbya", description = "egyptian sweet")
         val secondSweet = null
         every { consoleIO.readInput() } returns choiceSearchFeature
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(firstSweet, secondSweet)
+        every { suggestUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(firstSweet, secondSweet)
 
         // When
-        suggestionMealsService.handleUserChoice()
+        suggestMealService.handleUserChoice()
 
         // Then
         verify {
@@ -73,7 +107,7 @@ class SuggestionMealsServiceTest {
         val firstSweet = createMeal(name = "mahalbya", description = "egyptian sweet")
         val secondSweet = createMeal(name = "Halawa", description = "Delicious and eggless")
         val thirdSweet = null
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(
+        every { suggestUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(
             firstSweet,
             secondSweet,
             thirdSweet
@@ -81,7 +115,7 @@ class SuggestionMealsServiceTest {
         every { consoleIO.readInput() } returns "no"
 
         // When
-        suggestionMealsService.launchSweetWithoutEggs()
+        suggestMealService.launchSweetWithoutEggs()
 
         // Then
         verifyOrder {
@@ -95,11 +129,11 @@ class SuggestionMealsServiceTest {
     fun `should view meal details when user says yes`() {
         // Given
         val sweet = createMeal(name = "mahalbya", description = "egyptian sweet")
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(sweet)
+        every { suggestUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(sweet)
         every { consoleIO.readInput() } returns "yes"
 
         // When
-        suggestionMealsService.launchSweetWithoutEggs()
+        suggestMealService.launchSweetWithoutEggs()
 
         // Then
         verify {
@@ -111,11 +145,11 @@ class SuggestionMealsServiceTest {
     fun `should exit when user types exit`() {
         // Given
         val sweet = createMeal(name = "mahalbya", description = null)
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returns sweet
+        every { suggestUseCase.suggestSweetsWithNoEggs() } returns sweet
         every { consoleIO.readInput() } returns "exit"
 
         // When
-        suggestionMealsService.launchSweetWithoutEggs()
+        suggestMealService.launchSweetWithoutEggs()
 
         // Then
         verify { consoleIO.viewWithLine("GoodBye") }
@@ -126,11 +160,11 @@ class SuggestionMealsServiceTest {
     fun `should view meal details when user types yes with none case sensitive`() {
         // Given
         val sweet = createMeal(name = "mahalbya", description = null)
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returns sweet
+        every { suggestUseCase.suggestSweetsWithNoEggs() } returns sweet
         every { consoleIO.readInput() } returns " YES"
 
         // When
-        suggestionMealsService.launchSweetWithoutEggs()
+        suggestMealService.launchSweetWithoutEggs()
 
         // Then
         verify { viewMealDetails.displayMealDetails(sweet) }
@@ -143,7 +177,7 @@ class SuggestionMealsServiceTest {
         val firstSweet = createMeal(name = "mahalbya", description = null)
         val secondSweet = createMeal(name = "Halawa", description = "Delicious and eggless")
         val thirdSweet = null
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(
+        every { suggestUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(
             firstSweet,
             secondSweet,
             thirdSweet
@@ -151,7 +185,7 @@ class SuggestionMealsServiceTest {
         every { consoleIO.readInput() } returns ""
 
         // When
-        suggestionMealsService.launchSweetWithoutEggs()
+        suggestMealService.launchSweetWithoutEggs()
 
         // Then
         verifyOrder {
@@ -162,4 +196,5 @@ class SuggestionMealsServiceTest {
         }
     }
     //endregion
+
 }
