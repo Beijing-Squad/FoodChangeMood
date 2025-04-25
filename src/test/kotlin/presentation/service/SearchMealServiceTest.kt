@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.view_read.ConsoleIO
 
-
 class SearchMealServiceTest {
     private lateinit var manageMealsSearch: ManageMealsSearchUseCase
     private lateinit var searchMealService: SearchMealService
@@ -42,7 +41,6 @@ class SearchMealServiceTest {
             consoleIO.viewWithLine("5. Iraqi Meals")
             consoleIO.viewWithLine("0. Exit")
         }
-
     }
     //endregion
 
@@ -141,125 +139,182 @@ class SearchMealServiceTest {
     }
     //endregion
 
-    //region Iraqi Meals Tests
+    //region search by name
     @Test
-    fun `should display Iraqi meal details correctly when selected`() {
+    fun `should call launchSearchMealByName when choice 2 selected`() {
         // Given
-        val iraqiMeal = createMeal(
-            name = "Masgouf",
-            id = 1,
-            tags = listOf("Iraqi", "Grilled"),
-            description = "Traditional Iraqi grilled fish"
-        )
-        every { manageMealsSearch.getIraqiMeals() } returns listOf(iraqiMeal)
-        every { consoleIO.readInput() } returns "5" andThen "1" andThen "0" // Select Iraqi option, then meal, then exit
+        every { consoleIO.readInput() } returns "2" andThen "egg"
+        every { manageMealsSearch.getMealByName("egg") } returns listOf(createMeal("egg"))
 
         // When
         searchMealService.handleUserChoice()
 
         // Then
         verify {
-            consoleIO.viewWithLine("Masgouf")
-            consoleIO.viewWithLine(match { it.contains("Traditional Iraqi grilled fish") })
+            consoleIO.view("Enter meal name to search: ")
+            manageMealsSearch.getMealByName("egg")
+            consoleIO.viewWithLine("Meals found:")
+            consoleIO.viewWithLine("egg")
         }
     }
 
     @Test
-    fun `should show proper message when no Iraqi meals found`() {
+    fun `should show error when meal name input is null`() {
         // Given
-        every { manageMealsSearch.getIraqiMeals() } returns emptyList()
-        every { consoleIO.readInput() } returns "5" andThen "0"
+        every { consoleIO.readInput() } returns "2" andThen null
 
         // When
-        searchMealService.handleUserChoice()
+        searchMealService.showService()
 
         // Then
         verify {
-            consoleIO.viewWithLine("\n⚠️ No Iraqi meals found!\n")
+            consoleIO.view("Enter meal name to search: ")
+            consoleIO.viewWithLine("❌ Meal name input cannot be null.")
         }
     }
 
     @Test
-    fun `should handle case insensitive Iraqi tags`() {
+    fun `should show error when meal name input is empty`() {
         // Given
-        val meal1 = createMeal(
-            name = "Dolma",
-            tags = listOf("iraqi", "Vegetarian")
-        )
-        val meal2 = createMeal(
-            name = "Qoozi",
-            tags = listOf("IRAQI", "Meat")
-        )
-        every { manageMealsSearch.getIraqiMeals() } returns listOf(meal1, meal2)
-        every { consoleIO.readInput() } returns "5" andThen "0"
+        every { consoleIO.readInput() } returns "2" andThen " "
 
         // When
-        searchMealService.handleUserChoice()
-
-        // Then
-        verify(exactly = 2) {
-            consoleIO.viewWithLine(any())
-        }
-    }
-
-    @Test
-    fun `should handle meals with Iraqi in description`() {
-        // Given
-        val meal = createMeal(
-            name = "Tashreeb",
-            description = "Traditional iraqi bread soup",
-            tags = listOf("Middle Eastern")
-        )
-        every { manageMealsSearch.getIraqiMeals() } returns listOf(meal)
-        every { consoleIO.readInput() } returns "5" andThen "0"
-
-        // When
-        searchMealService.handleUserChoice()
+        searchMealService.showService()
 
         // Then
         verify {
-            consoleIO.viewWithLine("Tashreeb")
+            consoleIO.view("Enter meal name to search: ")
+            consoleIO.viewWithLine("❌ Meal name input cannot be empty.")
         }
     }
 
     @Test
-    fun `should show all matching Iraqi meals`() {
+    fun `should show error when meal name has numbers`() {
         // Given
-        val meal1 = createMeal("Masgouf", tags = listOf("Iraqi"))
-        val meal2 = createMeal("Tashreeb", description = "Iraqi bread soup")
-        val meal3 = createMeal("Dolma", tags = listOf("iraqi"))
-
-        every { manageMealsSearch.getIraqiMeals() } returns listOf(meal1, meal2, meal3)
-        every { consoleIO.readInput() } returns "5" andThen "0"
+        every { consoleIO.readInput() } returns "2" andThen "eg9"
 
         // When
-        searchMealService.handleUserChoice()
-
-        // Then
-        verify(exactly = 3) {
-            consoleIO.viewWithLine(any())
-        }
-    }
-
-    @Test
-    fun `should handle special characters in Iraqi meals`() {
-        // Given
-        val meal = createMeal(
-            name = "Biryani Baghdadi",
-            description = "Iraqi-style biryani with special spices",
-            tags = listOf("Iraqi", "Spicy")
-        )
-        every { manageMealsSearch.getIraqiMeals() } returns listOf(meal)
-        every { consoleIO.readInput() } returns "5" andThen "0"
-
-        // When
-        searchMealService.handleUserChoice()
+        searchMealService.showService()
 
         // Then
         verify {
-            consoleIO.viewWithLine("Biryani Baghdadi")
+            consoleIO.view("Enter meal name to search: ")
+            consoleIO.viewWithLine("❌ Meal name must contain only letters and spaces.")
         }
     }
-//endregion
 
+    @Test
+    fun `should show message when no meals found by name`() {
+        // Given
+        every { consoleIO.readInput() } returns "2" andThen "pizza hut"
+
+        every { manageMealsSearch.getMealByName("pizza hut") } returns emptyList()
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.view("Enter meal name to search: ")
+            manageMealsSearch.getMealByName("pizza hut")
+            consoleIO.viewWithLine("No meals found matching \"pizza hut\".")
+        }
+    }
+
+    @Test
+    fun `should handle exception thrown from use case while searching by name`() {
+        // Given
+        val errorMessage = "Something went wrong"
+        every { consoleIO.readInput() } returns "2" andThen "egg"
+
+        every {
+            manageMealsSearch.getMealByName("egg")
+        } throws Exception(errorMessage)
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.view("Enter meal name to search: ")
+            consoleIO.viewWithLine("❌ $errorMessage")
+        }
+    }
+    //endregion
+
+    //region search meal by country
+    @Test
+    fun `should show meals when valid country name is entered`() {
+        // Given
+        val country = "Italy"
+        val meals = listOf(
+            createMeal(name = "Pizza", minutes = 15, ingredients = listOf("cheese", "tomato"), steps = listOf("prep", "bake")),
+            createMeal(name = "Pasta", minutes = 20, ingredients = listOf("noodles", "sauce"), steps = listOf("boil", "mix"))
+        )
+        every { consoleIO.readInput() } returnsMany listOf("4", country, "exit")
+        every { manageMealsSearch.getMealByCountry(country) } returns meals
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("🍽️ Found ${meals.size} meal(s) related to '$country':\n")
+            consoleIO.viewWithLine("1. Pizza • ⏱️ 15 mins • 🧂 2 ingredients • 🔧 2 steps")
+            consoleIO.viewWithLine("2. Pasta • ⏱️ 20 mins • 🧂 2 ingredients • 🔧 2 steps")
+        }
+    }
+
+    @Test
+    fun `should show warning when empty country input is entered`() {
+        // Given
+        every { consoleIO.readInput() } returnsMany listOf("4", "", "exit")
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify { consoleIO.viewWithLine("⚠️ Please enter a country name with at least 4 characters.") }
+    }
+
+    @Test
+    fun `should show warning when short country name is entered`() {
+        // Given
+        every { consoleIO.readInput() } returnsMany listOf("4", "It", "exit")
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify { consoleIO.viewWithLine("⚠️ Please enter a country name with at least 4 characters.") }
+    }
+
+    @Test
+    fun `should show warning when numeric country input is entered`() {
+        // Given
+        every { consoleIO.readInput() } returnsMany listOf("4", "1234", "exit")
+
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify { consoleIO.viewWithLine("🚫 Please enter a valid name, not just numbers.") }
+    }
+
+    @Test
+    fun `should show no meals found message when country has no meals`() {
+        // Given
+        val country = "Atlantis"
+        every { consoleIO.readInput() } returnsMany listOf("4", country, "exit")
+
+        every { manageMealsSearch.getMealByCountry(country) } returns emptyList()
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify { consoleIO.viewWithLine("😔 Sorry, no meals found for '$country'. Try another country!") }
+    }
+    //endregion region search meal by country
 }

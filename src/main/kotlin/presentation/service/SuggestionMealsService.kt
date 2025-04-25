@@ -38,7 +38,7 @@ class SuggestionMealsService(
     }
 
     // region Keto Diet
-    private fun launchKetoMealHelper() {
+   private fun launchKetoMealHelper() {
         val usedKetoMealIds = mutableSetOf<Int>()
         while (true) {
             val meal = suggestionMeals.suggestKetoMeal(usedKetoMealIds)
@@ -52,9 +52,10 @@ class SuggestionMealsService(
 
             consoleIO.viewWithLine("Do you like it? ❤")
             consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
-            when (consoleIO.readInput()?.trim()?.lowercase()) {
+            when (consoleIO.readInput()!!.lowercase().trim()) {
                 "yes" -> {
                     viewMealDetails.displayMealDetails(meal)
+                    break
                 }
 
                 "no" -> {
@@ -62,7 +63,7 @@ class SuggestionMealsService(
                     continue
                 }
 
-                "exit" -> {
+                "exit" -> {consoleIO.viewWithLine("GoodBye")
                     break
                 }
 
@@ -75,7 +76,7 @@ class SuggestionMealsService(
 // endregion
 
     //region ten random meals contains potato
-    fun launchTenRandomPotatoMeals() {
+    private fun launchTenRandomPotatoMeals() {
         val tenRandomPotatoMeals = try {
             suggestionMeals.suggestTenRandomMealsContainsPotato()
         } catch (e: IllegalArgumentException) {
@@ -146,7 +147,7 @@ class SuggestionMealsService(
 // endregion
 
     // region easy meal service
-    fun launchEasyMeals() {
+    private fun launchEasyMeals() {
         consoleIO.viewWithLine("🥗 Easy Meal Suggestions")
         consoleIO.viewWithLine("------------------------")
         consoleIO.viewWithLine("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
@@ -164,23 +165,17 @@ class SuggestionMealsService(
 
     // region Suggest Meal With more than 700 calories
     fun launchSoThinMeals() {
-        val suggestedMeals = mutableListOf<Meal>()
-        var meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
-        var choice: String?
-
+        val suggestedMeals = mutableSetOf<Meal>()
         while (true) {
 
-            if (suggestedMeals.contains(meal)) {
-                meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
-            }
-            suggestedMeals.add(meal)
+            val meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
+            if (!suggestedMeals.add(meal)) continue
             showMeal(meal)
 
             consoleIO.viewWithLine("Do You Like This Meal?")
             consoleIO.view("write 'yes' to get details or 'no' to get another meal Or 'exit':")
             consoleIO.view("\nhere: ")
-            choice = consoleIO.readInput()?.trim()?.lowercase()
-            when (choice) {
+            when (consoleIO.readInput()?.trim()?.lowercase()) {
                 "yes" -> {
                     showMealDetails(meal)
                     break
@@ -189,7 +184,7 @@ class SuggestionMealsService(
                 "no" -> continue
                 "exit" -> return
                 else -> {
-                    consoleIO.viewWithLine("Invalid input! Please choose 1, 2 or 0.")
+                    consoleIO.viewWithLine("Invalid input! Please choose 'Yes','No' or 'Exit'.")
                 }
             }
         }
@@ -214,13 +209,16 @@ class SuggestionMealsService(
         consoleIO.viewWithLine("Meal TotalFat: ${meal.nutrition.totalFatGrams}")
         consoleIO.viewWithLine("Meal Carbohydrates: ${meal.nutrition.carbohydratesGrams}")
         consoleIO.viewWithLine("Meal Saturated: ${meal.nutrition.saturatedFatGrams}")
-        consoleIO.viewWithLine("Meal Tags: ${meal.tags}")
+        consoleIO.viewWithLine("Meal Tag:")
+        meal.tags.forEach { tag ->
+            consoleIO.viewWithLine("   • $tag")
+        }
         consoleIO.viewWithLine("Meal ContributorId: ${meal.contributorId}")
         consoleIO.viewWithLine("Meal Ingredients:")
         meal.ingredients.forEach { ingredient ->
             consoleIO.viewWithLine("   • $ingredient")
         }
-        consoleIO.viewWithLine("Meal Steps ((${meal.nSteps} total) :")
+        consoleIO.viewWithLine("Meal Steps (${meal.nSteps} total) :")
         meal.steps.forEachIndexed { index, step ->
             consoleIO.viewWithLine("   ${index + 1}. $step")
         }

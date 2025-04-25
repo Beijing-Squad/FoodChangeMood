@@ -4,14 +4,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.beijing.presentation.FoodConsoleUi
-import org.beijing.presentation.FoodUi
 import org.beijing.presentation.service.GameMealsService
 import org.beijing.presentation.service.SearchMealService
 import org.beijing.presentation.service.SuggestionMealsService
 import org.beijing.presentation.service.ViewMealsService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import presentation.view_read.ConsoleIO
@@ -38,7 +36,6 @@ class FoodConsoleUiTest {
             gameMealsService,
             suggestionMealsService,
             consoleIO
-
         )
     }
 
@@ -54,8 +51,6 @@ class FoodConsoleUiTest {
 
         // When && Then
         verify { consoleIO.view(messageWelcome) }
-
-
     }
 
     @Test
@@ -133,7 +128,7 @@ class FoodConsoleUiTest {
         foodConsoleUi.start()
 
         // Then
-        verify { consoleIO.viewWithLine(errorMessage)}
+        verify { consoleIO.viewWithLine(errorMessage) }
     }
 
     @Test
@@ -163,5 +158,4 @@ class FoodConsoleUiTest {
         // Then
         verify { consoleIO.viewWithLine("An unknown error occurred") }
     }
-
 }

@@ -69,7 +69,7 @@ class ManageMealsSuggestionsUseCase(
     fun suggestEasyPreparedMeal(): List<Meal> {
         return mealRepository.getAllMeals().asSequence()
             .filter { it.nSteps <= N_STEP && it.nIngredients <= N_INGREDIENTS && it.minutes <= MINUTES }
-            .shuffled()
+            .sortedWith(compareBy({ it.minutes }, { it.nSteps }, { it.nIngredients }))
             .take(N_EASY_MEAL)
             .toList()
     }

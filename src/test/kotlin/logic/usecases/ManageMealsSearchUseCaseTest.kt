@@ -3,6 +3,7 @@ package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
 import fake.createMeal
+import fake.createMealForSearchByName
 import fake.meals
 import io.mockk.every
 import io.mockk.mockk
@@ -200,13 +201,156 @@ class ManageMealsSearchUseCaseTest {
 
     // region get meal by name
     @Test
-    fun getMealByName() {
+    fun `should return meals that contain the keyword`() {
+        //Given
+        val query = "Chicken"
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMealForSearchByName("Spicy Chili Chicken Bowl", 87),
+            createMealForSearchByName("Triple Fire Chicken Sandwich", 98985),
+        )
+
+        //When
+        val result = useCase.getMealByName(query)
+
+        //Then
+        assertThat(result).isEqualTo(
+            listOf(
+                createMealForSearchByName("Spicy Chili Chicken Bowl", 87),
+                createMealForSearchByName("Triple Fire Chicken Sandwich", 98985),
+            )
+        )
+
+    }
+
+    @Test
+    fun `should throw exception if search query is blank`() {
+        //Given
+        val blankQuery = "   "
+
+        //When
+        val exception = assertThrows<IllegalArgumentException> {
+            useCase.getMealByName(blankQuery)
+        }
+
+        //Then
+        assertThat(exception.message).isEqualTo("Search query must not be blank.")
+
+    }
+
+    @Test
+    fun `should throw exception if no meals exist in repository`() {
+        //Given
+        val query = "Chili"
+        every { mealRepository.getAllMeals() } returns emptyList()
+
+        //When
+        val exception = assertThrows<IllegalStateException> {
+            useCase.getMealByName(query)
+        }
+
+        //Then
+        assertThat(exception.message).isEqualTo("No food data available to search.")
+
+    }
+
+    @Test
+    fun `should return meals that contain the word, regardless of the case`() {
+        //Given
+        val query = "cHiLi"
+        every { mealRepository.getAllMeals() } returns listOf(createMealForSearchByName("Spicy Chili Chicken Bowl", 87))
+
+        //When
+        val result = useCase.getMealByName(query)
+
+        //Then
+        assertThat(result.first().name).isEqualTo("Spicy Chili Chicken Bowl")
+    }
+
+    @Test
+    fun `should return empty list if meal name does not match`() {
+        //Given
+        val query = "Kosharii"
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMealForSearchByName("Hmam Baldy", 323584),
+        )
+
+        //When
+        val result = useCase.getMealByName(query)
+
+        //Then
+        assertThat(result).isEmpty()
     }
     //endregion
 
     //region get meal by country
     @Test
-    fun getMealByCountry() {
+    fun `should return meals matching country query sorted by name`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Zaatar Pizza", tags = listOf("Lebanese"), minutes = 10, contributorId = 1),
+            createMeal(id = 2, name = "Baklava", tags = listOf("Lebanese"), minutes = 5, contributorId = 2),
+            createMeal(id = 3, name = "Kebab", tags = listOf("Lebanese"), minutes = 20, contributorId = 3)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.getMealByCountry("lebanese")
+
+        // Then
+        assert(result.map { it.name } == listOf("Baklava", "Kebab", "Zaatar Pizza"))
+    }
+
+    @Test
+    fun `should return empty list when no meals match the country query`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Pasta", tags = listOf("italian"), minutes = 10, contributorId = 1),
+            createMeal(id = 2, name = "Burger", tags = listOf("american"), minutes = 20, contributorId = 2)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.getMealByCountry("japanese")
+
+        // Then
+        assert(result.isEmpty())
+    }
+
+    @Test
+    fun `should return at most 20 meals when more than 20 match`() {
+        // Given
+        val meals = List(50) { index ->
+            createMeal(
+                id = index,
+                name = "Iraqi Meal $index",
+                tags = listOf("iraqi"),
+                minutes = 10,
+                contributorId = 1
+            )
+        }
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.getMealByCountry("iraqi")
+
+        // Then
+        assert(result.size == 20)
+    }
+
+    @Test
+    fun `should match country query case-insensitively`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Rice Dish", tags = listOf("Iraqi"), minutes = 10, contributorId = 1),
+            createMeal(id = 2, name = "Soup", tags = listOf("iraqi"), minutes = 20, contributorId = 2)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.getMealByCountry("IRAQI")
+
+        // Then
+        assert(result.size == 2)
     }
     //endregion
 
