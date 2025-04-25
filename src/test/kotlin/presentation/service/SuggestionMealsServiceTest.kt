@@ -308,6 +308,59 @@ class SuggestionMealsServiceTest {
         verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Solo Spaghetti") }) }
         verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Party Platter") }) }
     }
+    @Test
+    fun `should ignore meals with empty tags`() {
+        // Given
+        val noTagsMeal = createMeal(name = "Unknown Dish", tags = emptyList())
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf()
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("❌ No Italian meals found for large groups.") }
+    }
+    @Test
+    fun `should handle meals with null or malformed tags`() {
+        // Given
+        val malformedMeal = createMeal(name = "Glitch Dish", tags = listOf("Itali@n", "FOR_LARGE_GROUP"))
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf()
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("❌ No Italian meals found for large groups.") }
+    }
+    @Test
+    fun `should match tags regardless of casing`() {
+        // Given
+        val meal = createMeal(name = "Caprese", tags = listOf("ITALIAN", "For_Large_Group"))
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf(meal)
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("1. Caprese | 🕒 ${meal.minutes} minutes |") }
+    }
+    @Test
+    fun `should correctly number multiple meals`() {
+        // Given
+        val meal1 = createMeal(name = "Gnocchi", minutes = 20)
+        val meal2 = createMeal(name = "Risotto", minutes = 45)
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf(meal1, meal2)
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verifyOrder {
+            consoleIO.viewWithLine("🍝 Meals from Italy suitable for large groups:\n")
+            consoleIO.viewWithLine("1. Gnocchi | 🕒 20 minutes |")
+            consoleIO.viewWithLine("2. Risotto | 🕒 45 minutes |")
+        }
+    }
     //endregion
 
 }
