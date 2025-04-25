@@ -82,5 +82,33 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine("Correct!! The preparation time is indeed 15 minutes.")
         }
     }
+    @Test
+    fun `should allow multiple wrong guesses then end game`() {
+        // Given
+        val meal = createMeal(name = "Burger", minutes = 10)
+        val round1 = GameRound(meal, 3, false, null)
+        val round2 = GameRound(meal, 2, false, "Too low! Try a higher number.")
+        val round3 = GameRound(meal, 1, false, "Too high! Try a lower number.")
+        val round4 = GameRound(meal, 0, true, "Too low! Try a higher number.\nGameOver! The actual preparation time is 10 minutes.")
+
+        every { gamesMeals.startNewRound() } returns round1
+        every { consoleIO.readInput() } returnsMany listOf("5", "15", "7")
+        every { gamesMeals.makeGuess(round1, 5) } returns round2
+        every { gamesMeals.makeGuess(round2, 15) } returns round3
+        every { gamesMeals.makeGuess(round3, 7) } returns round4
+
+        // When
+        service.launchGuessGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Too low! Try a higher number.")
+            consoleIO.viewWithLine("Too high! Try a lower number.")
+            consoleIO.viewWithLine("Too low! Try a higher number.\nGameOver! The actual preparation time is 10 minutes.")
+            consoleIO.viewWithLine("🎮 Game Over! Returning to main menu.\n")
+        }
+    }
+
+
     //endregion
 }
