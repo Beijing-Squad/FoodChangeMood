@@ -104,8 +104,8 @@ class ManageMealsSearchUseCase(
     //region iraqi meals
     fun getIraqiMeals(): List<Meal> {
         return mealRepository.getAllMeals().filter { meal ->
-            meal.tags?.any { it.equals(IRAQI, ignoreCase = true) } ?: false ||
-                    meal.description?.contains(IRAQI, ignoreCase = true) ?: false
+            meal.tags?.any { it.contains(IRAQ, ignoreCase = true) } ?: false ||
+                    meal.description?.contains(IRAQ, ignoreCase = true) ?: false
         }
 
     }
@@ -114,7 +114,7 @@ class ManageMealsSearchUseCase(
     private companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
-        const val IRAQI = "Iraqi"
+        const val IRAQ = "Iraq"
         const val BLANK_SEARCH_EXCEPTION = "Search query must not be blank."
         const val NO_FOOD_DATA = "No food data available to search."
     }

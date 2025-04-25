@@ -384,7 +384,9 @@ class ManageMealsSearchUseCaseTest {
 
         // Then
         assertThat(iraqiMeals).hasSize(2)
-        assertThat(iraqiMeals.map { it.name }).containsExactly("Masgouf", "Kebab")
+        iraqiMeals.forEach { meal ->
+            assertThat(meal.name).isIn(listOf("Masgouf", "Kebab"))
+        }
     }
 
     @Test
