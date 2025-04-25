@@ -109,7 +109,7 @@ class SearchMealService(
     fun getDateInput(): String {
         consoleIO.viewWithLine("Please Enter The Date In Format YYYY-MM-DD")
         consoleIO.view("Enter Date (YYYY-MM-DD): ")
-        return consoleIO.readInput()?.trim().toString()
+        return consoleIO.readInput()!!.trim()
     }
 
     private fun viewMealsOnDate(meals: List<Meal>) {
@@ -141,17 +141,17 @@ class SearchMealService(
     private fun getSeeDetailsAnswer(): Boolean {
         consoleIO.viewWithLine("Do You Want To See Details Of A Specific Meal? (yes/no)")
         consoleIO.view("Enter Your Answer: ")
-        val answer = consoleIO.readInput()?.trim()?.lowercase()
-        return answer?.get(0) == 'y'
+        val answer = consoleIO.readInput()!!.trim().lowercase()
+        return answer.get(0) == 'y'
     }
 
     fun getIdInput(): Int {
         while (true) {
             consoleIO.viewWithLine("Please Enter The Meal ID")
             consoleIO.view("Enter Meal ID: ")
-            val input = consoleIO.readInput()?.trim()
+            val input = consoleIO.readInput()!!.trim() // "abc"
             try {
-                return input?.toInt() ?: throw NumberFormatException()
+                return input.toInt()
             } catch (e: Exception) {
                 consoleIO.viewWithLine("❌ Invalid ID Format, Please Use A Number.")
             }
