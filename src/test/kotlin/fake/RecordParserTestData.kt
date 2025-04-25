@@ -101,7 +101,4 @@ object RecordParserTestData {
         description = "A classic\nItalian pasta\ndish."
     )
 
-    fun emptyRecord() = """
-        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
-    """.trimIndent()
 }
