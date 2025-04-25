@@ -55,14 +55,25 @@ class ManageMealsSearchUseCase(
 
     //region search meal by name
     fun getMealByName(searchQuery: String): List<Meal> {
+        validateSearchQuery(searchQuery)
 
         val allMeals = fetchAllMeals()
 
         return filterMealsByName(allMeals, searchQuery)
     }
 
+    private fun validateSearchQuery(query: String) {
+        if (query.isBlank()) {
+            throw IllegalArgumentException(BLANK_SEARCH_EXCEPTION)
+        }
+    }
+
     private fun fetchAllMeals(): List<Meal> {
-        return mealRepository.getAllMeals()
+        val meals = mealRepository.getAllMeals()
+        if (meals.isEmpty()) {
+            throw IllegalStateException(NO_FOOD_DATA)
+        }
+        return meals
     }
 
     private fun filterMealsByName(meals: List<Meal>, query: String): List<Meal> {
@@ -106,5 +117,7 @@ class ManageMealsSearchUseCase(
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
         const val IRAQI = "Iraqi"
+        const val BLANK_SEARCH_EXCEPTION = "Search query must not be blank."
+        const val NO_FOOD_DATA = "No food data available to search."
     }
 }
