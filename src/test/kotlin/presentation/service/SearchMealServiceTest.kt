@@ -140,4 +140,108 @@ class SearchMealServiceTest {
     }
     //endregion
 
+    //region search by name
+    @Test
+    fun `should call launchSearchMealByName when choice 2 selected`() {
+        // Given
+        every { consoleIO.readInput() } returns "2" andThen "egg"
+        every { manageMealsSearch.getMealByName("egg") } returns listOf(createMeal("egg"))
+
+        // When
+        searchMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.view("Enter meal name to search: ")
+            manageMealsSearch.getMealByName("egg")
+            consoleIO.viewWithLine("Meals found:")
+            consoleIO.viewWithLine("egg")
+        }
+    }
+
+    @Test
+    fun `should show error when meal name input is null`() {
+        // Given
+        every { consoleIO.readInput() } returns "2" andThen null
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.view("Enter meal name to search: ")
+            consoleIO.viewWithLine("❌ Meal name input cannot be null.")
+        }
+    }
+
+    @Test
+    fun `should show error when meal name input is empty`() {
+        // Given
+        every { consoleIO.readInput() } returns "2" andThen " "
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.view("Enter meal name to search: ")
+            consoleIO.viewWithLine("❌ Meal name input cannot be empty.")
+        }
+    }
+
+    @Test
+    fun `should show error when meal name has numbers`() {
+        // Given
+        every { consoleIO.readInput() } returns "2" andThen "eg9"
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.view("Enter meal name to search: ")
+            consoleIO.viewWithLine("❌ Meal name must contain only letters and spaces.")
+        }
+    }
+
+    @Test
+    fun `should show message when no meals found by name`() {
+        // Given
+        every { consoleIO.readInput() } returns "2" andThen "pizza hut"
+
+        every { manageMealsSearch.getMealByName("pizza hut") } returns emptyList()
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.view("Enter meal name to search: ")
+            manageMealsSearch.getMealByName("pizza hut")
+            consoleIO.viewWithLine("No meals found matching \"pizza hut\".")
+        }
+    }
+
+    @Test
+    fun `should handle exception thrown from use case while searching by name`() {
+        // Given
+        val errorMessage = "Something went wrong"
+        every { consoleIO.readInput() } returns "2" andThen "egg"
+
+        every {
+            manageMealsSearch.getMealByName("egg")
+        } throws Exception(errorMessage)
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.view("Enter meal name to search: ")
+            consoleIO.viewWithLine("❌ $errorMessage")
+        }
+    }
+
+    //endregion
+
 }
