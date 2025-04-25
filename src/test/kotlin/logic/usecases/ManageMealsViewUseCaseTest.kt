@@ -165,7 +165,7 @@ class ManageMealsViewUseCaseTest {
 
     @Test
     fun `should exclude when carbs above average`() {
-        // Arrange - totalFatGrams (4.0) < avg (5.0), carbsGrams (21.0) > avg (20.0)
+        // Given
         val meals = listOf(
             createMeal(
                 name = "low Carbs",
@@ -184,22 +184,22 @@ class ManageMealsViewUseCaseTest {
         )
         every { mealRepository.getAllMeals() } returns meals
 
-        // Act
+        // When
         val result = useCase.getHealthyQuickPreparedMeals()
 
-        // Assert
+        // Then
         assertThat(result).isEmpty()
     }
 
     @Test
     fun `getHealthyQuickPreparedMeals should return empty list when passed empty meals list`() {
-        // Arrange
+        // Given
         every { mealRepository.getAllMeals() } returns emptyList()
 
-        // Act
+        // When
         val result = useCase.getHealthyQuickPreparedMeals()
 
-        // Assert
+        // Then
         assertThat(result).isEmpty()
     }
 

@@ -43,7 +43,7 @@ class ViewMealsServiceTest {
 
     //region get ten healthy quick meals
     @Test
-    fun `launchHealthyQuickPreparedMeals should called when selected`() {
+    fun `launchHealthyQuickPreparedMeals should be called when selected`() {
         // Given
         val choiceViewFeature = "1"
 
@@ -76,7 +76,7 @@ class ViewMealsServiceTest {
     }
 
     @Test
-    fun `should show message when empty list of meals passed`() {
+    fun `should show message when empty list of meal passed`() {
         // Given
         val choiceViewFeature = "1"
 
