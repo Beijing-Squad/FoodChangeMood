@@ -85,6 +85,42 @@ class SuggestionMealsServiceTest {
     }
     //endregion
 
+    // region launch easy meals
+    @Test
+    fun `should call Suggest Easy Meal when selected`() {
+        // Given
+        val choiceSearchFeature = "3"
+        val easyMeal = createMeal(name = "Fast Toast", minutes = 5, ingredients = listOf("bread", "cheese"), steps = listOf("toast bread", "add cheese"))
+
+        every { consoleIO.readInput() } returns choiceSearchFeature
+        every { suggestUseCase.suggestEasyPreparedMeal() } returns listOf(easyMeal)
+
+        // When
+        suggestMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Try this meal: ${easyMeal.name}")
+        }
+    }
+
+    @Test
+    fun `should handle invalid input gracefully`() {
+        // Given
+        val invalidChoice = "invalidChoice"
+        every { consoleIO.readInput() } returns invalidChoice
+
+        // When
+        suggestMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Unknown input.")
+        }
+    }
+
+    // endregion
+
     //region sweets wit no eggs
     @Test
     fun `should call Suggest Sweets with No Eggs when it selected`() {
