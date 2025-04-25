@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import fake.createMeal
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.junit.jupiter.api.BeforeEach
