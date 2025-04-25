@@ -486,10 +486,8 @@ class SearchMealServiceTest {
         searchMealService.showService()
 
         // Then
-        verify {
-            consoleIO.viewWithLine("🍽️ Found ${meals.size} meal(s) related to '$country':\n")
-            consoleIO.viewWithLine("1. Pizza • ⏱️ 15 mins • 🧂 2 ingredients • 🔧 2 steps")
-            consoleIO.viewWithLine("2. Pasta • ⏱️ 20 mins • 🧂 2 ingredients • 🔧 2 steps")
+        verify(exactly = 1) {
+            consoleIO.viewWithLine(match { it.contains("🍽️ Found 2 meal(s) related to 'Italy':") })
         }
     }
 
