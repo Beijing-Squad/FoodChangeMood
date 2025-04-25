@@ -13,7 +13,7 @@ class ManageMealsGamesUseCaseTest {
 
     @BeforeEach
     fun setup() {
-        mealRepository = mockk(relaxed = true)
+        mealRepository = mockk()
         useCase = ManageMealsGamesUseCase(mealRepository)
     }
 
