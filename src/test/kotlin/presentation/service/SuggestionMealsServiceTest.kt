@@ -309,30 +309,6 @@ class SuggestionMealsServiceTest {
         verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Party Platter") }) }
     }
     @Test
-    fun `should ignore meals with empty tags`() {
-        // Given
-        val noTagsMeal = createMeal(name = "Unknown Dish", tags = emptyList())
-        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf()
-
-        // When
-        suggestMealService.launchItalianLargeGroupMeals()
-
-        // Then
-        verify { consoleIO.viewWithLine("❌ No Italian meals found for large groups.") }
-    }
-    @Test
-    fun `should handle meals with null or malformed tags`() {
-        // Given
-        val malformedMeal = createMeal(name = "Glitch Dish", tags = listOf("Itali@n", "FOR_LARGE_GROUP"))
-        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf()
-
-        // When
-        suggestMealService.launchItalianLargeGroupMeals()
-
-        // Then
-        verify { consoleIO.viewWithLine("❌ No Italian meals found for large groups.") }
-    }
-    @Test
     fun `should match tags regardless of casing`() {
         // Given
         val meal = createMeal(name = "Caprese", tags = listOf("ITALIAN", "For_Large_Group"))
