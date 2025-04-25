@@ -107,6 +107,5 @@ class ViewMealsServiceTest {
         // Then
         verify { useCase.getSortedSeaFoodByProtein() }
     }
-
     //endregion
 }

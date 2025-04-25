@@ -6,7 +6,8 @@ import io.mockk.every
 import io.mockk.mockk
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsGamesUseCase
-import org.beijing.model.*
+import org.beijing.model.IngredientGameRound
+import org.beijing.model.IngredientGameState
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -80,7 +81,8 @@ class ManageMealsGamesUseCaseTest {
         val emptyMeal = createMeal(
             id = 1,
             name = "Empty Pizza",
-            ingredients = emptyList())
+            ingredients = emptyList()
+        )
 
         every { mealRepository.getAllMeals() } returns listOf(emptyMeal)
         useCase = ManageMealsGamesUseCase(mealRepository)
@@ -99,7 +101,8 @@ class ManageMealsGamesUseCaseTest {
         val meal = createMeal(
             id = 1,
             name = "Pizza",
-            ingredients = listOf("Cheese", "Tomato", "Flour"))
+            ingredients = listOf("Cheese", "Tomato", "Flour")
+        )
 
         every { mealRepository.getAllMeals() } returns listOf(meal)
         val usedState = IngredientGameState(usedMeals = setOf(1))
@@ -160,6 +163,7 @@ class ManageMealsGamesUseCaseTest {
         assertThat(newState.score).isEqualTo(expectedScore)
         assertThat(newState.correctAnswers).isEqualTo(expectedCorrectAnswers)
     }
+
     @ParameterizedTest
     @CsvSource(
         "14,false",
@@ -168,14 +172,15 @@ class ManageMealsGamesUseCaseTest {
     )
     fun `should handle game over conditions correctly`(
         correctAnswers: Int,
-        expectedGameOver: Boolean)
-    {
+        expectedGameOver: Boolean
+    ) {
         // Given
         val state = IngredientGameState(correctAnswers = correctAnswers)
         val meal = createMeal(
             id = 1,
             name = "Pizza",
-            ingredients = listOf("Cheese", "Tomato", "Flour", "Pepperoni"))
+            ingredients = listOf("Cheese", "Tomato", "Flour", "Pepperoni")
+        )
 
         every { mealRepository.getAllMeals() } returns listOf(meal)
 
@@ -192,6 +197,7 @@ class ManageMealsGamesUseCaseTest {
             assertThat(startResult.isSuccess).isTrue()
         }
     }
+
     @Test
     fun `should calculate score correctly when answering multiple questions correctly`() {
         // Given
@@ -236,7 +242,7 @@ class ManageMealsGamesUseCaseTest {
     @Test
     fun `should return correct number of options when starting game with many ingredients meal`() {
         // Given
-        val numberOfOptions =3
+        val numberOfOptions = 3
         val meal = createMeal(
             id = 1,
             name = "Complex Meal",

@@ -41,7 +41,6 @@ class SearchMealServiceTest {
             consoleIO.viewWithLine("5. Iraqi Meals")
             consoleIO.viewWithLine("0. Exit")
         }
-
     }
     //endregion
 
@@ -241,7 +240,5 @@ class SearchMealServiceTest {
             consoleIO.viewWithLine("❌ $errorMessage")
         }
     }
-
     //endregion
-
 }
