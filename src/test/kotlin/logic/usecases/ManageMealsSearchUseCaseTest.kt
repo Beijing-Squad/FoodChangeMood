@@ -215,9 +215,12 @@ class ManageMealsSearchUseCaseTest {
         val result = useCase.getMealByName(query)
 
         //Then
-        assertEquals(2, result.size)
-        assertTrue(result.any { it.name == "Spicy Chili Chicken Bowl" })
-        assertTrue(result.any { it.name == "Triple Fire Chicken Sandwich" })
+        assertThat(result).isEqualTo(
+            listOf(
+                createMealForSearchByName("Spicy Chili Chicken Bowl", 87),
+                createMealForSearchByName("Triple Fire Chicken Sandwich", 98985),
+            )
+        )
 
     }
 
@@ -232,7 +235,7 @@ class ManageMealsSearchUseCaseTest {
         }
 
         //Then
-        assertEquals("Search query must not be blank.", exception.message)
+        assertThat(exception.message).isEqualTo("Search query must not be blank.")
 
     }
 
@@ -248,7 +251,7 @@ class ManageMealsSearchUseCaseTest {
         }
 
         //Then
-        assertEquals("No food data available to search.", exception.message)
+        assertThat(exception.message).isEqualTo("No food data available to search.")
 
     }
 
@@ -262,8 +265,7 @@ class ManageMealsSearchUseCaseTest {
         val result = useCase.getMealByName(query)
 
         //Then
-        assertEquals(1, result.size)
-        assertEquals("Spicy Chili Chicken Bowl", result.first().name)
+        assertThat(result.first().name).isEqualTo("Spicy Chili Chicken Bowl")
     }
 
     @Test
@@ -278,7 +280,7 @@ class ManageMealsSearchUseCaseTest {
         val result = useCase.getMealByName(query)
 
         //Then
-        assertTrue(result.isEmpty())
+        assertThat(result).isEmpty()
     }
     //endregion
 
