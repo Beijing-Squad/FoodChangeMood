@@ -61,7 +61,7 @@ class ManageMealsGamesUseCaseTest {
     }
 
     @Test
-    fun `should return failure when starting game with empty meal repository`() {
+    fun `should return failure when starting game with empty meal list`() {
         // Given
         every { mealRepository.getAllMeals() } returns emptyList()
         useCase = ManageMealsGamesUseCase(mealRepository)
