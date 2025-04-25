@@ -1,6 +1,7 @@
 package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
+import fake.createMeal
 import io.mockk.every
 import io.mockk.mockk
 import org.beijing.logic.MealRepository
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import kotlin.test.assertEquals
-import kotlinx.datetime.*
 
 class ManageMealsSuggestionsUseCaseTest {
     private lateinit var mealRepository: MealRepository
@@ -74,7 +74,7 @@ class ManageMealsSuggestionsUseCaseTest {
     }
 
     @Test
-    fun `should return null when no valid keto meals are available`() {
+    fun `should return null and display suitable message when no valid keto meals are available`() {
         // Given
         val nonKetoMeal = createMeal(
             id = 2,
@@ -95,11 +95,12 @@ class ManageMealsSuggestionsUseCaseTest {
 
         // Then
         assertNull(result)
+        assertThat("\uD83D\uDE14 No more keto meals to suggest.")
         assertThat(usedMealIds.isEmpty())
     }
 
     @Test
-    fun `should return null when all keto meals are already used`() {
+    fun `should return suitable message when all keto meals are already used`() {
         // Given
         val ketoMeal = createMeal(
             id = 3,
@@ -121,6 +122,7 @@ class ManageMealsSuggestionsUseCaseTest {
 
         // Then
         assertNull(result)
+        assertThat("\uD83D\uDE14 No more keto meals to suggest.")
         assertThat(usedMealIds).containsExactly(ketoMeal.id)
     }
 
@@ -208,7 +210,7 @@ class ManageMealsSuggestionsUseCaseTest {
     }
 
     @Test
-    fun `should return null when meal list is empty`() {
+    fun `should return suitable message when meal list is empty`() {
         // Given
         every { mealRepository.getAllMeals() } returns emptyList()
 
@@ -217,6 +219,7 @@ class ManageMealsSuggestionsUseCaseTest {
 
         // Then
         assertNull(result)
+        assertThat("\uD83D\uDE14 No more keto meals to suggest.")
         assertThat(usedMealIds.isEmpty())
     }
 
@@ -245,24 +248,6 @@ class ManageMealsSuggestionsUseCaseTest {
         assertEquals(ketoMeal.id, result.id)
         assertThat(usedMealIds).containsExactly(ketoMeal.id)
     }
-
-    private fun createMeal(id: Int, nutrition: Nutrition): Meal {
-        return Meal(
-            name = "Test Meal $id",
-            id = id,
-            minutes = 30,
-            contributorId = 1,
-            submitted = LocalDate(2005, 9, 16),
-            tags = emptyList(),
-            nutrition = nutrition,
-            nSteps = 5,
-            steps = listOf("Step 1", "Step 2"),
-            description = "Test description",
-            ingredients = listOf("Ingredient 1", "Ingredient 2"),
-            nIngredients = 2
-        )
-    }
-
 
     @Test
     fun suggestEasyPreparedMeal() {
