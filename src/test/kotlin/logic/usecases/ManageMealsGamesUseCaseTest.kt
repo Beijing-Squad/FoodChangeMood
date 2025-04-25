@@ -1,5 +1,6 @@
 package logic.usecases
 
+import com.google.common.truth.Truth.assertThat
 import fake.createMeal
 import io.mockk.*
 import junit.framework.TestCase.assertEquals
@@ -8,7 +9,6 @@ import model.GameRound
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsGamesUseCase
 import org.beijing.model.Meal
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -40,7 +40,7 @@ class ManageMealsGamesUseCaseTest {
             emptyUseCase.startNewRound()
         }
 
-        Assertions.assertEquals("No meals found in the repository", exception.message)
+        assertThat(exception).hasMessageThat().isEqualTo("No meals found in the repository")
     }
 
     @Test
@@ -56,10 +56,10 @@ class ManageMealsGamesUseCaseTest {
         val gameRound = useCase.startNewRound()
 
         // Then
-        Assertions.assertNotNull(gameRound)
-        Assertions.assertFalse(gameRound.isCompleted)
-        Assertions.assertEquals(3, gameRound.attemptsLeft)
-        Assertions.assertNull(gameRound.lastFeedBack)
+        assertThat(gameRound).isNotNull()
+        assertThat(gameRound!!.isCompleted).isFalse()
+        assertThat(gameRound.attemptsLeft).isEqualTo(3)
+        assertThat(gameRound.lastFeedBack).isNull()
 
     }
 
@@ -83,9 +83,9 @@ class ManageMealsGamesUseCaseTest {
         val result = useCase.makeGuess(completedRound, 25)
 
         // Then
-        Assertions.assertTrue(result.isCompleted)
-        Assertions.assertEquals("This round is already Completed, Start A new Round.", result.lastFeedBack)
-        Assertions.assertEquals(completedRound.attemptsLeft, result.attemptsLeft)
+        assertThat(result.isCompleted).isTrue()
+        assertThat(result.lastFeedBack).isEqualTo("This round is already Completed, Start A new Round.")
+        assertThat(result.attemptsLeft).isEqualTo(completedRound.attemptsLeft)
     }
 
     @Test
@@ -108,8 +108,8 @@ class ManageMealsGamesUseCaseTest {
         val result = useCase.makeGuess(noAttemptsRound, 25)
 
         // Then
-        Assertions.assertTrue(result.isCompleted)
-        Assertions.assertEquals("No Attempts Left, The Actual Preparation Time is: 30 minutes.", result.lastFeedBack)
+        assertThat(result.isCompleted).isTrue()
+        assertThat(result.lastFeedBack).isEqualTo("No Attempts Left, The Actual Preparation Time is: 30 minutes.")
     }
 
     @Test
@@ -132,9 +132,9 @@ class ManageMealsGamesUseCaseTest {
         val result = useCase.makeGuess(round, 25)
 
         // Then
-        Assertions.assertFalse(result.isCompleted)
-        Assertions.assertEquals(2, result.attemptsLeft)
-        Assertions.assertEquals("Too low! Try a higher number.", result.lastFeedBack)
+        assertThat(result.isCompleted).isFalse()
+        assertThat(result.attemptsLeft).isEqualTo(2)
+        assertThat(result.lastFeedBack).isEqualTo("Too low! Try a higher number.")
     }
 
     @Test
@@ -157,9 +157,9 @@ class ManageMealsGamesUseCaseTest {
         val result = useCase.makeGuess(round, 35)
 
         // Then
-        Assertions.assertFalse(result.isCompleted)
-        Assertions.assertEquals(2, result.attemptsLeft)
-        Assertions.assertEquals("Too high! Try a lower number.", result.lastFeedBack)
+        assertThat(result.isCompleted).isFalse()
+        assertThat(result.attemptsLeft).isEqualTo(2)
+        assertThat(result.lastFeedBack).isEqualTo("Too high! Try a lower number.")
     }
 
     @Test
@@ -182,9 +182,10 @@ class ManageMealsGamesUseCaseTest {
         val result = useCase.makeGuess(round, 30)
 
         // Then
-        Assertions.assertTrue(result.isCompleted)
-        Assertions.assertEquals(2, result.attemptsLeft)
-        Assertions.assertEquals("Correct!! The preparation time is indeed 30 minutes.", result.lastFeedBack)
+        assertThat(result.isCompleted).isTrue()
+        assertThat(result.attemptsLeft).isEqualTo(2)
+        assertThat(result.lastFeedBack).isEqualTo("Correct!! The preparation time is indeed 30 minutes.")
+
     }
 
     @Test
@@ -207,12 +208,12 @@ class ManageMealsGamesUseCaseTest {
         val result = useCase.makeGuess(lastAttemptRound, 25)
 
         // Then
-        Assertions.assertTrue(result.isCompleted)
-        Assertions.assertEquals(0, result.attemptsLeft)
-        Assertions.assertEquals(
-            "Too low! Try a higher number.\nGameOver! The actual preparation time is 30 minutes.",
-            result.lastFeedBack
+        assertThat(result.isCompleted).isTrue()
+        assertThat(result.attemptsLeft).isEqualTo(0)
+        assertThat(result.lastFeedBack).isEqualTo(
+            "Too low! Try a higher number.\nGameOver! The actual preparation time is 30 minutes."
         )
+
     }
 
     @Test
@@ -226,7 +227,7 @@ class ManageMealsGamesUseCaseTest {
         val exception = assertThrows<IllegalArgumentException> {
             useCase.startNewRound()
         }
-        assertEquals("No meals found in the repository", exception.message)
+        assertThat(exception).hasMessageThat().isEqualTo("No meals found in the repository")
     }
 
     @Test
