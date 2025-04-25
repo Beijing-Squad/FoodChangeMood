@@ -54,7 +54,7 @@ class SuggestionMealsServiceTest {
         val firstSweet = createMeal(name = "mahalbya", description = "egyptian sweet")
         val secondSweet = null
         every { consoleIO.readInput() } returns choiceSearchFeature
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany  listOf(firstSweet,secondSweet)
+        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(firstSweet, secondSweet)
 
         // When
         suggestionMealsService.handleUserChoice()
@@ -68,16 +68,22 @@ class SuggestionMealsServiceTest {
     }
 
     @Test
-    fun `should skip sweet when user says no and suggest next one`(){
+    fun `should skip sweet when user says no and suggest next one`() {
+        // Given
         val firstSweet = createMeal(name = "mahalbya", description = "egyptian sweet")
         val secondSweet = createMeal(name = "Halawa", description = "Delicious and eggless")
         val thirdSweet = null
-
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(firstSweet, secondSweet,thirdSweet)
+        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(
+            firstSweet,
+            secondSweet,
+            thirdSweet
+        )
         every { consoleIO.readInput() } returns "no"
 
+        // When
         suggestionMealsService.launchSweetWithoutEggs()
 
+        // Then
         verifyOrder {
             consoleIO.viewWithLine("Try this sweet: ${firstSweet.name}")
             consoleIO.readInput()
@@ -86,14 +92,16 @@ class SuggestionMealsServiceTest {
     }
 
     @Test
-    fun `should view meal details when user says yes`(){
+    fun `should view meal details when user says yes`() {
+        // Given
         val sweet = createMeal(name = "mahalbya", description = "egyptian sweet")
-
         every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(sweet)
         every { consoleIO.readInput() } returns "yes"
 
+        // When
         suggestionMealsService.launchSweetWithoutEggs()
 
+        // Then
         verify {
             viewMealDetails.displayMealDetails(sweet)
         }
@@ -101,40 +109,51 @@ class SuggestionMealsServiceTest {
 
     @Test
     fun `should exit when user types exit`() {
+        // Given
         val sweet = createMeal(name = "mahalbya", description = null)
-
         every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returns sweet
         every { consoleIO.readInput() } returns "exit"
 
+        // When
         suggestionMealsService.launchSweetWithoutEggs()
 
+        // Then
         verify { consoleIO.viewWithLine("GoodBye") }
 
     }
 
     @Test
     fun `should view meal details when user types yes with none case sensitive`() {
+        // Given
         val sweet = createMeal(name = "mahalbya", description = null)
-
         every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returns sweet
         every { consoleIO.readInput() } returns " YES"
 
+        // When
         suggestionMealsService.launchSweetWithoutEggs()
 
+        // Then
         verify { viewMealDetails.displayMealDetails(sweet) }
 
     }
+
     @Test
     fun `should return massage when user types empty or anything except the three choices`() {
+        // Given
         val firstSweet = createMeal(name = "mahalbya", description = null)
         val secondSweet = createMeal(name = "Halawa", description = "Delicious and eggless")
         val thirdSweet = null
-
-        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(firstSweet, secondSweet,thirdSweet)
+        every { manageMealsSuggestionsUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(
+            firstSweet,
+            secondSweet,
+            thirdSweet
+        )
         every { consoleIO.readInput() } returns ""
 
+        // When
         suggestionMealsService.launchSweetWithoutEggs()
 
+        // Then
         verifyOrder {
             consoleIO.viewWithLine("Try this sweet: ${firstSweet.name}")
             consoleIO.readInput()
