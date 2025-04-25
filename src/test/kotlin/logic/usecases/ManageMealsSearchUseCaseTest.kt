@@ -304,7 +304,7 @@ class ManageMealsSearchUseCaseTest {
     fun `should return empty list when no meals match the country query`() {
         // Given
         val meals = listOf(
-            createMeal(id = 1, name = "Pasta", tags = listOf("italian"),minutes = 10, contributorId = 1),
+            createMeal(id = 1, name = "Pasta", tags = listOf("italian"), minutes = 10, contributorId = 1),
             createMeal(id = 2, name = "Burger", tags = listOf("american"), minutes = 20, contributorId = 2)
         )
         every { mealRepository.getAllMeals() } returns meals
@@ -319,7 +319,15 @@ class ManageMealsSearchUseCaseTest {
     @Test
     fun `should return at most 20 meals when more than 20 match`() {
         // Given
-        val meals = List(50) { index -> createMeal(id = index, name = "Iraqi Meal $index", tags = listOf("iraqi"), minutes = 10, contributorId = 1) }
+        val meals = List(50) { index ->
+            createMeal(
+                id = index,
+                name = "Iraqi Meal $index",
+                tags = listOf("iraqi"),
+                minutes = 10,
+                contributorId = 1
+            )
+        }
         every { mealRepository.getAllMeals() } returns meals
 
         // When
@@ -345,7 +353,6 @@ class ManageMealsSearchUseCaseTest {
         assert(result.size == 2)
     }
     //endregion
-
 
     //region get iraqi meals
     @Test

@@ -1,11 +1,11 @@
 package presentation.service
 
 import fake.createMeal
+import fake.mealsListWithHighCaloriesMeals
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
-import fake.mealsListWithHighCaloriesMeals
 import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.beijing.model.Meal
@@ -241,7 +241,6 @@ class SuggestionMealsServiceTest {
             consoleIO.viewWithLine("Try this sweet: ${secondSweet.name}")
         }
     }
-
     //endregion
 
     //region suggest meal have more than seven hundred calories
