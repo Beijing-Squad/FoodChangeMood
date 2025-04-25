@@ -94,12 +94,11 @@ class ManageMealsSearchUseCase(
 
     //region iraqi meals
     fun getIraqiMeals(): List<Meal> {
-        val allMeals = mealRepository.getAllMeals()
-
-        return allMeals.filter { meal ->
-            (meal.tags?.any { tag -> tag.equals(IRAQI, ignoreCase = true) } == true) ||
-                    meal.description?.contains(IRAQI, ignoreCase = true) == true
+        return mealRepository.getAllMeals().filter { meal ->
+            meal.tags?.any { it.equals(IRAQI, ignoreCase = true) } ?: false ||
+                    meal.description?.contains(IRAQI, ignoreCase = true) ?: false
         }
+
     }
     //endregion
 

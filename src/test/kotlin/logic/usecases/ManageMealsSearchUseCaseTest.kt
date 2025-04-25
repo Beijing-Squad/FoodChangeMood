@@ -1,17 +1,19 @@
 package logic.usecases
 
+
+import com.google.common.truth.Truth.assertThat
+import fake.createMeal
+import fake.meals
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
-import org.beijing.model.Meal
-import org.beijing.model.Nutrition
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 
 class ManageMealsSearchUseCaseTest {
 
@@ -26,134 +28,179 @@ class ManageMealsSearchUseCaseTest {
 
     //region get meal by date
     @Test
-    fun getMealsByDate() {
-    }
-//endregion
-
-    //region get meal by date and id
-    @Test
-    fun getMealByDateAndId() {
-    }
-//endregion
-
-    //region get gym helper meals by calories
-    @Test
-    fun getGymHelperMealsByCaloriesAndProtein() {
-    }
-//endregion
-
-    // region get meal by name
-    private val fakeMeals = listOf(
-        Meal(
-            name = "Spicy Chili Chicken Bowl",
-            id = 1,
-            minutes = 15,
-            contributorId = 1,
-            submitted = LocalDate.parse("2025-01-01"),
-            tags = listOf("spicy", "bowl"),
-            nutrition = Nutrition(
-                caloriesKcal = 300.0,
-                totalFatGrams = 10.0,
-                sugarGrams = 3.0,
-                sodiumGrams = 250.0,
-                proteinGrams = 30.0,
-                saturatedFatGrams = 2.0,
-                carbohydratesGrams = 20.0
-            ),
-            nSteps = 3,
-            steps = listOf("Grill chicken", "Add chili sauce", "Serve"),
-            description = "A spicy and flavorful meal",
-            ingredients = listOf("chicken", "chili", "rice"),
-            nIngredients = 3
-        ),
-        Meal(
-            name = "Beef Burger",
-            id = 2,
-            minutes = 60,
-            contributorId = 2,
-            submitted = LocalDate.parse("2025-02-01"),
-            tags = listOf("hearty", "dinner"),
-            nutrition = Nutrition(
-                caloriesKcal = 550.0,
-                totalFatGrams = 25.0,
-                sugarGrams = 5.0,
-                sodiumGrams = 600.0,
-                proteinGrams = 45.0,
-                saturatedFatGrams = 10.0,
-                carbohydratesGrams = 35.0
-            ),
-            nSteps = 5,
-            steps = listOf("Brown beef", "Simmer", "Add vegetables"),
-            description = "Comfort food for winter",
-            ingredients = listOf("beef", "potatoes", "carrots"),
-            nIngredients = 3
-        ),
-        Meal(
-            name = "Triple Fire Chicken Sandwich",
-            id = 65,
-            minutes = 15,
-            contributorId = 989,
-            submitted = LocalDate.parse("2025-01-30"),
-            tags = listOf("spicy", "bowl"),
-            nutrition = Nutrition(
-                caloriesKcal = 300.0,
-                totalFatGrams = 10.0,
-                sugarGrams = 3.0,
-                sodiumGrams = 250.0,
-                proteinGrams = 30.0,
-                saturatedFatGrams = 2.0,
-                carbohydratesGrams = 20.0
-            ),
-            nSteps = 3,
-            steps = listOf("chicken", "Add chili sauce", "Serve"),
-            description = "A spicy and flavorful meal",
-            ingredients = listOf("chicken", "chili", "rice"),
-            nIngredients = 3
+    fun `should return list of meals when date is valid`() {
+        // Given
+        val date = "2025-03-10"
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
         )
 
+        // When
+        val result = useCase.getMealsByDate(date)
+
+        // Then
+        assert(result.size == 2)
+    }
+
+    @Test
+    fun `should throw exception when no meals found on the date`() {
+        // Given
+        val date = "2025-01-01"
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
+
+        // When && Then
+        assertThrows<Exception> {
+            useCase.getMealsByDate(date)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "2023 05 10",
+        "2023@05@10",
+        "20230615",
+        "2023-600-01",
+        "2023/01/02",
+        "2023--32",
     )
+    fun `should throw IllegalArgumentException when date is invalid`(date: String) {
+        // Given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
+
+        // When && Then
+        assertThrows<IllegalArgumentException> {
+            useCase.getMealsByDate(date)
+        }
+    }
 
     @Test
-    fun `should return meals that contain the keyword`() {
-        //Given
-        val query = "Chicken"
-        every { mealRepository.getAllMeals() } returns fakeMeals
+    fun `should throw IllegalArgumentException when date is empty`() {
+        // Given
+        val date = ""
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(submitted = LocalDate(2025, 2, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 3, 10)),
+            createMeal(submitted = LocalDate(2025, 4, 10)),
+        )
 
-        //When
-        val result = useCase.getMealByName(query)
+        // When && Then
+        assertThrows<IllegalArgumentException> {
+            useCase.getMealsByDate(date)
+        }
+    }
+    //endregion
 
-        //Then
-        assertEquals(2, result.size)
-        assertTrue(result.any { it.name == "Spicy Chili Chicken Bowl" })
-        assertTrue(result.any { it.name == "Triple Fire Chicken Sandwich" })
+    //region get meal by id
+    @Test
+    fun `should return the matched meal when id is valid`() {
+        // Given
+        val id = 1
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(id = 1),
+            createMeal(id = 2),
+            createMeal(id = 3),
+            createMeal(id = 4),
+        )
+
+        // When
+        val result = useCase.getMealById(id)
+
+        // Then
+        assert(result.id == id)
+    }
+
+    @Test
+    fun `should throw exception when no found meal for the id`() {
+        // Given
+        val id = 5
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(id = 1),
+            createMeal(id = 2),
+            createMeal(id = 3),
+            createMeal(id = 4),
+        )
+
+        // When && Then
+        assertThrows<Exception> {
+            useCase.getMealById(id)
+        }
+    }
+    //endregion
+
+    //region gets gym helper
+    @ParameterizedTest
+    @CsvSource(
+        "-1000.0, 50.0",
+        "20.0,-1000.0"
+    )
+    fun `should throw exception when target calories or target protein is less than zero`(
+        targetCalories: Double,
+        targetProtein: Double
+    ) {
+        // Given
+        every { mealRepository.getAllMeals() } returns meals
+
+        // Then && When
+        assertThrows<Exception> {
+            useCase
+                .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "1500.0, 100.0",
+        "300.0, 10200.0",
+    )
+    fun `should throw exception when no have gym helper meals`(
+        targetCalories: Double,
+        targetProtein: Double
+    ) {
+        // Given
+        every { mealRepository.getAllMeals() } returns meals
+
+        // Then && When
+        assertThrows<Exception> {
+            useCase
+                .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
+        }
 
     }
 
     @Test
-    fun `should return meals that contain the word, regardless of the case`() {
-        //Given
-        val query = "cHiLi"
-        every { mealRepository.getAllMeals() } returns fakeMeals
+    fun `should return gym helper meals when target calories and target protein are vaild`() {
+        // Given
+        val targetCalories = 250.0
+        val targetProtein = 5.0
+        every { mealRepository.getAllMeals() } returns meals
 
-        //When
-        val result = useCase.getMealByName(query)
+        // When
+        val result = useCase
+            .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
 
-        //Then
-        assertEquals(1, result.size)
-        assertEquals("Spicy Chili Chicken Bowl", result.first().name)
+        // Then
+        assertThat(result.size).isEqualTo(2)
+
     }
+    //endregion
 
+    // region get meal by name
     @Test
-    fun `should return empty list if meal name does not match`() {
-        //Given
-        val query = "Kosharii"
-        every { mealRepository.getAllMeals() } returns fakeMeals
-
-        //When
-        val result = useCase.getMealByName(query)
-
-        //Then
-        assertTrue(result.isEmpty())
+    fun getMealByName() {
     }
     //endregion
 
@@ -161,7 +208,7 @@ class ManageMealsSearchUseCaseTest {
     @Test
     fun getMealByCountry() {
     }
-//endregion
+    //endregion
 
     //region get iraqi meals
     @Test
