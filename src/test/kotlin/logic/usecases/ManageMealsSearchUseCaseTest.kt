@@ -360,7 +360,114 @@ class ManageMealsSearchUseCaseTest {
 
     //region get iraqi meals
     @Test
-    fun getIraqiMeals() {
+    fun `getIraqiMeals should return meals with Iraqi tag or description`() {
+        // Given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(
+                name = "Masgouf",
+                id = 1,
+                tags = listOf("Iraqi", "Grilled"),
+                description = "Traditional Iraqi grilled fish"
+            ),
+            createMeal(
+                name = "Kebab",
+                id = 2,
+                tags = listOf("Middle Eastern"),
+                description = "Popular in Iraq"
+            ),
+            createMeal(
+                name = "Pizza",
+                id = 3,
+                tags = listOf("Italian"),
+                description = "Italian classic dish"
+            )
+        )
+
+        // When
+        val iraqiMeals = useCase.getIraqiMeals()
+
+        // Then
+        assertThat(iraqiMeals).hasSize(2)
+        iraqiMeals.forEach { meal ->
+            assertThat(meal.name).isIn(listOf("Masgouf", "Kebab"))
+        }
+    }
+
+    @Test
+    fun `getIraqiMeals should return empty list when no Iraqi meals exist`() {
+        // Given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(
+                name = "Sushi",
+                id = 1,
+                tags = listOf("Japanese"),
+                description = "Japanese delicacy"
+            ),
+            createMeal(
+                name = "Pasta",
+                id = 2,
+                tags = listOf("Italian"),
+                description = "Italian classic"
+            )
+        )
+
+        // When
+        val iraqiMeals = useCase.getIraqiMeals()
+
+        // Then
+        assertThat(iraqiMeals).isEmpty()
+    }
+
+    @Test
+    fun `getIraqiMeals should match Iraqi tag case insensitively`() {
+        // Given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(
+                name = "Dolma",
+                id = 1,
+                tags = listOf("iraqi", "vegetarian"),
+                description = "Stuffed vegetables"
+            ),
+            createMeal(
+                name = "Biryani",
+                id = 2,
+                tags = listOf("Indian"),
+                description = "Spiced rice dish"
+            )
+        )
+
+        // When
+        val iraqiMeals = useCase.getIraqiMeals()
+
+        // Then
+        assertThat(iraqiMeals).hasSize(1)
+        assertThat(iraqiMeals[0].name).isEqualTo("Dolma")
+    }
+
+    @Test
+    fun `getIraqiMeals should match Iraqi in description case insensitively`() {
+        // Given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(
+                name = "Tashreeb",
+                id = 1,
+                tags = listOf("Middle Eastern"),
+                description = "An iraqi bread soup dish"
+            ),
+            createMeal(
+                name = "Falafel",
+                id = 2,
+                tags = listOf("Middle Eastern"),
+                description = "Popular across the region"
+            )
+        )
+
+        // When
+        val iraqiMeals = useCase.getIraqiMeals()
+
+        // Then
+        assertThat(iraqiMeals).hasSize(1)
+        assertThat(iraqiMeals[0].name).isEqualTo("Tashreeb")
     }
     //endregion
 }
