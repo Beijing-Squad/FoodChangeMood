@@ -2,13 +2,11 @@ package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
 import fake.createMeal
-import io.mockk.every
-import com.google.common.truth.Truth.assertThat
-import io.mockk.every
-import io.mockk.mockk
 import fake.mealsListWithSeaFood
 import fake.mealsWithNoSeaFood
 import fake.seafoodMealOrders
+import io.mockk.every
+import io.mockk.mockk
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsViewUseCase
 import org.beijing.model.Nutrition
@@ -81,6 +79,7 @@ class ManageMealsViewUseCaseTest {
         assertThat(result).isEmpty()
     }
 
+    @Test
     fun `getHealthyQuickPreparedMeals should return meals that meet all criteria`() {
         // Given
         every { mealRepository.getAllMeals() } returns listOf(
@@ -190,7 +189,7 @@ class ManageMealsViewUseCaseTest {
 
         // Assert
         assertThat(result).isEmpty()
-        }
+    }
 
     @Test
     fun `getHealthyQuickPreparedMeals should return empty list when passed empty meals list`() {
