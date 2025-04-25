@@ -23,6 +23,7 @@ class GameMealsServiceTest {
         consoleIO = mockk(relaxed = true)
         service = GameMealsService(gamesMeals, consoleIO)
     }
+
     //region handle user choice
     @Test
     fun handleUserChoice() {
@@ -57,6 +58,7 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine("🎮 Game Over! Returning to main menu.\n")
         }
     }
+
     @Test
     fun `should prompt again on non-numeric input and continue game`() {
         // Given
@@ -81,6 +83,7 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine("Correct!! The preparation time is indeed 15 minutes.")
         }
     }
+
     @Test
     fun `should allow multiple wrong guesses then end game`() {
         // Given
@@ -88,7 +91,12 @@ class GameMealsServiceTest {
         val round1 = GameRound(meal, 3, false, null)
         val round2 = GameRound(meal, 2, false, "Too low! Try a higher number.")
         val round3 = GameRound(meal, 1, false, "Too high! Try a lower number.")
-        val round4 = GameRound(meal, 0, true, "Too low! Try a higher number.\nGameOver! The actual preparation time is 10 minutes.")
+        val round4 = GameRound(
+            meal,
+            0,
+            true,
+            "Too low! Try a higher number.\nGameOver! The actual preparation time is 10 minutes."
+        )
 
         every { gamesMeals.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("5", "15", "7")
@@ -107,12 +115,14 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine("🎮 Game Over! Returning to main menu.\n")
         }
     }
+
     @Test
     fun `should display message if round is already completed`() {
         // Given
         val meal = createMeal(name = "Pasta", minutes = 12)
         val round1 = GameRound(meal, 3, false, null)
-        val round2 = round1.copy(isCompleted = true, lastFeedBack = "This round is already Completed, Start A new Round.")
+        val round2 =
+            round1.copy(isCompleted = true, lastFeedBack = "This round is already Completed, Start A new Round.")
 
         every { gamesMeals.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("12")
