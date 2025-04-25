@@ -42,7 +42,7 @@ class ManageMealsSuggestionsUseCaseTest {
     @Test
     fun suggestItalianLargeGroupsMeals() {
     }
-
+//region keto meal
     @Test
     fun `should return a keto meal when valid meals are available`() {
         // Given
@@ -248,7 +248,7 @@ class ManageMealsSuggestionsUseCaseTest {
         assertEquals(ketoMeal.id, result.id)
         assertThat(usedMealIds).containsExactly(ketoMeal.id)
     }
-
+//endregion
     @Test
     fun suggestEasyPreparedMeal() {
     }
