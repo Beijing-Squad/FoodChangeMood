@@ -23,14 +23,14 @@ class CsvFileParser {
 
         val hasDescription = fields.size == 12
 
-        val description = if (hasDescription) fields[ColumnIndex.DESCRIPTION] else null
+        val description = if (hasDescription) unescapeString(fields[ColumnIndex.DESCRIPTION]) else null
         val ingredients = if (hasDescription) fields[ColumnIndex.INGREDIENTS] else fields.getOrNull(9) ?: ""
         val ingredientsCount = if (hasDescription) fields[ColumnIndex.N_INGREDIENTS] else fields.getOrNull(10) ?: "0"
 
         val submittedDate = LocalDate.parse(fields[ColumnIndex.SUBMITTED])
 
         return Meal(
-            name = fields[ColumnIndex.NAME],
+            name = unescapeString(fields[ColumnIndex.NAME]),
             id = fields[ColumnIndex.ID].toInt(),
             minutes = fields[ColumnIndex.MINUTES].toInt(),
             contributorId = fields[ColumnIndex.CONTRIBUTOR_ID].toInt(),
@@ -83,6 +83,7 @@ class CsvFileParser {
     }
 
     private fun parseListOfStrings(rawList: String): List<String> {
+        if (rawList == "[]") return emptyList()
         return rawList
             .removePrefix("['")
             .removeSuffix("']")
@@ -109,4 +110,7 @@ class CsvFileParser {
         )
     }
 
+    private fun unescapeString(input: String): String {
+        return input.replace("\\n", "\n")
+    }
 }
