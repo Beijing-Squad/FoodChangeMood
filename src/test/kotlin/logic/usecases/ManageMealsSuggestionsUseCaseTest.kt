@@ -31,7 +31,100 @@ class ManageMealsSuggestionsUseCaseTest {
 
     //region suggest sweets with no eggs
     @Test
-    fun suggestSweetsWithNoEggs() {
+    fun `suggestSweetsWithNoEggs should return correct sweet meal without eggs`() {
+        // Given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(
+                name = "Egg Tart",
+                id = 1,
+                tags = listOf("sweet", "dessert"),
+                ingredients = listOf("egg", "milk", "sugar")
+            ),
+            createMeal(
+                name = "Chocolate Cake",
+                id = 2,
+                tags = listOf("sweet", "dessert"),
+                ingredients = listOf("flour", "milk", "sugar")
+            )
+        )
+
+        // When
+        val suggestedMeal = useCase.suggestSweetsWithNoEggs()
+
+        // Then
+        assertThat(suggestedMeal?.name).isEqualTo("Chocolate Cake")
+    }
+
+    @Test
+    fun `suggestSweetsWithNoEggs should not return sweet meal when the meals is null`() {
+        // Given
+        every { mealRepository.getAllMeals() } returns emptyList()
+
+        // When
+        val suggestedMeal = useCase.suggestSweetsWithNoEggs()
+
+        // Then
+        assertThat(suggestedMeal).isNull()
+    }
+
+    @Test
+    fun `suggestSweetsWithNoEggs should return correct sweet meal when it's not seen before`() {
+        // Given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(
+                name = "Chocolate Cake",
+                id = 1, tags = listOf("sweet", "dessert"),
+                ingredients = listOf("flour", "milk", "sugar")
+            ),
+            createMeal(
+                name = "Tart", id = 2,
+                tags = listOf("sweet", "dessert"),
+                ingredients = listOf("flour", "milk", "sugar")
+            )
+        )
+
+        // When
+        val firstCall = useCase.suggestSweetsWithNoEggs()
+        val secondCall = useCase.suggestSweetsWithNoEggs()
+
+        // Then
+        assertThat(firstCall?.id).isNotEqualTo(secondCall?.id)
+    }
+
+    @Test
+    fun `suggestSweetsWithNoEggs should return correct sweet meal when tags has a capitalize letters`() {
+        // Given
+
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(
+                name = "Chocolate Cake",
+                id = 1, tags = listOf("SwEeT", "dessert"),
+                ingredients = listOf("wheat", "milk", "sugar")
+            )
+        )
+
+        // When
+        val suggestedMeal = useCase.suggestSweetsWithNoEggs()
+
+        // Then
+        assertThat(suggestedMeal?.name).isEqualTo("Chocolate Cake")
+    }
+
+    @Test
+    fun `suggestSweetsWithNoEggs should return null when no sweet tags or there is egg ingredient`() {
+        // Given
+        createMeal(
+            name = "Grilled Fish",
+            id = 1, tags = listOf("main dish"),
+            ingredients = listOf("egg", "fish", "wheat")
+        )
+        every { mealRepository.getAllMeals() } returns listOf(createMeal())
+
+        // When
+        val suggestedMeal = useCase.suggestSweetsWithNoEggs()
+
+        // Then
+        assertThat(suggestedMeal).isNull()
     }
 //endregion
 
@@ -45,7 +138,8 @@ class ManageMealsSuggestionsUseCaseTest {
     @Test
     fun suggestItalianLargeGroupsMeals() {
     }
-//region keto meal
+
+    //region keto meal
     @Test
     fun `should return a keto meal when valid meals are available`() {
         // Given
@@ -251,16 +345,49 @@ class ManageMealsSuggestionsUseCaseTest {
         assertEquals(ketoMeal.id, result.id)
         assertThat(usedMealIds).containsExactly(ketoMeal.id)
     }
-//endregion
+
+    //endregion
     // easy meal region
     @Test
     fun `should return sorted easy meals based on criteria`() {
         // Given
         val meals = listOf(
-            createMeal(id = 1, name = "Simple Salad", tags = listOf("Healthy"), minutes = 10, nSteps = 3, nIngredients = 4, contributorId = 1),
-            createMeal(id = 2, name = "Quick Pasta", tags = listOf("Italian"), minutes = 15, nSteps = 4, nIngredients = 5, contributorId = 2),
-            createMeal(id = 3, name = "Fruit Bowl", tags = listOf("Healthy"), minutes = 5, nSteps = 2, nIngredients = 3, contributorId = 3),
-            createMeal(id = 4, name = "Rice Dish", tags = listOf("Iraqi"), minutes = 20, nSteps = 5, nIngredients = 7, contributorId = 4)
+            createMeal(
+                id = 1,
+                name = "Simple Salad",
+                tags = listOf("Healthy"),
+                minutes = 10,
+                nSteps = 3,
+                nIngredients = 4,
+                contributorId = 1
+            ),
+            createMeal(
+                id = 2,
+                name = "Quick Pasta",
+                tags = listOf("Italian"),
+                minutes = 15,
+                nSteps = 4,
+                nIngredients = 5,
+                contributorId = 2
+            ),
+            createMeal(
+                id = 3,
+                name = "Fruit Bowl",
+                tags = listOf("Healthy"),
+                minutes = 5,
+                nSteps = 2,
+                nIngredients = 3,
+                contributorId = 3
+            ),
+            createMeal(
+                id = 4,
+                name = "Rice Dish",
+                tags = listOf("Iraqi"),
+                minutes = 20,
+                nSteps = 5,
+                nIngredients = 7,
+                contributorId = 4
+            )
         )
         every { mealRepository.getAllMeals() } returns meals
 
@@ -278,7 +405,15 @@ class ManageMealsSuggestionsUseCaseTest {
     fun `should return empty list when no meals meet easy meal criteria`() {
         // Given
         val meals = listOf(
-            createMeal(id = 1, name = "Hard Meal", tags = listOf("Complex"), minutes = 60, nSteps = 10, nIngredients = 12, contributorId = 1)
+            createMeal(
+                id = 1,
+                name = "Hard Meal",
+                tags = listOf("Complex"),
+                minutes = 60,
+                nSteps = 10,
+                nIngredients = 12,
+                contributorId = 1
+            )
         )
         every { mealRepository.getAllMeals() } returns meals
 
@@ -293,8 +428,24 @@ class ManageMealsSuggestionsUseCaseTest {
     fun `should return only meals with valid steps, ingredients, and time limit`() {
         // Given
         val meals = listOf(
-            createMeal(id = 1, name = "Easy Breakfast", tags = listOf("Breakfast"), minutes = 15, nSteps = 3, nIngredients = 4, contributorId = 1),
-            createMeal(id = 2, name = "Gourmet Meal", tags = listOf("Dinner"), minutes = 40, nSteps = 7, nIngredients = 10, contributorId = 2)
+            createMeal(
+                id = 1,
+                name = "Easy Breakfast",
+                tags = listOf("Breakfast"),
+                minutes = 15,
+                nSteps = 3,
+                nIngredients = 4,
+                contributorId = 1
+            ),
+            createMeal(
+                id = 2,
+                name = "Gourmet Meal",
+                tags = listOf("Dinner"),
+                minutes = 40,
+                nSteps = 7,
+                nIngredients = 10,
+                contributorId = 2
+            )
         )
         every { mealRepository.getAllMeals() } returns meals
 
@@ -310,9 +461,33 @@ class ManageMealsSuggestionsUseCaseTest {
     fun `should handle edge case with exactly matching meal count`() {
         // Given
         val meals = listOf(
-            createMeal(id = 1, name = "Breakfast Smoothie", tags = listOf("Smoothie"), minutes = 5, nSteps = 2, nIngredients = 3, contributorId = 1),
-            createMeal(id = 2, name = "Light Salad", tags = listOf("Salad"), minutes = 10, nSteps = 3, nIngredients = 4, contributorId = 2),
-            createMeal(id = 3, name = "Quick Wrap", tags = listOf("Wrap"), minutes = 10, nSteps = 3, nIngredients = 5, contributorId = 3)
+            createMeal(
+                id = 1,
+                name = "Breakfast Smoothie",
+                tags = listOf("Smoothie"),
+                minutes = 5,
+                nSteps = 2,
+                nIngredients = 3,
+                contributorId = 1
+            ),
+            createMeal(
+                id = 2,
+                name = "Light Salad",
+                tags = listOf("Salad"),
+                minutes = 10,
+                nSteps = 3,
+                nIngredients = 4,
+                contributorId = 2
+            ),
+            createMeal(
+                id = 3,
+                name = "Quick Wrap",
+                tags = listOf("Wrap"),
+                minutes = 10,
+                nSteps = 3,
+                nIngredients = 5,
+                contributorId = 3
+            )
         )
         every { mealRepository.getAllMeals() } returns meals
 
