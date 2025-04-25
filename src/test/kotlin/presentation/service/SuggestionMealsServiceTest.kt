@@ -243,7 +243,25 @@ class SuggestionMealsServiceTest {
         // Then
         verify { consoleIO.viewWithLine("1.  | 🕒 ${unnamedMeal.minutes} minutes |") }
     }
+    @Test
+    fun `should only show meals that are both italian and for large groups`() {
+        // Given
+        val meals = listOf(
+            createMeal(name = "Italian Pizza", tags = listOf("italian", "for-large-groups")),
+            createMeal(name = "Solo Spaghetti", tags = listOf("italian")),
+            createMeal(name = "Party Platter", tags = listOf("for-large-groups")),
+            createMeal(name = "Tiramisu", tags = listOf("dessert"))
+        )
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf(meals[0])
 
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify(exactly = 1) { consoleIO.viewWithLine("1. Italian Pizza | 🕒 ${meals[0].minutes} minutes |") }
+        verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Solo Spaghetti") }) }
+        verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Party Platter") }) }
+    }
     //endregion
 
 }
