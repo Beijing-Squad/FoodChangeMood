@@ -249,7 +249,9 @@ class ManageMealsSuggestionsUseCaseTest {
         val result = useCase.suggestItalianLargeGroupsMeals()
 
         //Then
-        assert(result.size == 1 && result.first().id == 1)
+        assertThat(result).hasSize(1)
+        assertThat(result.first().id).isEqualTo(1)
+
     }
 
     @Test
@@ -267,7 +269,7 @@ class ManageMealsSuggestionsUseCaseTest {
         val result = useCase.suggestItalianLargeGroupsMeals()
 
         //Then
-        Assertions.assertTrue(result.isEmpty())
+        assertThat(result).isEmpty()
     }
 
     @Test
@@ -286,7 +288,7 @@ class ManageMealsSuggestionsUseCaseTest {
         val result = useCase.suggestItalianLargeGroupsMeals()
 
         //Then
-        Assertions.assertEquals(2, result.size)
+        assertThat(result).hasSize(2)
     }
 
     @Test
@@ -303,7 +305,7 @@ class ManageMealsSuggestionsUseCaseTest {
         val result = useCase.suggestItalianLargeGroupsMeals()
 
         //Then
-        Assertions.assertEquals(2, result.size)
+        assertThat(result).hasSize(2)
     }
 
     @Test
@@ -317,7 +319,7 @@ class ManageMealsSuggestionsUseCaseTest {
         val result = useCase.suggestItalianLargeGroupsMeals()
 
         //Then
-        Assertions.assertEquals(1, result.distinctBy { it.id }.size)
+        assertThat(result.distinctBy { it.id }).hasSize(1)
     }
 
     @Test
@@ -333,8 +335,8 @@ class ManageMealsSuggestionsUseCaseTest {
         //When
         val result = useCase.suggestItalianLargeGroupsMeals()
         //Then
-        Assertions.assertEquals(1, result.size)
-        Assertions.assertEquals(1, result.first().id)
+        assertThat(result).hasSize(1)
+        assertThat(result.first().id).isEqualTo(1)
     }
 
 //endregion
