@@ -75,7 +75,7 @@ class SuggestionMealsService(
 // endregion
 
     //region ten random meals contains potato
-    fun launchTenRandomPotatoMeals() {
+    private fun launchTenRandomPotatoMeals() {
         val tenRandomPotatoMeals = try {
             suggestionMeals.suggestTenRandomMealsContainsPotato()
         } catch (e: IllegalArgumentException) {
