@@ -1,24 +1,15 @@
 package presentation.service
 
 import fake.createMeal
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import io.mockk.verifySequence
-import kotlinx.datetime.LocalDate
-import logic.usecases.ManageMealsSearchUseCaseTest
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
-import org.beijing.model.Meal
-import org.beijing.model.Nutrition
 import org.beijing.presentation.ViewMealDetails
 import org.beijing.presentation.service.SearchMealService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import presentation.view_read.ConsoleIO
-import kotlin.collections.emptyList
 
 class SearchMealServiceTest {
     private lateinit var manageMealsSearch: ManageMealsSearchUseCase
