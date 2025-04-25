@@ -2,6 +2,8 @@ package logic.usecases
 
 import fake.createMeal
 import io.mockk.*
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import model.GameRound
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsGamesUseCase
@@ -211,6 +213,34 @@ class ManageMealsGamesUseCaseTest {
             "Too low! Try a higher number.\nGameOver! The actual preparation time is 30 minutes.",
             result.lastFeedBack
         )
+    }
+
+    @Test
+    fun `should throw exception when no meals are available`() {
+        // Given
+        val emptyRepo = mockk<MealRepository>()
+        every { emptyRepo.getAllMeals() } returns emptyList()
+        val useCase = ManageMealsGamesUseCase(emptyRepo)
+
+        // When / Then
+        val exception = assertThrows<IllegalArgumentException> {
+            useCase.startNewRound()
+        }
+        assertEquals("No meals found in the repository", exception.message)
+    }
+
+    @Test
+    fun `should return no attempts left message when attempts run out immediately`() {
+        // Given
+        val meal = createMeal(name = "Pizza", minutes = 20)
+        val round = GameRound(meal, 0, false, null)
+
+        // When
+        val result = useCase.makeGuess(round, 10)
+
+        // Then
+        assertTrue(result.isCompleted)
+        assertEquals("No Attempts Left, The Actual Preparation Time is: 20 minutes.", result.lastFeedBack)
     }
 //endregion
 
