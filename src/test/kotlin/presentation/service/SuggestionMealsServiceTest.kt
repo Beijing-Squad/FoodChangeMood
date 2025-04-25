@@ -51,12 +51,11 @@ class SuggestionMealsServiceTest {
     fun `should call get ten random potato meals when selected`() {
         // Given
         val choiceSearchFeature = "5"
-        val exitInput = "0"
 
-        every { consoleIO.readInput() } returns choiceSearchFeature andThen exitInput
+        every { consoleIO.readInput() } returns choiceSearchFeature
 
         // When
-        suggestMealService.handleUserChoice()
+        suggestMealService.showService()
 
         // Then
         verify {
@@ -67,11 +66,13 @@ class SuggestionMealsServiceTest {
     @Test
     fun `should show an error message when throw an exception`() {
         // Given
+        val choiceSearchFeature = "5"
         val errorMessage = "no meals contains potato found"
+        every { consoleIO.readInput() } returns choiceSearchFeature
         every { suggestUseCase.suggestTenRandomMealsContainsPotato() } throws IllegalArgumentException(errorMessage)
 
         // When
-        suggestMealService.launchTenRandomPotatoMeals()
+        suggestMealService.showService()
 
         // Then
         verify {
