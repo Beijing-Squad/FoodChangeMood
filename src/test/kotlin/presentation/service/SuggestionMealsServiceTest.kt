@@ -202,4 +202,25 @@ class SuggestionMealsServiceTest {
     }
     //endregion
 
+    //region Italian Dishes For Large Groups
+    @Test
+    fun `should print Italian large group meals when such meals exist`() {
+        // Given
+        val meals = listOf(
+            createMeal(name = "Italian Pasta", minutes = 40),
+            createMeal(name = "Lasagna", minutes = 60)
+        )
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns meals
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("🍝 Meals from Italy suitable for large groups:\n") }
+        verify { consoleIO.viewWithLine("1. Italian Pasta | 🕒 40 minutes |") }
+        verify { consoleIO.viewWithLine("2. Lasagna | 🕒 60 minutes |") }
+    }
+
+    //endregion
+
 }
