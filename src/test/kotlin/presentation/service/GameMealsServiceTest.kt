@@ -137,5 +137,76 @@ class GameMealsServiceTest {
         }
     }
 
+    @Test
+    fun `should win on last attempt without triggering game over message`() {
+        // Given
+        val meal = createMeal(name = "Tacos", minutes = 18)
+        val round1 = GameRound(meal, 1, false, null)
+        val round2 = round1.copy(
+            attemptsLeft = 0,
+            isCompleted = true,
+            lastFeedBack = "Correct!! The preparation time is indeed 18 minutes."
+        )
+
+        every { gamesMeals.startNewRound() } returns round1
+        every { consoleIO.readInput() } returnsMany listOf("18")
+        every { gamesMeals.makeGuess(round1, 18) } returns round2
+
+        // When
+        service.launchGuessGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Correct!! The preparation time is indeed 18 minutes.")
+            consoleIO.viewWithLine("🎮 Game Over! Returning to main menu.\n")
+        }
+    }
+
+    @Test
+    fun `should handle guess with negative numbers`() {
+        // Given
+        val meal = createMeal(name = "Salad", minutes = 8)
+        val round1 = GameRound(meal, 3, false, null)
+        val round2 = round1.copy(
+            attemptsLeft = 2,
+            isCompleted = true,
+            lastFeedBack = "Too low! Try a higher number."
+        )
+
+        every { gamesMeals.startNewRound() } returns round1
+        every { consoleIO.readInput() } returnsMany listOf("-5")
+        every { gamesMeals.makeGuess(round1, -5) } returns round2
+
+        // When
+        service.launchGuessGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("Too low! Try a higher number.")
+        }
+    }
+
+    @Test
+    fun `should skip multiple invalid inputs before valid guess`() {
+        val meal = createMeal(name = "Curry", minutes = 30)
+        val round1 = GameRound(meal, 3, false, null)
+        val round2 = round1.copy(
+            attemptsLeft = 2,
+            isCompleted = true,
+            lastFeedBack = "Correct!! The preparation time is indeed 30 minutes."
+        )
+
+        every { gamesMeals.startNewRound() } returns round1
+        every { consoleIO.readInput() } returnsMany listOf("hello", "?", "30")
+        every { gamesMeals.makeGuess(round1, 30) } returns round2
+
+        service.launchGuessGame()
+
+        verify {
+            consoleIO.viewWithLine("Please enter a valid number.")
+            consoleIO.viewWithLine("Correct!! The preparation time is indeed 30 minutes.")
+        }
+    }
+
     //endregion
 }
