@@ -147,7 +147,7 @@ class SuggestionMealsService(
 // endregion
 
     // region easy meal service
-    fun launchEasyMeals() {
+    private fun launchEasyMeals() {
         consoleIO.viewWithLine("🥗 Easy Meal Suggestions")
         consoleIO.viewWithLine("------------------------")
         consoleIO.viewWithLine("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
