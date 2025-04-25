@@ -31,7 +31,7 @@ class GameMealsService(
     }
 
     // region Guess Game Preparation Time
-    private fun launchGuessGame() {
+    fun launchGuessGame() {
         currentRound = gamesMeals.startNewRound()
         val mealName = currentRound?.meal?.name ?: "Unknown"
 
