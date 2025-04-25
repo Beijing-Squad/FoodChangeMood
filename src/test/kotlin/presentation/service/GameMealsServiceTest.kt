@@ -108,7 +108,25 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine("🎮 Game Over! Returning to main menu.\n")
         }
     }
+    @Test
+    fun `should display message if round is already completed`() {
+        // Given
+        val meal = createMeal(name = "Pasta", minutes = 12)
+        val round1 = GameRound(meal, 3, false, null)
+        val round2 = round1.copy(isCompleted = true, lastFeedBack = "This round is already Completed, Start A new Round.")
 
+        every { gamesMeals.startNewRound() } returns round1
+        every { consoleIO.readInput() } returnsMany listOf("12")
+        every { gamesMeals.makeGuess(round1, 12) } returns round2
+
+        // When
+        service.launchGuessGame()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("This round is already Completed, Start A new Round.")
+        }
+    }
 
     //endregion
 }
