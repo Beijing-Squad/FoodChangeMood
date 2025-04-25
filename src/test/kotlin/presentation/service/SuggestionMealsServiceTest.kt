@@ -207,6 +207,7 @@ class SuggestionMealsServiceTest {
     }
 
     //endregion
+
     //region suggest meal have more than seven hundred calories
     @Test
     fun `should call launchSoThinMeals when suggest meal with more than 700 calories selected`() {
