@@ -1,14 +1,12 @@
 package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
 import fake.createMeal
-import io.mockk.every
-import io.mockk.mockk
 import fake.mealsListWithHighCaloriesMeals
 import fake.mealsWithHighCalories
 import fake.mealsWithNoHighCalories
-import kotlinx.datetime.LocalDate
+import io.mockk.every
+import io.mockk.mockk
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.beijing.model.Meal
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class ManageMealsSuggestionsUseCaseTest {
     private lateinit var mealRepository: MealRepository
@@ -255,6 +252,7 @@ class ManageMealsSuggestionsUseCaseTest {
         assertThat(usedMealIds).containsExactly(ketoMeal.id)
     }
 //endregion
+    // easy meal region
     @Test
     fun `should return sorted easy meals based on criteria`() {
         // Given
