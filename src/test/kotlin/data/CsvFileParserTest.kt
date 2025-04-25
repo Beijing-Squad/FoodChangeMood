@@ -112,4 +112,18 @@ class CsvFileParserTest {
             parser.parseCsvFileContent(expectedMeal)
         }
     }
+
+    @Test
+    fun `should parse CSV line with missing ingredient correctly`() {
+        //Given
+        val record = RecordParserTestData.recordWithMissingStep()
+        val expectedMeal = RecordParserTestData.mealWithMissingStep()
+
+        //When
+        val result = parser.parseCsvFileContent(record)
+
+        //Then
+        assertThat(result[0]).isEqualTo(expectedMeal)
+    }
+
 }
