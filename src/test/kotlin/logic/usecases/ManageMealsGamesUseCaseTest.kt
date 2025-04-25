@@ -62,7 +62,9 @@ class ManageMealsGamesUseCaseTest {
             assertThat(state.usedMeals).contains(1)
         }
     }
+//endregion
 
+    //region check answer
     @Test
     fun `should return failure when starting game with maximum correct answers`() {
         // Given
