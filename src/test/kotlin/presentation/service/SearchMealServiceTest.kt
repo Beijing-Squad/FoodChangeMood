@@ -241,7 +241,82 @@ class SearchMealServiceTest {
             consoleIO.viewWithLine("❌ $errorMessage")
         }
     }
-
     //endregion
 
+    //region search meal by country
+    @Test
+    fun `should show meals when valid country name is entered`() {
+        // Given
+        val country = "Italy"
+        val meals = listOf(
+            createMeal(name = "Pizza", minutes = 15, ingredients = listOf("cheese", "tomato"), steps = listOf("prep", "bake")),
+            createMeal(name = "Pasta", minutes = 20, ingredients = listOf("noodles", "sauce"), steps = listOf("boil", "mix"))
+        )
+        every { consoleIO.readInput() } returnsMany listOf("4", country, "exit")
+        every { manageMealsSearch.getMealByCountry(country) } returns meals
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("🍽️ Found ${meals.size} meal(s) related to '$country':\n")
+            consoleIO.viewWithLine("1. Pizza • ⏱️ 15 mins • 🧂 2 ingredients • 🔧 2 steps")
+            consoleIO.viewWithLine("2. Pasta • ⏱️ 20 mins • 🧂 2 ingredients • 🔧 2 steps")
+        }
+    }
+
+    @Test
+    fun `should show warning when empty country input is entered`() {
+        // Given
+        every { consoleIO.readInput() } returnsMany listOf("4", "", "exit")
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify { consoleIO.viewWithLine("⚠️ Please enter a country name with at least 4 characters.") }
+    }
+
+    @Test
+    fun `should show warning when short country name is entered`() {
+        // Given
+        every { consoleIO.readInput() } returnsMany listOf("4", "It", "exit")
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify { consoleIO.viewWithLine("⚠️ Please enter a country name with at least 4 characters.") }
+    }
+
+    @Test
+    fun `should show warning when numeric country input is entered`() {
+        // Given
+        every { consoleIO.readInput() } returnsMany listOf("4", "1234", "exit")
+
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify { consoleIO.viewWithLine("🚫 Please enter a valid name, not just numbers.") }
+    }
+
+    @Test
+    fun `should show no meals found message when country has no meals`() {
+        // Given
+        val country = "Atlantis"
+        every { consoleIO.readInput() } returnsMany listOf("4", country, "exit")
+
+        every { manageMealsSearch.getMealByCountry(country) } returns emptyList()
+
+        // When
+        searchMealService.showService()
+
+        // Then
+        verify { consoleIO.viewWithLine("😔 Sorry, no meals found for '$country'. Try another country!") }
+    }
+
+    //endregion region search meal by country
 }
