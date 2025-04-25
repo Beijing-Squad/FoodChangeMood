@@ -1,6 +1,11 @@
 package logic.usecases
 
+import com.google.common.truth.Truth.assertThat
+import io.mockk.every
 import io.mockk.mockk
+import fake.mealsListWithSeaFood
+import fake.mealsWithNoSeaFood
+import fake.seafoodMealOrders
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsViewUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -25,7 +30,34 @@ class ManageMealsViewUseCaseTest {
 
     //region get sorted seafood by protein
     @Test
-    fun getSortedSeaFoodByProtein() {
+    fun `should return sorted seaFood meals ordered by protein When give list of meals`() {
+        //Given
+        every { mealRepository.getAllMeals() } returns mealsListWithSeaFood
+        //When
+        val result = useCase.getSortedSeaFoodByProtein()
+        //Then
+        assertThat(result).containsExactlyElementsIn(seafoodMealOrders).inOrder()
     }
+
+    @Test
+    fun `should return empty list When give empty list`() {
+        //Given
+        every { mealRepository.getAllMeals() } returns listOf()
+        //When
+        val result = useCase.getSortedSeaFoodByProtein()
+        //Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `should return empty list When give list of meals have no seafood meals`() {
+        //Given
+        every { mealRepository.getAllMeals() } returns mealsWithNoSeaFood
+        //When
+        val result = useCase.getSortedSeaFoodByProtein()
+        //Then
+        assertThat(result).isEmpty()
+    }
+
     //endregion
 }
