@@ -13,6 +13,7 @@ import org.beijing.logic.usecases.ManageMealsSearchUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
@@ -47,7 +48,7 @@ class ManageMealsSearchUseCaseTest {
     }
 
     @Test
-    fun `should throw exception when no meals found on the date`() {
+    fun `should return empty list when no meals found on the date`() {
         // Given
         val date = "2025-01-01"
         every { mealRepository.getAllMeals() } returns listOf(
@@ -57,11 +58,13 @@ class ManageMealsSearchUseCaseTest {
             createMeal(submitted = LocalDate(2025, 4, 10)),
         )
 
-        // When && Then
-        assertThrows<Exception> {
-            useCase.getMealsByDate(date)
-        }
+        // When
+        val result = useCase.getMealsByDate(date)
+
+        // Then
+        Assertions.assertTrue(result.isEmpty())
     }
+
 
     @ParameterizedTest
     @CsvSource(
@@ -107,7 +110,7 @@ class ManageMealsSearchUseCaseTest {
 
     //region get meal by id
     @Test
-    fun `should return the matched meal when id is valid`() {
+    fun `should return the matched meal when id is found`() {
         // Given
         val id = 1
         every { mealRepository.getAllMeals() } returns listOf(
@@ -121,11 +124,11 @@ class ManageMealsSearchUseCaseTest {
         val result = useCase.getMealById(id)
 
         // Then
-        assert(result.id == id)
+        assert(result?.id == id)
     }
 
     @Test
-    fun `should throw exception when no found meal for the id`() {
+    fun `should return null when no meal found for the id`() {
         // Given
         val id = 5
         every { mealRepository.getAllMeals() } returns listOf(
@@ -135,10 +138,11 @@ class ManageMealsSearchUseCaseTest {
             createMeal(id = 4),
         )
 
-        // When && Then
-        assertThrows<Exception> {
-            useCase.getMealById(id)
-        }
+        // When
+        val result = useCase.getMealById(id)
+
+        // Then
+        assertNull(result)
     }
     //endregion
 

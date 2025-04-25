@@ -14,15 +14,13 @@ class ManageMealsSearchUseCase(
     fun getMealsByDate(date: String): List<Meal> {
         return mealRepository.getAllMeals()
             .filter { it.submitted == date.parseDate() }
-            .ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
     // endregion
 
     // region search meal by id
-    fun getMealById(id: Int): Meal {
+    fun getMealById(id: Int): Meal? {
         return mealRepository.getAllMeals()
             .find { it.id == id }
-            ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
     }
     // endregion
 
