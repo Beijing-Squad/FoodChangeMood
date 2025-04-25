@@ -85,12 +85,13 @@ class SuggestionMealsService(
             consoleIO.viewWithLine("${e.message}")
             return
         }
-        consoleIO.viewWithLine("-".repeat(70))
+
         consoleIO.viewWithLine("\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57List of ten random Meals with potato in their ingredients\uD83C\uDF55\uD83C\uDF54\uD83C\uDF57")
         consoleIO.viewWithLine("-".repeat(70))
         consoleIO.viewWithLine(
             "Rank".padEnd(5) + "| " + "Meal Name".padEnd(70)
         )
+        consoleIO.viewWithLine("-".repeat(70))
 
         tenRandomPotatoMeals.forEachIndexed { index, meal ->
             consoleIO.viewWithLine(
