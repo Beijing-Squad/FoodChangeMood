@@ -113,14 +113,16 @@ class SuggestionMealsService(
             consoleIO.viewWithLine("Description: ${sweet.description ?: "No description"}")
             consoleIO.view("Do you like it? (yes to view details / no to see another / exit): ")
 
-            when (consoleIO.readInput()?.lowercase()?.trim()) {
+            when (consoleIO.readInput()!!.lowercase().trim()) {
                 "yes" -> {
                     viewMealDetails.displayMealDetails(sweet)
                     break
                 }
 
                 "no" -> continue
-                "exit" -> break
+                "exit" -> { consoleIO.viewWithLine("GoodBye")
+                    break
+                }
                 else -> consoleIO.viewWithLine("Unknown input.")
             }
         }
