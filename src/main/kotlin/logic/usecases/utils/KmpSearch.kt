@@ -13,13 +13,14 @@ object KmpSearch {
         var patternIndex = 0
 
         while (textIndex < textLower.length) {
-
-            if (patternIndex == patternLower.length) return true
-
             when {
                 patternLower[patternIndex] == textLower[textIndex] -> {
                     textIndex++
                     patternIndex++
+                }
+
+                patternIndex == patternLower.length -> {
+                    return true
                 }
 
                 textIndex < textLower.length && patternLower[patternIndex] != textLower[textIndex] -> {
@@ -27,7 +28,6 @@ object KmpSearch {
                         patternIndex != 0 -> {
                             patternIndex = longestPrefixSuffix[patternIndex - 1]
                         }
-
                         else -> {
                             textIndex++
                         }

@@ -284,9 +284,68 @@ class ManageMealsSearchUseCaseTest {
 
     //region get meal by country
     @Test
-    fun getMealByCountry() {
+    fun `should return meals matching country query sorted by name`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Zaatar Pizza", tags = listOf("Lebanese"), minutes = 10, contributorId = 1),
+            createMeal(id = 2, name = "Baklava", tags = listOf("Lebanese"), minutes = 5, contributorId = 2),
+            createMeal(id = 3, name = "Kebab", tags = listOf("Lebanese"), minutes = 20, contributorId = 3)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.getMealByCountry("lebanese")
+
+        // Then
+        assert(result.map { it.name } == listOf("Baklava", "Kebab", "Zaatar Pizza"))
     }
-//endregion
+
+    @Test
+    fun `should return empty list when no meals match the country query`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Pasta", tags = listOf("italian"),minutes = 10, contributorId = 1),
+            createMeal(id = 2, name = "Burger", tags = listOf("american"), minutes = 20, contributorId = 2)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.getMealByCountry("japanese")
+
+        // Then
+        assert(result.isEmpty())
+    }
+
+    @Test
+    fun `should return at most 20 meals when more than 20 match`() {
+        // Given
+        val meals = List(50) { index -> createMeal(id = index, name = "Iraqi Meal $index", tags = listOf("iraqi"), minutes = 10, contributorId = 1) }
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.getMealByCountry("iraqi")
+
+        // Then
+        assert(result.size == 20)
+    }
+
+    @Test
+    fun `should match country query case-insensitively`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Rice Dish", tags = listOf("Iraqi"), minutes = 10, contributorId = 1),
+            createMeal(id = 2, name = "Soup", tags = listOf("iraqi"), minutes = 20, contributorId = 2)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.getMealByCountry("IRAQI")
+
+        // Then
+        assert(result.size == 2)
+    }
+    //endregion
+
 
     //region get iraqi meals
     @Test

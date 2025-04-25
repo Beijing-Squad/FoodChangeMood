@@ -25,7 +25,7 @@ class SearchMealService(
         consoleIO.view("\nhere: ")
         when (consoleIO.readInput()) {
             "1" -> launchGymHelper()
-            "2" -> launchSearchMealByName()
+            "2" -> launchSearchByName()
             "3" -> launchMealsByDate()
             "4" -> launchSearchByCountry()
             "5" -> launchIraqiMeals()
@@ -35,36 +35,33 @@ class SearchMealService(
     }
 
     // region search by name
-    private fun launchSearchMealByName() {
-        val mealNameQuery = try {
-            readMealNameInput()
+    private fun launchSearchByName() {
+        try {
+            val mealNameQuery = getMealNameFromInput()
+            val searchResults = searchMeals.getMealByName(mealNameQuery)
+            showMealsSearchResult(searchResults, mealNameQuery)
         } catch (e: IllegalArgumentException) {
             consoleIO.viewWithLine("❌ ${e.message}")
             showService()
-            return
-        }
-
-        try {
-            val searchResults = searchMeals.getMealByName(mealNameQuery)
-            showMealsSearchResult(searchResults, mealNameQuery)
-        } catch (e: Exception) {
-            consoleIO.viewWithLine("❌ ${e.message}")
-            showService()
         }
     }
 
-    private fun readMealNameInput(): String {
+    private fun getMealNameFromInput(): String {
         consoleIO.view("Enter meal name to search: ")
         val userInput = consoleIO.readInput()?.trim()
+            ?: throw IllegalArgumentException("Meal name input cannot be null.")
 
-        return when {
-            userInput == null -> throw IllegalArgumentException("Meal name input cannot be null.")
-            userInput.isEmpty() -> throw IllegalArgumentException("Meal name input cannot be empty.")
-            !userInput.matches(Regex("^[A-Za-z ]+$")) -> throw IllegalArgumentException("Meal name must contain only letters and spaces.")
-            else -> userInput
+        if (userInput.isEmpty()) {
+            throw IllegalArgumentException("Meal name input cannot be empty.")
         }
-    }
 
+        val isOnlyLettersAndSpaces = userInput.matches(Regex("^[A-Za-z ]+$"))
+        if (!isOnlyLettersAndSpaces) {
+            throw IllegalArgumentException("Meal name must contain only letters and spaces.")
+        }
+
+        return userInput
+    }
 
     private fun showMealsSearchResult(results: List<Meal>, query: String) {
         if (results.isEmpty()) {
@@ -165,7 +162,7 @@ class SearchMealService(
                     targetCalories, targetProtein
                 )
                 showGymHelperResult(meals)
-            } catch (e: Exception) {
+            }catch (e: Exception){
                 consoleIO.viewWithLine(e.message)
                 launchGymHelper()
             }

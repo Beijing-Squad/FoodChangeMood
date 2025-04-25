@@ -24,7 +24,7 @@ class ViewMealsService(
         consoleIO.view("\nhere: ")
         when (consoleIO.readInput()) {
             "1" -> launchHealthyQuickPreparedMeals()
-            "2" -> lunchSortedSeaFoodByProteinMeals()
+            "2" -> showSortedSeaFoodByProtein()
             "0" -> return
             else -> consoleIO.viewWithLine("❌ Invalid input! Please enter a number between 0 and 2")
         }
@@ -65,7 +65,7 @@ class ViewMealsService(
 
 // region get a list of seafood sorted by protein content
 
-    fun lunchSortedSeaFoodByProteinMeals() {
+    fun showSortedSeaFoodByProtein() {
         consoleIO.viewWithLine("List Of SeaFood Sorted By Protein:")
         consoleIO.viewWithLine(String.format("%-6s| %-70s | %-14s", "Rank", "Meal Name", "Protein Content"))
         consoleIO.viewWithLine("----------------------------------------------------------------------------------------------------")

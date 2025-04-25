@@ -76,7 +76,7 @@ class SuggestionMealsService(
 // endregion
 
     //region ten random meals contains potato
-    private fun launchTenRandomPotatoMeals() {
+    fun launchTenRandomPotatoMeals() {
         val tenRandomPotatoMeals = try {
             suggestionMeals.suggestTenRandomMealsContainsPotato()
         } catch (e: IllegalArgumentException) {
@@ -165,17 +165,23 @@ class SuggestionMealsService(
 
     // region Suggest Meal With more than 700 calories
     fun launchSoThinMeals() {
-        val suggestedMeals = mutableSetOf<Meal>()
+        val suggestedMeals = mutableListOf<Meal>()
+        var meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
+        var choice: String?
+
         while (true) {
 
-            val meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
-            if (!suggestedMeals.add(meal)) continue
+            if (suggestedMeals.contains(meal)) {
+                meal = suggestionMeals.suggestMealHaveMoreThanSevenHundredCalories().random()
+            }
+            suggestedMeals.add(meal)
             showMeal(meal)
 
             consoleIO.viewWithLine("Do You Like This Meal?")
             consoleIO.view("write 'yes' to get details or 'no' to get another meal Or 'exit':")
             consoleIO.view("\nhere: ")
-            when (consoleIO.readInput()?.trim()?.lowercase()) {
+            choice = consoleIO.readInput()?.trim()?.lowercase()
+            when (choice) {
                 "yes" -> {
                     showMealDetails(meal)
                     break
@@ -184,7 +190,7 @@ class SuggestionMealsService(
                 "no" -> continue
                 "exit" -> return
                 else -> {
-                    consoleIO.viewWithLine("Invalid input! Please choose 'Yes','No' or 'Exit'.")
+                    consoleIO.viewWithLine("Invalid input! Please choose 1, 2 or 0.")
                 }
             }
         }
@@ -209,16 +215,13 @@ class SuggestionMealsService(
         consoleIO.viewWithLine("Meal TotalFat: ${meal.nutrition.totalFatGrams}")
         consoleIO.viewWithLine("Meal Carbohydrates: ${meal.nutrition.carbohydratesGrams}")
         consoleIO.viewWithLine("Meal Saturated: ${meal.nutrition.saturatedFatGrams}")
-        consoleIO.viewWithLine("Meal Tag:")
-        meal.tags.forEach { tag ->
-            consoleIO.viewWithLine("   • $tag")
-        }
+        consoleIO.viewWithLine("Meal Tags: ${meal.tags}")
         consoleIO.viewWithLine("Meal ContributorId: ${meal.contributorId}")
         consoleIO.viewWithLine("Meal Ingredients:")
         meal.ingredients.forEach { ingredient ->
             consoleIO.viewWithLine("   • $ingredient")
         }
-        consoleIO.viewWithLine("Meal Steps (${meal.nSteps} total) :")
+        consoleIO.viewWithLine("Meal Steps ((${meal.nSteps} total) :")
         meal.steps.forEachIndexed { index, step ->
             consoleIO.viewWithLine("   ${index + 1}. $step")
         }

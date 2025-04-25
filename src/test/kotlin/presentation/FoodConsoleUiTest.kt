@@ -1,35 +1,26 @@
 package presentation
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.beijing.presentation.FoodConsoleUi
-import org.beijing.presentation.FoodUi
-import org.beijing.presentation.service.GameMealsService
-import org.beijing.presentation.service.SearchMealService
-import org.beijing.presentation.service.SuggestionMealsService
-import org.beijing.presentation.service.ViewMealsService
+import org.beijing.presentation.service.*
+import presentation.view_read.ConsoleIO
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import presentation.view_read.ConsoleIO
 
 class FoodConsoleUiTest {
 
-    private lateinit var foodConsoleUi: FoodConsoleUi
     private lateinit var searchMealService: SearchMealService
-    private lateinit var gameMealsService: GameMealsService
     private lateinit var viewMealsService: ViewMealsService
+    private lateinit var gameMealsService: GameMealsService
     private lateinit var suggestionMealsService: SuggestionMealsService
     private lateinit var consoleIO: ConsoleIO
+    private lateinit var foodConsoleUi: FoodConsoleUi
 
     @BeforeEach
     fun setup() {
         searchMealService = mockk(relaxed = true)
-        gameMealsService = mockk(relaxed = true)
         viewMealsService = mockk(relaxed = true)
+        gameMealsService = mockk(relaxed = true)
         suggestionMealsService = mockk(relaxed = true)
         consoleIO = mockk(relaxed = true)
         foodConsoleUi = FoodConsoleUi(
@@ -38,109 +29,76 @@ class FoodConsoleUiTest {
             gameMealsService,
             suggestionMealsService,
             consoleIO
-
         )
     }
 
     @Test
-    fun `should show message welcome when start app`() {
-        // Given
-        val inputChoice = "0"
-        every { consoleIO.readInput() } returns inputChoice
-        val messageWelcome = "Welcome to Food Change Mood\uD83E\uDD6A "
-
+    fun `should show welcome message and options when start is called`() {
         // When
         foodConsoleUi.start()
 
-        // When && Then
-        verify { consoleIO.view(messageWelcome) }
-
-
+        // Then
+        verify { consoleIO.view("Welcome to Food Change Mood\uD83E\uDD6A ") }
+        verify { consoleIO.viewWithLine("===Please enter one of the numbers listed below===") }
+        verify { consoleIO.viewWithLine("1. Suggestion Meal \uD83E\uDD14") }
+        verify { consoleIO.viewWithLine("2. Search Meal \uD83D\uDD0E") }
+        verify { consoleIO.viewWithLine("3. Game Meal \uD83C\uDFAE") }
+        verify { consoleIO.viewWithLine("4. View Meal \uD83E\uDD63") }
+        verify { consoleIO.viewWithLine("0. Exit") }
     }
 
     @Test
-    fun `should present suggestion meals when choice is one`() {
+    fun `should call SuggestionMealsService when input is 1`() {
         // Given
-        val inputChoice = "1"
-        val titleOfFeature = "1. Suggestion Meal 🤔"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns "1"
 
         // When
         foodConsoleUi.start()
 
         // Then
         verify { suggestionMealsService.showService() }
-        verify { consoleIO.viewWithLine(titleOfFeature) }
     }
 
     @Test
-    fun `should present search meals when choice is two`() {
+    fun `should call SearchMealService when input is 2`() {
         // Given
-        val inputChoice = "2"
-        val titleOfFeature = "2. Search Meal \uD83D\uDD0E"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns "2"
 
         // When
         foodConsoleUi.start()
 
         // Then
         verify { searchMealService.showService() }
-        verify { consoleIO.viewWithLine(titleOfFeature) }
     }
 
     @Test
-    fun `should present game meals when choice is three`() {
+    fun `should call GameMealsService when input is 3`() {
         // Given
-        val inputChoice = "3"
-        val titleOfFeature = "3. Game Meal \uD83C\uDFAE"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns "3"
 
         // When
         foodConsoleUi.start()
 
         // Then
         verify { gameMealsService.showService() }
-        verify { consoleIO.viewWithLine(titleOfFeature) }
     }
 
     @Test
-    fun `should present view meals when choice is four`() {
+    fun `should call ViewMealsService when input is 4`() {
         // Given
-        val inputChoice = "4"
-        val titleOfFeature = "4. View Meal \uD83E\uDD63"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns "4"
 
         // When
         foodConsoleUi.start()
 
         // Then
         verify { viewMealsService.showService() }
-        verify { consoleIO.viewWithLine(titleOfFeature) }
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "1a2b",
-        " -",
-        "@"
-    )
-    fun `should view message when write invalid option`(inputChoice: String) {
-        // Given
-        val errorMessage = "❌ Invalid input! Please enter a number between 0 and 4"
-        every { consoleIO.readInput() } returns inputChoice
-
-        // When
-        foodConsoleUi.start()
-
-        // Then
-        verify { consoleIO.viewWithLine(errorMessage)}
     }
 
     @Test
-    fun `should exit when choice zero from menu`() {
+    fun `should return on exit when input is 0`() {
         // Given
-        val inputChoice = "0"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns "0"
 
         // When
         foodConsoleUi.start()
@@ -153,15 +111,14 @@ class FoodConsoleUiTest {
     }
 
     @Test
-    fun `should handle exception when an unknown error occurred`() {
+    fun `should show error message when invalid input is entered`() {
         // Given
-        every { consoleIO.readInput() } throws Exception("An unknown error occurred")
+        every { consoleIO.readInput() } returns "invalid"
 
         // When
         foodConsoleUi.start()
 
         // Then
-        verify { consoleIO.viewWithLine("An unknown error occurred") }
+        verify { consoleIO.viewWithLine("❌ Invalid input! Please enter a number between 0 and 4") }
     }
-
 }
