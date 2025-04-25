@@ -145,7 +145,7 @@ class SearchMealService(
         return answer?.get(0) == 'y'
     }
 
-     fun getIdInput(): Int {
+    fun getIdInput(): Int {
         while (true) {
             consoleIO.viewWithLine("Please Enter The Meal ID")
             consoleIO.view("Enter Meal ID: ")

@@ -153,11 +153,15 @@ class SearchMealServiceTest {
             createMeal(submitted = LocalDate(2025, 3, 10)),
             createMeal(submitted = LocalDate(2025, 3, 10))
         )
+
         every { consoleIO.readInput() } returnsMany listOf(searchByDateFeature, date)
+
         every { consoleIO.viewWithLine(any()) } just Runs
         every { consoleIO.view(any()) } just Runs
+
         every { manageMealsSearch.getMealsByDate(date) } returns expectedMeals
         every { manageMealsSearch.getMealById(any()) } returns expectedMeals.first()
+
         every { consoleIO.readInput() } returnsMany listOf(searchByDateFeature, date, "no")
 
         // When
@@ -173,9 +177,12 @@ class SearchMealServiceTest {
         val searchByDateFeature = "3"
         val date = "2025-01-05"
         val errorMessage = "❌ No Meals Found For The Date [$date]."
+
         every { consoleIO.readInput() } returnsMany listOf(searchByDateFeature, date)
+
         every { consoleIO.view(any()) } just Runs
         every { consoleIO.viewWithLine(any()) } just Runs
+
         every { manageMealsSearch.getMealsByDate(date) } returns emptyList()
 
         // When
@@ -216,7 +223,9 @@ class SearchMealServiceTest {
         // Given
         val searchByDateFeature = "3"
         val date = "2025-03-10"
+
         every { consoleIO.readInput() } returns searchByDateFeature andThen date
+
         every { manageMealsSearch.getMealsByDate(date) } returns listOf(
             createMeal(submitted = LocalDate(2025, 2, 10)),
             createMeal(submitted = LocalDate(2025, 3, 10)),
@@ -249,10 +258,13 @@ class SearchMealServiceTest {
             wantsToSeeDetails,
             mealId.toString()
         )
+
         every { consoleIO.viewWithLine(any()) } just Runs
         every { consoleIO.view(any()) } just Runs
+
         every { manageMealsSearch.getMealsByDate(date) } returns mealsOnDate
         every { manageMealsSearch.getMealById(mealId) } returns meal
+
         every { viewMealDetails.displayMealDetails(meal) } just Runs
 
         // When
@@ -277,8 +289,10 @@ class SearchMealServiceTest {
             "yes",
             invalidMealId.toString()
         )
+
         every { consoleIO.viewWithLine(any()) } just Runs
         every { consoleIO.view(any()) } just Runs
+
         every { manageMealsSearch.getMealsByDate(date) } returns mealsOnDate
 
         // When
@@ -338,6 +352,7 @@ class SearchMealServiceTest {
     fun `should display error when meal ID is invalid format`() {
         // Given
         val errorMessage = "❌ Invalid ID Format, Please Use A Number."
+
         every { consoleIO.viewWithLine("Please Enter The Meal ID") } just Runs
         every { consoleIO.view("Enter Meal ID: ") } just Runs
         every { consoleIO.viewWithLine(errorMessage) } just Runs
@@ -348,7 +363,7 @@ class SearchMealServiceTest {
         val id = searchMealService.getIdInput()
 
         // Then
-        assertEquals(1, id)
+        Assertions.assertEquals(1, id)
         verify { consoleIO.viewWithLine(errorMessage) }
     }
 
