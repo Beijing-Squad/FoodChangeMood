@@ -102,7 +102,7 @@ class CsvFileParserTest {
     }
 
     @Test
-    fun `should throw IllegalArgumentException for CSV line with fewer than 11 fields`() {
+    fun `should throw Exception for CSV line with fewer than 11 fields`() {
         //Given
         val record = RecordParserTestData.recordWithAllDataCorrect()
         val expectedMeal = RecordParserTestData.recordWithFewerThanNumberOfFields()
