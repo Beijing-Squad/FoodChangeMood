@@ -173,7 +173,6 @@ class SuggestionMealsService(
                     showMealDetails(meal)
                     break
                 }
-
                 "no" -> continue
                 "exit" -> return
                 else -> {

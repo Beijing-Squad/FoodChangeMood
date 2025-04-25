@@ -36,7 +36,8 @@ class SuggestionMealsServiceTest {
         // Given
         val choiceSuggestionFeature = "6"
         val likeMeal="yes"
-        every { consoleIO.readInput() } returns choiceSuggestionFeature andThen likeMeal
+        val unLikeMeal = "no"
+        every { consoleIO.readInput()?.trim()?.lowercase() } returnsMany listOf(choiceSuggestionFeature,likeMeal,unLikeMeal)
         every { useCase.suggestMealHaveMoreThanSevenHundredCalories() } returns  mealsListWithHighCaloriesMeals
 
         // When
@@ -47,6 +48,21 @@ class SuggestionMealsServiceTest {
             consoleIO.viewWithLine("Do You Like This Meal?")
             consoleIO.view("write 'yes' to get details or 'no' to get another meal Or 'exit':")
         }
+
+    }
+    @Test
+    fun `should show message when input invalid choice`() {
+        // Given
+        val invalidChoice="qwerty"
+        val finishLoop="exit"
+        every { consoleIO.readInput()?.trim()?.lowercase() } returns  invalidChoice andThen finishLoop
+        every { useCase.suggestMealHaveMoreThanSevenHundredCalories() } returns  mealsListWithHighCaloriesMeals
+
+        // When
+        service.launchSoThinMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("Invalid input! Please choose 1, 2 or 0.") }
     }
 
     //endregion
