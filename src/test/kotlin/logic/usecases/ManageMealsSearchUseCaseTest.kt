@@ -1,11 +1,17 @@
 package logic.usecases
 
+
+import com.google.common.truth.Truth.assertThat
 import fake.createMeal
+import fake.createMealForSearchByName
+import fake.meals
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -138,15 +144,141 @@ class ManageMealsSearchUseCaseTest {
     }
     //endregion
 
-    //region get gym helper meals by calories
-    @Test
-    fun getGymHelperMealsByCaloriesAndProtein() {
+    //region gets gym helper
+    @ParameterizedTest
+    @CsvSource(
+        "-1000.0, 50.0",
+        "20.0,-1000.0"
+    )
+    fun `should throw exception when target calories or target protein is less than zero`(
+        targetCalories: Double,
+        targetProtein: Double
+    ) {
+        // Given
+        every { mealRepository.getAllMeals() } returns meals
+
+        // Then && When
+        assertThrows<Exception> {
+            useCase
+                .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
+        }
     }
-//endregion
+
+    @ParameterizedTest
+    @CsvSource(
+        "1500.0, 100.0",
+        "300.0, 10200.0",
+    )
+    fun `should throw exception when no have gym helper meals`(
+        targetCalories: Double,
+        targetProtein: Double
+    ) {
+        // Given
+        every { mealRepository.getAllMeals() } returns meals
+
+        // Then && When
+        assertThrows<Exception> {
+            useCase
+                .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
+        }
+
+    }
+
+    @Test
+    fun `should return gym helper meals when target calories and target protein are vaild`() {
+        // Given
+        val targetCalories = 250.0
+        val targetProtein = 5.0
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase
+            .getGymHelperMealsByCaloriesAndProtein(targetCalories, targetProtein)
+
+        // Then
+        assertThat(result.size).isEqualTo(2)
+
+    }
+    //endregion
 
     // region get meal by name
     @Test
-    fun getMealByName() {
+    fun `should return meals that contain the keyword`() {
+        //Given
+        val query = "Chicken"
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMealForSearchByName("Spicy Chili Chicken Bowl", 87),
+            createMealForSearchByName("Triple Fire Chicken Sandwich", 98985),
+        )
+
+        //When
+        val result = useCase.getMealByName(query)
+
+        //Then
+        assertEquals(2, result.size)
+        assertTrue(result.any { it.name == "Spicy Chili Chicken Bowl" })
+        assertTrue(result.any { it.name == "Triple Fire Chicken Sandwich" })
+
+    }
+
+    @Test
+    fun `should throw exception if search query is blank`() {
+        //Given
+        val blankQuery = "   "
+
+        //When
+        val exception = assertThrows<IllegalArgumentException> {
+            useCase.getMealByName(blankQuery)
+        }
+
+        //Then
+        assertEquals("Search query must not be blank.", exception.message)
+
+    }
+
+    @Test
+    fun `should throw exception if no meals exist in repository`() {
+        //Given
+        val query = "Chili"
+        every { mealRepository.getAllMeals() } returns emptyList()
+
+        //When
+        val exception = assertThrows<IllegalStateException> {
+            useCase.getMealByName(query)
+        }
+
+        //Then
+        assertEquals("No food data available to search.", exception.message)
+
+    }
+
+    @Test
+    fun `should return meals that contain the word, regardless of the case`() {
+        //Given
+        val query = "cHiLi"
+        every { mealRepository.getAllMeals() } returns listOf(createMealForSearchByName("Spicy Chili Chicken Bowl", 87))
+
+        //When
+        val result = useCase.getMealByName(query)
+
+        //Then
+        assertEquals(1, result.size)
+        assertEquals("Spicy Chili Chicken Bowl", result.first().name)
+    }
+
+    @Test
+    fun `should return empty list if meal name does not match`() {
+        //Given
+        val query = "Kosharii"
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMealForSearchByName("Hmam Baldy", 323584),
+        )
+
+        //When
+        val result = useCase.getMealByName(query)
+
+        //Then
+        assertTrue(result.isEmpty())
     }
     //endregion
 
@@ -213,6 +345,7 @@ class ManageMealsSearchUseCaseTest {
         assert(result.size == 2)
     }
     //endregion
+
 
     //region get iraqi meals
     @Test
