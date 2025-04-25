@@ -271,7 +271,12 @@ class SearchMealServiceTest {
         val errorMessage = "❌ Meal with ID [$invalidMealId] Not Found On That Date."
         val mealsOnDate = listOf(createMeal(id = 1, submitted = LocalDate(2025, 3, 10)))
 
-        every { consoleIO.readInput() } returnsMany listOf(searchByDateFeature, date, "yes", invalidMealId.toString())
+        every { consoleIO.readInput() } returnsMany listOf(
+            searchByDateFeature,
+            date,
+            "yes",
+            invalidMealId.toString()
+        )
         every { consoleIO.viewWithLine(any()) } just Runs
         every { consoleIO.view(any()) } just Runs
         every { manageMealsSearch.getMealsByDate(date) } returns mealsOnDate
@@ -284,25 +289,69 @@ class SearchMealServiceTest {
     }
 
     @Test
-    fun `should show error and ask again when meal ID input is invalid`() {
+    fun `should display error if user chooses to view meal details and meal not in mealsOnDate`() {
         // Given
-        val invalidInput = "abc"
-        val validInput = "2"
+        val mealsOnDate = listOf(createMeal(id = 1, submitted = LocalDate.parse("2025-04-25")))
+        val date = "2025-04-25"
+        val notFoundId = 99
+        val errorMessage = "❌ Meal with ID [$notFoundId] Not Found On That Date."
 
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+
+        every { consoleIO.readInput() } returnsMany listOf(date, "yes", notFoundId.toString())
+
+        every { manageMealsSearch.getMealsByDate("2025-04-25") } returns mealsOnDate
+        every { manageMealsSearch.getMealById(99) } returns createMeal(id = 99)
+
+        // When
+        searchMealService.launchMealsByDate()
+
+        // Then
+        verify { consoleIO.viewWithLine(errorMessage) }
+    }
+
+    @Test
+    fun `should display error if user chooses to view meal details and id meal not found in meals repository`() {
+        // Given
+        val mealsOnDate = listOf(createMeal(id = 1, submitted = LocalDate.parse("2025-04-25")))
+        val date = "2025-04-25"
+        val notFoundId = 99
+        val errorMessage = "❌ Meal with ID [$notFoundId] Not Found On That Date."
+
+        every { consoleIO.viewWithLine(any()) } just Runs
+        every { consoleIO.view(any()) } just Runs
+
+        every { consoleIO.readInput() } returnsMany listOf(date, "yes", notFoundId.toString())
+
+        every { manageMealsSearch.getMealsByDate("2025-04-25") } returns mealsOnDate
+        every { manageMealsSearch.getMealById(99) } returns null
+
+        // When
+        searchMealService.launchMealsByDate()
+
+        // Then
+        verify { consoleIO.viewWithLine(errorMessage) }
+    }
+
+    @Test
+    fun `should display error when meal ID is invalid format`() {
+        // Given
+        val errorMessage = "❌ Invalid ID Format, Please Use A Number."
         every { consoleIO.viewWithLine("Please Enter The Meal ID") } just Runs
         every { consoleIO.view("Enter Meal ID: ") } just Runs
-        every { consoleIO.viewWithLine("❌ Invalid ID Format, Please Use A Number.") } just Runs
+        every { consoleIO.viewWithLine(errorMessage) } just Runs
 
-        // أول إدخال غلط، التاني صح
-        every { consoleIO.readInput() } returnsMany listOf(invalidInput, validInput)
+        every { consoleIO.readInput() } returnsMany listOf("abc", "1")
 
         // When
         val id = searchMealService.getIdInput()
 
         // Then
-        assertEquals(2, id)
-        verify { consoleIO.viewWithLine("❌ Invalid ID Format, Please Use A Number.") }
+        assertEquals(1, id)
+        verify { consoleIO.viewWithLine(errorMessage) }
     }
+
     // endregion
 
     //region search by name
