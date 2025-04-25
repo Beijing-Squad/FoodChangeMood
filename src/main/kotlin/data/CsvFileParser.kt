@@ -17,11 +17,16 @@ class CsvFileParser {
     private fun parseCsvLineToMeal(line: String): Meal {
         val fields = splitLineByCommas(line)
 
+        if (fields.size < 11) {
+            throw IllegalArgumentException("Invalid CSV line: not enough fields. Got ${fields.size}")
+        }
+
         val hasDescription = fields.size == 12
 
         val description = if (hasDescription) fields[ColumnIndex.DESCRIPTION] else null
-        val ingredients = if (hasDescription) fields[ColumnIndex.INGREDIENTS] else fields[9]
-        val ingredientsCount = if (hasDescription) fields[ColumnIndex.N_INGREDIENTS] else fields[10]
+        val ingredients = if (hasDescription) fields[ColumnIndex.INGREDIENTS] else fields.getOrNull(9) ?: ""
+        val ingredientsCount = if (hasDescription) fields[ColumnIndex.N_INGREDIENTS] else fields.getOrNull(10) ?: "0"
+
         val submittedDate = LocalDate.parse(fields[ColumnIndex.SUBMITTED])
 
         return Meal(
@@ -39,6 +44,7 @@ class CsvFileParser {
             nIngredients = ingredientsCount.toInt()
         )
     }
+
 
     private fun splitCsvIntoLines(csvContent: String): List<String> {
         val lines = mutableListOf<String>()
