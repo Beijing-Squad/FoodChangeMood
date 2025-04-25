@@ -7,24 +7,22 @@ import org.beijing.model.Nutrition
 object RecordParserTestData {
 
     fun recordWithAllDataCorrect() = """
-            "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']",
-            "[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]",
-            "4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']",
-            "A classic Italian pasta dish.","['Spaghetti', 'Water', 'Salt']","3"
-        """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+        "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']","[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]","4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']","A classic Italian pasta dish.","['Spaghetti', 'Water', 'Salt']","3"
+    """.trimIndent()
 
     fun mealWithAllDataCorrect() = Meal(
         name = "Spaghetti",
         id = 123,
         minutes = 30,
         contributorId = 99,
-        submitted = LocalDate(year = 2023, monthNumber = 4, dayOfMonth = 21),
+        submitted = LocalDate(2023, 4, 21),
         tags = listOf("Italian", "Dinner"),
         nutrition = Nutrition(
             caloriesKcal = 400.0,
             totalFatGrams = 10.0,
-            sodiumGrams = 5.0,
-            sugarGrams = 800.0,
+            sugarGrams = 5.0,
+            sodiumGrams = 800.0,
             proteinGrams = 15.0,
             saturatedFatGrams = 3.0,
             carbohydratesGrams = 60.0
@@ -37,218 +35,73 @@ object RecordParserTestData {
     )
 
     fun recordWithNoDescription() = """
-            "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']",
-            "[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]",
-            "4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']",
-            ,"['Spaghetti', 'Water', 'Salt']","3"
-        """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+        "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']","[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]","4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']","","['Spaghetti', 'Water', 'Salt']","3"
+    """.trimIndent()
 
-    fun mealWithNoDescription() = Meal(
-        name = "Spaghetti",
-        id = 123,
-        minutes = 30,
-        contributorId = 99,
-        submitted = LocalDate(year = 2023, monthNumber = 4, dayOfMonth = 21),
-        tags = listOf("Italian", "Dinner"),
-        nutrition = Nutrition(
-            caloriesKcal = 400.0,
-            totalFatGrams = 10.0,
-            sugarGrams = 5.0,
-            sodiumGrams = 800.0,
-            proteinGrams = 15.0,
-            saturatedFatGrams = 3.0,
-            carbohydratesGrams = 60.0
-        ),
-        nSteps = 4,
-        steps = listOf("Boil water", "Cook pasta", "Drain", "Serve with sauce"),
-        description = "",
-        ingredients = listOf("Spaghetti", "Water", "Salt"),
-        nIngredients = 3
-    )
+    fun mealWithNoDescription() = mealWithAllDataCorrect().copy(description = "")
 
     fun recordWithMissingTags() = """
-            "Spaghetti","123","30","99","2023-04-21",,
-            "[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]",
-            "4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']",
-            "A classic Italian pasta dish.","['Spaghetti', 'Water', 'Salt']","3"
-        """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+        "Spaghetti","123","30","99","2023-04-21","[]","[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]","4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']","A classic Italian pasta dish.","['Spaghetti', 'Water', 'Salt']","3"
+    """.trimIndent()
 
-    fun mealWithMissingTags() = Meal(
-        name = "Spaghetti",
-        id = 123,
-        minutes = 30,
-        contributorId = 99,
-        submitted = LocalDate(year = 2023, monthNumber = 4, dayOfMonth = 21),
-        tags = emptyList(),
-        nutrition = Nutrition(
-            caloriesKcal = 400.0,
-            totalFatGrams = 10.0,
-            sugarGrams = 5.0,
-            sodiumGrams = 800.0,
-            proteinGrams = 15.0,
-            saturatedFatGrams = 3.0,
-            carbohydratesGrams = 60.0
-        ),
-        nSteps = 4,
-        steps = listOf("Boil water", "Cook pasta", "Drain", "Serve with sauce"),
-        description = "A classic Italian pasta dish.",
-        ingredients = listOf("Spaghetti", "Water", "Salt"),
-        nIngredients = 3
-    )
+    fun mealWithMissingTags() = mealWithAllDataCorrect().copy(tags = emptyList())
 
     fun recordWithMissingNutrition() = """
-            "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']",
-            ,
-            "4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']",
-            "A classic Italian pasta dish.","['Spaghetti', 'Water', 'Salt']","3"
-        """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+        "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']","[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]","4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']","A classic Italian pasta dish.","['Spaghetti', 'Water', 'Salt']","3"
+    """.trimIndent()
 
-    fun mealWithMissingNutrition() = Meal(
-        name = "Spaghetti",
-        id = 123,
-        minutes = 30,
-        contributorId = 99,
-        submitted = LocalDate(year = 2023, monthNumber = 4, dayOfMonth = 21),
-        tags = listOf("Italian", "Dinner"),
+    fun mealWithMissingNutrition() = mealWithAllDataCorrect().copy(
         nutrition = Nutrition(
-            caloriesKcal = 400.0,
-            totalFatGrams = 10.0,
-            sugarGrams = 5.0,
-            sodiumGrams = 800.0,
-            proteinGrams = 15.0,
-            saturatedFatGrams = 3.0,
-            carbohydratesGrams = 60.0
-        ),
-        nSteps = 4,
-        steps = listOf("Boil water", "Cook pasta", "Drain", "Serve with sauce"),
-        description = "A classic Italian pasta dish.",
-        ingredients = listOf("Spaghetti", "Water", "Salt"),
-        nIngredients = 3
+            caloriesKcal = 0.0,
+            totalFatGrams = 0.0,
+            sugarGrams = 0.0,
+            sodiumGrams = 0.0,
+            proteinGrams = 0.0,
+            saturatedFatGrams = 0.0,
+            carbohydratesGrams = 0.0
+        )
     )
 
     fun recordWithMissingSteps() = """
-            "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']",
-            "[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]",
-            "4",,
-            "A classic Italian pasta dish.","['Spaghetti', 'Water', 'Salt']","3"
-        """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+        "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']","[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]","4","[]","A classic Italian pasta dish.","['Spaghetti', 'Water', 'Salt']","3"
+    """.trimIndent()
 
-    fun mealWithMissingSteps() = Meal(
-        name = "Spaghetti",
-        id = 123,
-        minutes = 30,
-        contributorId = 99,
-        submitted = LocalDate(year = 2023, monthNumber = 4, dayOfMonth = 21),
-        tags = listOf("Italian", "Dinner"),
-        nutrition = Nutrition(
-            caloriesKcal = 400.0,
-            totalFatGrams = 10.0,
-            sugarGrams = 5.0,
-            sodiumGrams = 800.0,
-            proteinGrams = 15.0,
-            saturatedFatGrams = 3.0,
-            carbohydratesGrams = 60.0
-        ),
-        nSteps = 4,
-        steps = emptyList(),
-        description = "A classic Italian pasta dish.",
-        ingredients = listOf("Spaghetti", "Water", "Salt"),
-        nIngredients = 3
-    )
+    fun mealWithMissingSteps() = mealWithAllDataCorrect().copy(steps = emptyList())
 
     fun recordWithMissingStep() = """
-            "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']",
-            "[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]",
-            "4",,
-            "A classic Italian pasta dish.","['Spaghetti', '  ', 'Salt']","3"
-        """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+        "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']","[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]","4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']","A classic Italian pasta dish.","['Spaghetti', 'Salt']","2"
+    """.trimIndent()
 
-    fun mealWithMissingStep() = Meal(
-        name = "Spaghetti",
-        id = 123,
-        minutes = 30,
-        contributorId = 99,
-        submitted = LocalDate(year = 2023, monthNumber = 4, dayOfMonth = 21),
-        tags = listOf("Italian", "Dinner"),
-        nutrition = Nutrition(
-            caloriesKcal = 400.0,
-            totalFatGrams = 10.0,
-            sugarGrams = 5.0,
-            sodiumGrams = 800.0,
-            proteinGrams = 15.0,
-            saturatedFatGrams = 3.0,
-            carbohydratesGrams = 60.0
-        ),
-        nSteps = 4,
-        steps = emptyList(),
-        description = "A classic Italian pasta dish.",
+    fun mealWithMissingStep() = mealWithAllDataCorrect().copy(
         ingredients = listOf("Spaghetti", "Salt"),
-        nIngredients = 3
+        nIngredients = 2
     )
 
     fun recordWithMissingIngredients() = """
-            "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']",
-            "[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]",
-            "4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']",
-            "A classic Italian pasta dish.",,"3"
-        """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+        "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']","[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]","4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']","A classic Italian pasta dish.","[]","0"
+    """.trimIndent()
 
-    fun mealWithMissingIngredients() = Meal(
-        name = "Spaghetti",
-        id = 123,
-        minutes = 30,
-        contributorId = 99,
-        submitted = LocalDate(year = 2023, monthNumber = 4, dayOfMonth = 21),
-        tags = listOf("Italian", "Dinner"),
-        nutrition = Nutrition(
-            caloriesKcal = 400.0,
-            totalFatGrams = 10.0,
-            sugarGrams = 5.0,
-            sodiumGrams = 800.0,
-            proteinGrams = 15.0,
-            saturatedFatGrams = 3.0,
-            carbohydratesGrams = 60.0
-        ),
-        nSteps = 4,
-        steps = listOf("Boil water", "Cook pasta", "Drain", "Serve with sauce"),
-        description = "A classic Italian pasta dish.",
+    fun mealWithMissingIngredients() = mealWithAllDataCorrect().copy(
         ingredients = emptyList(),
-        nIngredients = 3
+        nIngredients = 0
     )
 
     fun recordWithMultiLineDescription() = """
-            "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']",
-            "[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]",
-            "4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']",
-            "A classic
-             Italian pasta
-              dish.","['Spaghetti', 'Water', 'Salt']","3"
-        """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+        "Spaghetti","123","30","99","2023-04-21","['Italian', 'Dinner']","[400.0, 10.0, 5.0, 800.0, 15.0, 3.0, 60.0]","4","['Boil water', 'Cook pasta', 'Drain', 'Serve with sauce']","A classic\nItalian pasta\ndish.","['Spaghetti', 'Water', 'Salt']","3"
+    """.trimIndent()
 
-    fun mealWithMultiLineDescription() = Meal(
-        name = "Spaghetti",
-        id = 123,
-        minutes = 30,
-        contributorId = 99,
-        submitted = LocalDate(year = 2023, monthNumber = 4, dayOfMonth = 21),
-        tags = listOf("Italian", "Dinner"),
-        nutrition = Nutrition(
-            caloriesKcal = 400.0,
-            totalFatGrams = 10.0,
-            sugarGrams = 5.0,
-            sodiumGrams = 800.0,
-            proteinGrams = 15.0,
-            saturatedFatGrams = 3.0,
-            carbohydratesGrams = 60.0
-        ),
-        nSteps = 4,
-        steps = listOf("Boil water", "Cook pasta", "Drain", "Serve with sauce"),
-        description = """A classic
-             Italian pasta
-              dish.""",
-        ingredients = listOf("Spaghetti", "Water", "Salt"),
-        nIngredients = 3
+    fun mealWithMultiLineDescription() = mealWithAllDataCorrect().copy(
+        description = "A classic\nItalian pasta\ndish."
     )
 
-    fun emptyRecord() = ""
+    fun emptyRecord() = """
+        name,id,minutes,contributorId,submitted,tags,nutrition,nSteps,steps,description,ingredients,nIngredients
+    """.trimIndent()
 }
