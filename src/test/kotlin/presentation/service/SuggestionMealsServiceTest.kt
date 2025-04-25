@@ -220,6 +220,17 @@ class SuggestionMealsServiceTest {
         verify { consoleIO.viewWithLine("1. Italian Pasta | 🕒 40 minutes |") }
         verify { consoleIO.viewWithLine("2. Lasagna | 🕒 60 minutes |") }
     }
+    @Test
+    fun `should print no meals found message when no Italian large group meals exist`() {
+        // Given
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns emptyList()
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("❌ No Italian meals found for large groups.") }
+    }
 
     //endregion
 
