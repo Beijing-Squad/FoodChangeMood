@@ -10,8 +10,6 @@ import org.beijing.presentation.service.SuggestionMealsService
 import org.beijing.presentation.service.ViewMealsService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 import presentation.view_read.ConsoleIO
 
 class FoodConsoleUiTest {
@@ -113,22 +111,22 @@ class FoodConsoleUiTest {
         verify { consoleIO.viewWithLine(titleOfFeature) }
     }
 
-    @ParameterizedTest
-    @CsvSource(
-        "1a2b",
-        " -",
-        "@"
-    )
-    fun `should view message when write invalid option`(inputChoice: String) {
+    @Test
+    fun `should view message when write invalid option`() {
+        val firstChoice = "1a2b"
+        val secondChoice = " -@"
+        val thirdChoice = "0"
         // Given
         val errorMessage = "❌ Invalid input! Please enter a number between 0 and 4"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returnsMany listOf(firstChoice, secondChoice, thirdChoice)
 
         // When
         foodConsoleUi.start()
 
         // Then
-        verify { consoleIO.viewWithLine(errorMessage) }
+        verify {
+            consoleIO.viewWithLine(errorMessage)
+        }
     }
 
     @Test
