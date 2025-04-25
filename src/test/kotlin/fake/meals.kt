@@ -317,3 +317,30 @@ fun createMeal(
         nIngredients = 0
     )
 }
+fun createMealForSearchByName(
+    name: String,
+    id: Int,
+): Meal {
+    return Meal(
+        name = name,
+        id = id,
+        minutes = 0,
+        contributorId = 0,
+        submitted = LocalDate(2023, 1, 1),
+        tags = emptyList(),
+        nutrition = Nutrition(
+            caloriesKcal = 0.0,
+            proteinGrams = 0.0,
+            totalFatGrams = 0.0,
+            sodiumGrams = 0.0,
+            saturatedFatGrams = 0.0,
+            carbohydratesGrams = 0.0,
+            sugarGrams = 0.0
+        ),
+        nSteps = 0,
+        steps = emptyList(),
+        description = "",
+        ingredients = emptyList(),
+        nIngredients = 0
+    )
+}

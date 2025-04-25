@@ -1,9 +1,12 @@
 package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
-import fake.createMeal
 import io.mockk.every
+import fake.createMeal
 import io.mockk.mockk
+import fake.mealsListWithHighCaloriesMeals
+import fake.mealsWithHighCalories
+import fake.mealsWithNoHighCalories
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.junit.jupiter.api.Assertions
@@ -350,9 +353,35 @@ class ManageMealsSuggestionsUseCaseTest {
 
     //region suggest meal have more than seven hundred calories
     @Test
-    fun suggestMealHaveMoreThanSevenHundredCalories() {
+    fun `should return meals with high calories When give list of meals`() {
+        //Given
+        every { mealRepository.getAllMeals() } returns mealsListWithHighCaloriesMeals
+        //When
+        val result = useCase.suggestMealHaveMoreThanSevenHundredCalories()
+        //Then
+        assertThat(result).containsExactlyElementsIn(mealsWithHighCalories)
     }
-//endregion
+
+    @Test
+    fun `should return empty list When give empty list`() {
+        //Given
+        every { mealRepository.getAllMeals() } returns listOf()
+        //When
+        val result = useCase.suggestMealHaveMoreThanSevenHundredCalories()
+        //Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `should return empty list When give list of meals have low calories`() {
+        //Given
+        every { mealRepository.getAllMeals() } returns mealsWithNoHighCalories
+        //When
+        val result = useCase.suggestMealHaveMoreThanSevenHundredCalories()
+        //Then
+        assertThat(result).isEmpty()
+    }
+    //endregion
 
     //region check meal calories content
     @Test
