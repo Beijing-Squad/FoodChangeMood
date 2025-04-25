@@ -18,7 +18,7 @@ class CsvFileParser {
         val fields = splitLineByCommas(line)
 
         if (fields.size < 11) {
-            throw IllegalArgumentException("Invalid CSV line: not enough fields. Got ${fields.size}")
+            throw Exception("Invalid CSV line: not enough fields. Got ${fields.size}")
         }
 
         val hasDescription = fields.size == 12
