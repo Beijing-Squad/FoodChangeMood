@@ -81,8 +81,8 @@ class SearchMealService(
         val mealsOnDate = try {
             searchMeals.getMealsByDate(date)
         } catch (exception: IllegalArgumentException) {
-            println(exception.message)
-            launchMealsByDate()
+            consoleIO.viewWithLine(exception.message)
+//            launchMealsByDate()
             return
         } catch (exception: Exception) {
             consoleIO.viewWithLine(exception.message)
@@ -162,7 +162,7 @@ class SearchMealService(
                     targetCalories, targetProtein
                 )
                 showGymHelperResult(meals)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 consoleIO.viewWithLine(e.message)
                 launchGymHelper()
             }
