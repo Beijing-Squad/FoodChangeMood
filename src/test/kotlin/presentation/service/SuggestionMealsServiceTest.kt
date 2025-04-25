@@ -23,7 +23,7 @@ class SuggestionMealsServiceTest {
         suggestUseCase = mockk(relaxed = true)
         viewMealDetails = mockk()
         consoleIO = mockk(relaxed = true)
-        suggestMealService = SuggestionMealsService(manageMealsSuggest, viewMealDetails, consoleIO)
+        suggestMealService = SuggestionMealsService(suggestUseCase, viewMealDetails, consoleIO)
     }
 
     //region handle user choice
