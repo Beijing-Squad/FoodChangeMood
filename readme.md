@@ -20,22 +20,25 @@ These are the top-level categories that appear when the app starts in the CLI. E
 After selecting a category, you will be presented with more specific features. Here's a breakdown of what each category offers:
 
 #### **Meal Suggestions 🍲**
-- **Suggest a Healthy Meal**: Get meal suggestions based on various criteria (e.g., calories, fat content, etc.).
 - **Sweets with No Eggs 🍩**: Suggest one sweet that contains no eggs for users who are allergic to eggs. Users can like or dislike the suggestion to get a new one.
 - **Keto Diet Meal Helper 🥗**: Suggest keto-friendly meals based on nutritional information.
-- **Gym Helper 💪**: Suggest meals based on desired calorie and protein intake.
 - **I Love Potato 🥔**: Suggest meals that contain potatoes.
 - **So Thin Problem 🍽️**: Suggest meals with more than 700 calories.
+- **Large Group Italian Meal Helper 🇮🇹** :Suggest original Italian dishes suitable for large groups — ideal for friends traveling together.
+- **Easy Food Suggestion 🎯** :this feature suggests meals that are easy to prepare.
 
 #### **Meal Search 🔍**
 - **Search Meals by Name**: Search for meals based on their name. It includes fuzzy search functionality to handle typos.
 - **Search Foods by Date 📅**: Search meals by the date entered by user.
+- **Gym Helper 💪**: Suggest meals based on desired calorie and protein intake.
+- **Explore Other Countries' Food Culture 🌍** :Search for meals from a specific country by name and return up to 20 random matching meals.
 
 #### **Meal Games 🎮**
 - **Guess the Meal Preparation Time ⏳**: Guess how long it takes to prepare a random meal. You have 3 attempts to get it right.
 - **Ingredient Game 🧩**: A fun game where the user guesses the correct ingredient in a meal.
+
 #### **Meal Viewing 🍴**
-- **View Meal Details**: View details about a specific meal, including nutritional values, ingredients, and preparation steps.
+- **Suggest a Healthy Meal**: Get meal suggestions based on various criteria (e.g., calories, fat content, etc.).
 - **Seafood Meals Sorted by Protein Content 🦞**: Lists seafood meals sorted by protein content.
 
 ## Structure Overview 🏗️
