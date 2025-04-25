@@ -106,7 +106,7 @@ class ManageMealsSearchUseCaseTest {
 
     //region get meal by id
     @Test
-    fun `should return the matched meal when id is valid`() {
+    fun `should return the matched meal when id is found`() {
         // Given
         val id = 1
         every { mealRepository.getAllMeals() } returns listOf(
