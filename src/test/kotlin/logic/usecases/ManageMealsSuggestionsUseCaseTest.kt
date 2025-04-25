@@ -88,11 +88,13 @@ class ManageMealsSuggestionsUseCaseTest {
     fun `suggestSweetsWithNoEggs should return correct sweet meal when tags has a capitalize letters`() {
         // Given
 
-        every { mealRepository.getAllMeals() } returns listOf(createMeal(
-            name = "Chocolate Cake",
-            id = 1, tags = listOf("SwEeT", "dessert"),
-            ingredients = listOf("wheat", "milk", "sugar")
-        ))
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(
+                name = "Chocolate Cake",
+                id = 1, tags = listOf("SwEeT", "dessert"),
+                ingredients = listOf("wheat", "milk", "sugar")
+            )
+        )
 
         // When
         val suggestedMeal = useCase.suggestSweetsWithNoEggs()

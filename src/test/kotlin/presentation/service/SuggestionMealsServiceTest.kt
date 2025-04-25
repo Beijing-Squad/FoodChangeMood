@@ -21,7 +21,7 @@ class SuggestionMealsServiceTest {
     @BeforeEach
     fun setup() {
         suggestUseCase = mockk(relaxed = true)
-        viewMealDetails = mockk()
+        viewMealDetails = mockk(relaxed = true)
         consoleIO = mockk(relaxed = true)
         suggestMealService = SuggestionMealsService(suggestUseCase, viewMealDetails, consoleIO)
     }
@@ -104,6 +104,7 @@ class SuggestionMealsServiceTest {
     @Test
     fun `should skip sweet when user says no and suggest next one`() {
         // Given
+        val choiceSearchFeature = "2"
         val firstSweet = createMeal(name = "mahalbya", description = "egyptian sweet")
         val secondSweet = createMeal(name = "Halawa", description = "Delicious and eggless")
         val thirdSweet = null
@@ -112,10 +113,10 @@ class SuggestionMealsServiceTest {
             secondSweet,
             thirdSweet
         )
-        every { consoleIO.readInput() } returns "no"
+        every { consoleIO.readInput() } returns choiceSearchFeature andThen "no"
 
         // When
-        suggestMealService.launchSweetWithoutEggs()
+        suggestMealService.showService()
 
         // Then
         verifyOrder {
@@ -128,12 +129,13 @@ class SuggestionMealsServiceTest {
     @Test
     fun `should view meal details when user says yes`() {
         // Given
+        val choiceSearchFeature = "2"
         val sweet = createMeal(name = "mahalbya", description = "egyptian sweet")
-        every { suggestUseCase.suggestSweetsWithNoEggs() } returnsMany listOf(sweet)
-        every { consoleIO.readInput() } returns "yes"
+        every { consoleIO.readInput() } returns choiceSearchFeature andThen "yes"
+        every { suggestUseCase.suggestSweetsWithNoEggs() } returns sweet
 
         // When
-        suggestMealService.launchSweetWithoutEggs()
+        suggestMealService.showService()
 
         // Then
         verify {
@@ -144,12 +146,13 @@ class SuggestionMealsServiceTest {
     @Test
     fun `should exit when user types exit`() {
         // Given
+        val choiceSearchFeature = "2"
         val sweet = createMeal(name = "mahalbya", description = null)
         every { suggestUseCase.suggestSweetsWithNoEggs() } returns sweet
-        every { consoleIO.readInput() } returns "exit"
+        every { consoleIO.readInput() } returns choiceSearchFeature andThen "exit"
 
         // When
-        suggestMealService.launchSweetWithoutEggs()
+        suggestMealService.showService()
 
         // Then
         verify { consoleIO.viewWithLine("GoodBye") }
@@ -159,12 +162,13 @@ class SuggestionMealsServiceTest {
     @Test
     fun `should view meal details when user types yes with none case sensitive`() {
         // Given
+        val choiceSearchFeature = "2"
         val sweet = createMeal(name = "mahalbya", description = null)
         every { suggestUseCase.suggestSweetsWithNoEggs() } returns sweet
-        every { consoleIO.readInput() } returns " YES"
+        every { consoleIO.readInput() } returns choiceSearchFeature andThen " YES"
 
         // When
-        suggestMealService.launchSweetWithoutEggs()
+        suggestMealService.showService()
 
         // Then
         verify { viewMealDetails.displayMealDetails(sweet) }
@@ -174,6 +178,7 @@ class SuggestionMealsServiceTest {
     @Test
     fun `should return massage when user types empty or anything except the three choices`() {
         // Given
+        val choiceSearchFeature = "2"
         val firstSweet = createMeal(name = "mahalbya", description = null)
         val secondSweet = createMeal(name = "Halawa", description = "Delicious and eggless")
         val thirdSweet = null
@@ -182,10 +187,10 @@ class SuggestionMealsServiceTest {
             secondSweet,
             thirdSweet
         )
-        every { consoleIO.readInput() } returns ""
+        every { consoleIO.readInput() } returns choiceSearchFeature andThen ""
 
         // When
-        suggestMealService.launchSweetWithoutEggs()
+        suggestMealService.showService()
 
         // Then
         verifyOrder {

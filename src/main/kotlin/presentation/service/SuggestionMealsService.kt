@@ -102,7 +102,7 @@ class SuggestionMealsService(
 //endregion
 
     //region sweets with no eggs
-    fun launchSweetWithoutEggs() {
+    private fun launchSweetWithoutEggs() {
         consoleIO.viewWithLine("🍬 Welcome to the Egg-Free Sweets Suggester!")
         while (true) {
             val sweet = suggestionMeals.suggestSweetsWithNoEggs()
