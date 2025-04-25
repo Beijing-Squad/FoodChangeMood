@@ -29,16 +29,20 @@ class SuggestionMealsServiceTest {
     @Test
     fun handleUserChoice() {
     }
+
     //endregion
     //region suggest meal have more than seven hundred calories
     @Test
     fun `should call launchSoThinMeals when suggest meal with more than 700 calories selected`() {
         // Given
         val choiceSuggestionFeature = "6"
-        val likeMeal="yes"
+        val likeMeal = "yes"
         val unLikeMeal = "no"
-        every { consoleIO.readInput()?.trim()?.lowercase() } returnsMany listOf(choiceSuggestionFeature,likeMeal,unLikeMeal)
-        every { useCase.suggestMealHaveMoreThanSevenHundredCalories() } returns  mealsListWithHighCaloriesMeals
+        every { consoleIO.readInput()?.trim()?.lowercase() } returnsMany listOf(
+            choiceSuggestionFeature,
+            unLikeMeal, unLikeMeal, likeMeal, likeMeal
+        )
+        every { useCase.suggestMealHaveMoreThanSevenHundredCalories() } returns mealsListWithHighCaloriesMeals
 
         // When
         service.handleUserChoice()
@@ -50,19 +54,20 @@ class SuggestionMealsServiceTest {
         }
 
     }
+
     @Test
     fun `should show message when input invalid choice`() {
         // Given
-        val invalidChoice="qwerty"
-        val finishLoop="exit"
-        every { consoleIO.readInput()?.trim()?.lowercase() } returns  invalidChoice andThen finishLoop
-        every { useCase.suggestMealHaveMoreThanSevenHundredCalories() } returns  mealsListWithHighCaloriesMeals
+        val invalidChoice = "qwerty"
+        val finishLoop = "exit"
+        every { consoleIO.readInput()?.trim()?.lowercase() } returns invalidChoice andThen finishLoop
+        every { useCase.suggestMealHaveMoreThanSevenHundredCalories() } returns mealsListWithHighCaloriesMeals
 
         // When
         service.launchSoThinMeals()
 
         // Then
-        verify { consoleIO.viewWithLine("Invalid input! Please choose 1, 2 or 0.") }
+        verify { consoleIO.viewWithLine("Invalid input! Please choose 'Yes','No' or 'Exit'.") }
     }
 
     //endregion

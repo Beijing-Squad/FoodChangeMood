@@ -173,10 +173,11 @@ class SuggestionMealsService(
                     showMealDetails(meal)
                     break
                 }
+
                 "no" -> continue
                 "exit" -> return
                 else -> {
-                    consoleIO.viewWithLine("Invalid input! Please choose 1, 2 or 0.")
+                    consoleIO.viewWithLine("Invalid input! Please choose 'Yes','No' or 'Exit'.")
                 }
             }
         }
@@ -201,13 +202,16 @@ class SuggestionMealsService(
         consoleIO.viewWithLine("Meal TotalFat: ${meal.nutrition.totalFatGrams}")
         consoleIO.viewWithLine("Meal Carbohydrates: ${meal.nutrition.carbohydratesGrams}")
         consoleIO.viewWithLine("Meal Saturated: ${meal.nutrition.saturatedFatGrams}")
-        consoleIO.viewWithLine("Meal Tags: ${meal.tags}")
+        consoleIO.viewWithLine("Meal Tag:")
+        meal.tags.forEach { tag ->
+            consoleIO.viewWithLine("   • $tag")
+        }
         consoleIO.viewWithLine("Meal ContributorId: ${meal.contributorId}")
         consoleIO.viewWithLine("Meal Ingredients:")
         meal.ingredients.forEach { ingredient ->
             consoleIO.viewWithLine("   • $ingredient")
         }
-        consoleIO.viewWithLine("Meal Steps ((${meal.nSteps} total) :")
+        consoleIO.viewWithLine("Meal Steps (${meal.nSteps} total) :")
         meal.steps.forEachIndexed { index, step ->
             consoleIO.viewWithLine("   ${index + 1}. $step")
         }
