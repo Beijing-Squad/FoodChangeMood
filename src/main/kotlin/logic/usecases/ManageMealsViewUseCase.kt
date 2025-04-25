@@ -34,7 +34,6 @@ class ManageMealsViewUseCase(
         return mealRepository.getAllMeals()
             .filter { it.tags.contains("seafood") }
             .sortedByDescending { it.nutrition.proteinGrams }
-
     }
     //endregion
 
