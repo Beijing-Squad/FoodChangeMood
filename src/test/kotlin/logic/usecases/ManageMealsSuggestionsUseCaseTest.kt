@@ -80,6 +80,24 @@ class ManageMealsSuggestionsUseCaseTest {
         }
     }
 
+    @Test
+    fun `suggestTenRandomMealsContainsPotato should throw exception when a list with size smaller than ten`() {
+        //given
+        every { mealRepository.getAllMeals() } returns listOf(
+            createMeal(name = "Potato Onion Delight", ingredients = listOf("potato", "onion", "garlic")),
+            createMeal(name = "Potato Chicken Stew", ingredients = listOf("potato", "carrot", "chicken")),
+            createMeal(name = "Cheesy Potato Bake", ingredients = listOf("potato", "cheese", "cream")),
+        )
+
+        //when
+        val exception = assertFailsWith<IllegalArgumentException> {
+            useCase.suggestTenRandomMealsContainsPotato()
+        }
+
+        //then
+        assertEquals("There are not enough meals containing potato to suggest, try another service.", exception.message)
+    }
+
 //endregion
 
     //region suggest italian large group meals
