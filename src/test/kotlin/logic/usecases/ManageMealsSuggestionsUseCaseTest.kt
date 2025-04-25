@@ -245,9 +245,78 @@ class ManageMealsSuggestionsUseCaseTest {
 
     //region suggest easy prepared meal
     @Test
-    fun suggestEasyPreparedMeal() {
+    fun `should return sorted easy meals based on criteria`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Simple Salad", tags = listOf("Healthy"), minutes = 10, nSteps = 3, nIngredients = 4, contributorId = 1),
+            createMeal(id = 2, name = "Quick Pasta", tags = listOf("Italian"), minutes = 15, nSteps = 4, nIngredients = 5, contributorId = 2),
+            createMeal(id = 3, name = "Fruit Bowl", tags = listOf("Healthy"), minutes = 5, nSteps = 2, nIngredients = 3, contributorId = 3),
+            createMeal(id = 4, name = "Rice Dish", tags = listOf("Iraqi"), minutes = 20, nSteps = 5, nIngredients = 7, contributorId = 4)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.suggestEasyPreparedMeal()
+
+        // Then
+        assert(result.size == 3)
+        assert(result[0].name == "Fruit Bowl")
+        assert(result[1].name == "Simple Salad")
+        assert(result[2].name == "Quick Pasta")
     }
-//endregion
+
+    @Test
+    fun `should return empty list when no meals meet easy meal criteria`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Hard Meal", tags = listOf("Complex"), minutes = 60, nSteps = 10, nIngredients = 12, contributorId = 1)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.suggestEasyPreparedMeal()
+
+        // Then
+        assert(result.isEmpty())
+    }
+
+    @Test
+    fun `should return only meals with valid steps, ingredients, and time limit`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Easy Breakfast", tags = listOf("Breakfast"), minutes = 15, nSteps = 3, nIngredients = 4, contributorId = 1),
+            createMeal(id = 2, name = "Gourmet Meal", tags = listOf("Dinner"), minutes = 40, nSteps = 7, nIngredients = 10, contributorId = 2)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.suggestEasyPreparedMeal()
+
+        // Then
+        assert(result.size == 1)
+        assert(result[0].name == "Easy Breakfast")
+    }
+
+    @Test
+    fun `should handle edge case with exactly matching meal count`() {
+        // Given
+        val meals = listOf(
+            createMeal(id = 1, name = "Breakfast Smoothie", tags = listOf("Smoothie"), minutes = 5, nSteps = 2, nIngredients = 3, contributorId = 1),
+            createMeal(id = 2, name = "Light Salad", tags = listOf("Salad"), minutes = 10, nSteps = 3, nIngredients = 4, contributorId = 2),
+            createMeal(id = 3, name = "Quick Wrap", tags = listOf("Wrap"), minutes = 10, nSteps = 3, nIngredients = 5, contributorId = 3)
+        )
+        every { mealRepository.getAllMeals() } returns meals
+
+        // When
+        val result = useCase.suggestEasyPreparedMeal()
+
+        // Then
+        assert(result.size == 3)
+        assert(result[0].name == "Breakfast Smoothie")
+        assert(result[1].name == "Light Salad")
+        assert(result[2].name == "Quick Wrap")
+    }
+    //endregion
 
     //region suggest meal have more than seven hundred calories
     @Test
