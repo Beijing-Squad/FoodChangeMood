@@ -26,7 +26,7 @@ class SearchMealService(
         consoleIO.view("\nhere: ")
         when (consoleIO.readInput()) {
             "1" -> launchGymHelper()
-            "2" -> launchSearchByName()
+            "2" -> launchSearchMealByName()
             "3" -> launchMealsByDate()
             "4" -> launchSearchByCountry()
             "5" -> launchIraqiMeals()
@@ -36,33 +36,36 @@ class SearchMealService(
     }
 
     // region search by name
-    private fun launchSearchByName() {
+    private fun launchSearchMealByName() {
+        val mealNameQuery = try {
+            readMealNameInput()
+        } catch (e: IllegalArgumentException) {
+            consoleIO.viewWithLine("❌ ${e.message}")
+            showService()
+            return
+        }
+
         try {
-            val mealNameQuery = getMealNameFromInput()
             val searchResults = searchMeals.getMealByName(mealNameQuery)
             showMealsSearchResult(searchResults, mealNameQuery)
-        } catch (e: IllegalArgumentException) {
+        } catch (e: Exception) {
             consoleIO.viewWithLine("❌ ${e.message}")
             showService()
         }
     }
 
-    private fun getMealNameFromInput(): String {
+    private fun readMealNameInput(): String {
         consoleIO.view("Enter meal name to search: ")
         val userInput = consoleIO.readInput()?.trim()
-            ?: throw IllegalArgumentException("Meal name input cannot be null.")
 
-        if (userInput.isEmpty()) {
-            throw IllegalArgumentException("Meal name input cannot be empty.")
+        return when {
+            userInput == null -> throw IllegalArgumentException("Meal name input cannot be null.")
+            userInput.isEmpty() -> throw IllegalArgumentException("Meal name input cannot be empty.")
+            !userInput.matches(Regex("^[A-Za-z ]+$")) -> throw IllegalArgumentException("Meal name must contain only letters and spaces.")
+            else -> userInput
         }
-
-        val isOnlyLettersAndSpaces = userInput.matches(Regex("^[A-Za-z ]+$"))
-        if (!isOnlyLettersAndSpaces) {
-            throw IllegalArgumentException("Meal name must contain only letters and spaces.")
-        }
-
-        return userInput
     }
+
 
     private fun showMealsSearchResult(results: List<Meal>, query: String) {
         if (results.isEmpty()) {
