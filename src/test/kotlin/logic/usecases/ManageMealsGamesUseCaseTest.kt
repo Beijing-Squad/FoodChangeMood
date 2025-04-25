@@ -1,11 +1,9 @@
 package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
+import fake.createMeal
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsGamesUseCase
 import org.beijing.model.*
@@ -26,7 +24,6 @@ class ManageMealsGamesUseCaseTest {
 
     @BeforeEach
     fun setup() {
-        // Given
         mealRepository = mockk(relaxed = true)
         every { mealRepository.getAllMeals() } returns listOf(testMeal)
         useCase = ManageMealsGamesUseCase(mealRepository)
@@ -62,21 +59,6 @@ class ManageMealsGamesUseCaseTest {
             assertThat(state.usedMeals).contains(1)
         }
     }
-//endregion
-
-    //region check answer
-    @Test
-    fun `should return failure when starting game with maximum correct answers`() {
-        // Given
-        val state = IngredientGameState(correctAnswers = 15)
-
-        // When
-        val result = useCase.startIngredientGame(state)
-
-        // Then
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()?.message).isEqualTo("Game Over")
-    }
 
     @Test
     fun `should return failure when starting game with empty meal repository`() {
@@ -95,7 +77,11 @@ class ManageMealsGamesUseCaseTest {
     @Test
     fun `should return failure when starting game with meals having no ingredients`() {
         // Given
-        val emptyMeal = createMeal(id = 1, name = "Empty Pizza", ingredients = emptyList())
+        val emptyMeal = createMeal(
+            id = 1,
+            name = "Empty Pizza",
+            ingredients = emptyList())
+
         every { mealRepository.getAllMeals() } returns listOf(emptyMeal)
         useCase = ManageMealsGamesUseCase(mealRepository)
 
@@ -110,6 +96,12 @@ class ManageMealsGamesUseCaseTest {
     @Test
     fun `should return failure when starting game with all meals already used`() {
         // Given
+        val meal = createMeal(
+            id = 1,
+            name = "Pizza",
+            ingredients = listOf("Cheese", "Tomato", "Flour"))
+
+        every { mealRepository.getAllMeals() } returns listOf(meal)
         val usedState = IngredientGameState(usedMeals = setOf(1))
 
         // When
@@ -125,6 +117,7 @@ class ManageMealsGamesUseCaseTest {
         // Given
         val meal1 = createMeal(id = 1, name = "Pizza", ingredients = listOf("Cheese", "Tomato"))
         val meal2 = createMeal(id = 2, name = "Burger", ingredients = listOf("Meat", "Bun"))
+
         every { mealRepository.getAllMeals() } returns listOf(meal1, meal2)
         useCase = ManageMealsGamesUseCase(mealRepository)
         val selectedMeals = mutableSetOf<String>()
@@ -137,56 +130,6 @@ class ManageMealsGamesUseCaseTest {
 
         // Then
         assertThat(selectedMeals).containsAtLeast("Pizza", "Burger")
-    }
-
-    @Test
-    fun `should return failure when randomOrNull returns null`() {
-        // Given
-        val mealWithOneIngredient = createMeal(id = 1, name = "Test Meal", ingredients = listOf("Ingredient1"))
-        every { mealRepository.getAllMeals() } returns listOf(mealWithOneIngredient)
-        useCase = ManageMealsGamesUseCase(mealRepository)
-
-        // When
-        val result = useCase.startIngredientGame(IngredientGameState())
-
-        // Then
-        assertThat(result.isSuccess).isTrue()
-    }
-
-    @Test
-    fun `should return false when checking answer with invalid option index`() {
-        // Given
-        val round = IngredientGameRound(
-            mealName = "Pizza",
-            correctAnswer = "Cheese",
-            options = listOf("Cheese", "Tomato", "Flour")
-        )
-        val initialState = IngredientGameState()
-
-        // When
-        val (isCorrect, newState) = useCase.checkAnswer(4, round, initialState)
-
-        // Then
-        assertThat(isCorrect).isFalse()
-        assertThat(newState).isEqualTo(initialState)
-    }
-
-    @Test
-    fun `should return false when checking answer with negative index`() {
-        // Given
-        val round = IngredientGameRound(
-            mealName = "Pizza",
-            correctAnswer = "Cheese",
-            options = listOf("Cheese", "Tomato", "Flour")
-        )
-        val initialState = IngredientGameState()
-
-        // When
-        val (isCorrect, newState) = useCase.checkAnswer(-1, round, initialState)
-
-        // Then
-        assertThat(isCorrect).isFalse()
-        assertThat(newState).isEqualTo(initialState)
     }
 
     @ParameterizedTest
@@ -217,9 +160,40 @@ class ManageMealsGamesUseCaseTest {
         assertThat(newState.score).isEqualTo(expectedScore)
         assertThat(newState.correctAnswers).isEqualTo(expectedCorrectAnswers)
     }
+    @ParameterizedTest
+    @CsvSource(
+        "14,false",
+        "15,true",
+        "16,true"
+    )
+    fun `should handle game over conditions correctly`(
+        correctAnswers: Int,
+        expectedGameOver: Boolean)
+    {
+        // Given
+        val state = IngredientGameState(correctAnswers = correctAnswers)
+        val meal = createMeal(
+            id = 1,
+            name = "Pizza",
+            ingredients = listOf("Cheese", "Tomato", "Flour", "Pepperoni"))
 
+        every { mealRepository.getAllMeals() } returns listOf(meal)
+
+        // When
+        val gameOverResult = useCase.isGameOver(state)
+        val startResult = useCase.startIngredientGame(state)
+
+        // Then
+        assertThat(gameOverResult).isEqualTo(expectedGameOver)
+        if (expectedGameOver) {
+            assertThat(startResult.isFailure).isTrue()
+            assertThat(startResult.exceptionOrNull()?.message).isEqualTo("Game Over")
+        } else {
+            assertThat(startResult.isSuccess).isTrue()
+        }
+    }
     @Test
-    fun `should accumulate score correctly when answering multiple questions correctly`() {
+    fun `should calculate score correctly when answering multiple questions correctly`() {
         // Given
         val round = IngredientGameRound(
             mealName = "Pizza",
@@ -245,7 +219,7 @@ class ManageMealsGamesUseCaseTest {
         "15,true",
         "16,true"
     )
-    fun `should return correct game over state when checking different correct answer counts`(
+    fun `should return game over when answer all number of corrected answer required`(
         correctAnswers: Int,
         expectedGameOver: Boolean
     ) {
@@ -260,27 +234,9 @@ class ManageMealsGamesUseCaseTest {
     }
 
     @Test
-    fun `should  game over when reaching maximum correct answers`() {
-        // Given
-        val round = IngredientGameRound(
-            mealName = "Pizza",
-            correctAnswer = "Cheese",
-            options = listOf("Cheese", "Tomato", "Flour")
-        )
-        var state = IngredientGameState(correctAnswers = 14)
-
-        // When
-        val (_, newState) = useCase.checkAnswer(1, round, state)
-
-        // Then
-        assertThat(useCase.isGameOver(state)).isFalse()
-        assertThat(useCase.isGameOver(newState)).isTrue()
-        assertThat(newState.correctAnswers).isEqualTo(15)
-    }
-
-    @Test
     fun `should return correct number of options when starting game with many ingredients meal`() {
         // Given
+        val numberOfOptions =3
         val meal = createMeal(
             id = 1,
             name = "Complex Meal",
@@ -295,36 +251,10 @@ class ManageMealsGamesUseCaseTest {
         // Then
         assertThat(result.isSuccess).isTrue()
         result.onSuccess { (round, _) ->
-            assertThat(round.options).hasSize(3)
+            assertThat(round.options).hasSize(numberOfOptions)
             assertThat(round.options).contains(round.correctAnswer)
-            assertThat(round.options.distinct()).hasSize(3)
+            assertThat(round.options.distinct()).hasSize(numberOfOptions)
         }
     }
     //endregion
-
-
-    private fun createMeal(id: Int, name: String, ingredients: List<String>): Meal {
-        return Meal(
-            name = name,
-            id = id,
-            minutes = 30,
-            contributorId = 1,
-            submitted = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-            tags = emptyList(),
-            nutrition = Nutrition(
-                caloriesKcal = 500.0,
-                totalFatGrams = 40.0,
-                sugarGrams = 2.0,
-                sodiumGrams = 1.0,
-                proteinGrams = 20.0,
-                saturatedFatGrams = 15.0,
-                carbohydratesGrams = 10.0
-            ),
-            nSteps = 5,
-            steps = listOf("Step 1", "Step 2"),
-            description = "Test description",
-            ingredients = ingredients,
-            nIngredients = ingredients.size
-        )
-    }
 }

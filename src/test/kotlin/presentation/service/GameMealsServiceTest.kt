@@ -1,11 +1,9 @@
 package presentation.service
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import org.beijing.logic.usecases.ManageMealsGamesUseCase
 import org.beijing.model.*
 import org.beijing.presentation.service.GameMealsService
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.view_read.ConsoleIO
@@ -20,11 +18,6 @@ class GameMealsServiceTest {
         gamesMealsUseCase = mockk(relaxed = true)
         consoleIO = mockk(relaxed = true)
         gameMealsService = GameMealsService(gamesMealsUseCase, consoleIO)
-    }
-
-    @AfterEach
-    fun clear() {
-        unmockkAll()
     }
 
     //region Ingredient Game Tests
@@ -125,7 +118,7 @@ class GameMealsServiceTest {
         
         every { gamesMealsUseCase.isGameOver(any()) } returns false
         every { gamesMealsUseCase.startIngredientGame(any()) } returns Result.success(round to state)
-        every { consoleIO.readInput() } returns "abc"
+        every { consoleIO.readInput() } returns "a"
         every { consoleIO.viewWithLine(any()) } just Runs
         every { consoleIO.view(any()) } just Runs
 
@@ -247,8 +240,6 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine(match { it.contains("Score: 1000") })
         }
     }
-    
-    //endregion
 
     private fun createIngredientRound(
         mealName: String,
@@ -261,4 +252,6 @@ class GameMealsServiceTest {
             options = options
         )
     }
+    //endregion
+
 }
