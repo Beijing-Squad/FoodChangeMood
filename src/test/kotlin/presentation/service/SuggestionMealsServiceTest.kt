@@ -49,9 +49,8 @@ class SuggestionMealsServiceTest {
     fun `should call get ten random potato meals when selected`() {
         // Given
         val choiceSearchFeature = "5"
-        val exitInput = "0"
 
-        every { consoleIO.readInput() } returns choiceSearchFeature andThen exitInput
+        every { consoleIO.readInput() } returns choiceSearchFeature
 
         // When
         suggestMealService.showService()
