@@ -60,7 +60,7 @@ class ManageMealsGamesUseCaseTest {
 
         // Then
         assertThat(gameRound).isNotNull()
-        assertThat(gameRound!!.isCompleted).isFalse()
+        assertThat(gameRound.isCompleted).isFalse()
         assertThat(gameRound.attemptsLeft).isEqualTo(3)
         assertThat(gameRound.lastFeedBack).isNull()
 
