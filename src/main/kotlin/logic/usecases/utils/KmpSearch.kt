@@ -22,6 +22,10 @@ object KmpSearch {
                     patternIndex++
                 }
 
+                patternIndex == patternLower.length -> {
+                    return true
+                }
+
                 textIndex < textLower.length && patternLower[patternIndex] != textLower[textIndex] -> {
                     when {
                         patternIndex != 0 -> {

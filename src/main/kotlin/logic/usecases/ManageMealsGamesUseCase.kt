@@ -72,20 +72,21 @@ class ManageMealsGamesUseCase(
 
     // region ingredient game
     fun startIngredientGame(state: IngredientGameState): Result<Pair<IngredientGameRound, IngredientGameState>> {
-
         if (isGameOver(state)) return Result.failure(Exception(END_GAME))
 
-        val availableMeals = meals.filter { it.id !in state.usedMeals && it.ingredients.isNotEmpty() }
-        val meal = availableMeals.shuffled().firstOrNull()
-            ?: return Result.failure(Exception(NO_MEALS))
-        val correct = meal.ingredients.randomOrNull()
-            ?: return Result.failure(Exception(NO_INGREDIENTS))
-        val options = generateOptions(correct)
-        val updatedState = state.copy(usedMeals = state.usedMeals + meal.id)
+        val availableMeal = meals
+            .asSequence()
+            .filter { it.id !in state.usedMeals && it.ingredients.isNotEmpty() }
+            .shuffled()
+            .firstOrNull()
 
-        return Result.success(IngredientGameRound(meal.name, correct, options) to updatedState)
+        return availableMeal?.let { meal ->
+            val correct = meal.ingredients.random()
+            val options = generateOptions(correct)
+            val updatedState = state.copy(usedMeals = state.usedMeals + meal.id)
+            Result.success(IngredientGameRound(meal.name, correct, options) to updatedState)
+        } ?: Result.failure(Exception(NO_MEALS))
     }
-
     fun checkAnswer(
         userChoice: Int,
         round: IngredientGameRound,

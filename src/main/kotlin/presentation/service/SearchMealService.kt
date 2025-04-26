@@ -1,6 +1,7 @@
 package org.beijing.presentation.service
 
 import org.beijing.logic.usecases.ManageMealsSearchUseCase
+import org.beijing.logic.usecases.utils.parseDate
 import org.beijing.model.Meal
 import org.beijing.presentation.ViewMealDetails
 import presentation.view_read.ConsoleIO
@@ -79,26 +80,36 @@ class SearchMealService(
     //endregion
 
     // region search by add date and see details by id
-    private fun launchMealsByDate() {
-        val date = getDateInput()
-        val mealsOnDate = try {
-            searchMeals.getMealsByDate(date)
-        } catch (exception: IllegalArgumentException) {
-            println(exception.message)
-            launchMealsByDate()
-            return
-        } catch (exception: Exception) {
-            consoleIO.viewWithLine(exception.message)
+    fun launchMealsByDate() {
+        val date = getValidDate()
+        val mealsOnDate = searchMeals.getMealsByDate(date)
+
+        if (mealsOnDate.isEmpty()) {
+            consoleIO.viewWithLine("❌ No Meals Found For The Date [$date].")
             return
         }
+
         viewMealsOnDate(mealsOnDate)
         seeMealDetailsById(mealsOnDate)
     }
 
-    private fun getDateInput(): String {
+    fun getValidDate(): String {
+        while (true) {
+            val date = getDateInput()
+            try {
+                date.parseDate()
+                return date
+            } catch (e: Exception) {
+                consoleIO.viewWithLine("❌ Invalid date format. Please use (YYYY-MM-DD).")
+            }
+        }
+    }
+
+
+    fun getDateInput(): String {
         consoleIO.viewWithLine("Please Enter The Date In Format YYYY-MM-DD")
         consoleIO.view("Enter Date (YYYY-MM-DD): ")
-        return consoleIO.readInput()?.trim().toString()
+        return consoleIO.readInput()!!.trim()
     }
 
     private fun viewMealsOnDate(meals: List<Meal>) {
@@ -111,42 +122,37 @@ class SearchMealService(
 
     private fun seeMealDetailsById(mealsOnDate: List<Meal>) {
         val wantsToSeeDetails = getSeeDetailsAnswer()
-        if (wantsToSeeDetails) {
-            val id = getIdInput()
-            try {
-                val meal = searchMeals.getMealById(id)
-                    .takeIf { foundMeal ->
-                        foundMeal in mealsOnDate
-                    }
-                    ?: throw Exception("❌ Meal with ID [$id] Not Found On That Date.")
-
-                viewMealDetails.displayMealDetails(meal)
-
-            } catch (exception: Exception) {
-                consoleIO.viewWithLine(exception.message)
-            }
-        } else {
+        if (!wantsToSeeDetails) {
             consoleIO.viewWithLine("Exiting...")
+            return
         }
+
+        val id = getIdInput()
+        val meal = searchMeals.getMealById(id)
+
+        if (meal == null || meal !in mealsOnDate) {
+            consoleIO.viewWithLine("❌ Meal with ID [$id] Not Found On That Date.")
+            return
+        }
+
+        viewMealDetails.displayMealDetails(meal)
     }
 
     private fun getSeeDetailsAnswer(): Boolean {
         consoleIO.viewWithLine("Do You Want To See Details Of A Specific Meal? (yes/no)")
         consoleIO.view("Enter Your Answer: ")
-        val answer = consoleIO.readInput()?.trim()?.lowercase()
-        return answer?.get(0) == 'y'
+        val answer = consoleIO.readInput()!!.trim().lowercase()
+        return answer.get(0) == 'y'
     }
 
-    private fun getIdInput(): Int {
+    fun getIdInput(): Int {
         while (true) {
             consoleIO.viewWithLine("Please Enter The Meal ID")
             consoleIO.view("Enter Meal ID: ")
-            val input = consoleIO.readInput()?.trim()
+            val input = consoleIO.readInput()!!.trim() // "abc"
             try {
-                if (input != null) {
-                    return input.toInt()
-                }
-            } catch (exception: Exception) {
+                return input.toInt()
+            } catch (e: Exception) {
                 consoleIO.viewWithLine("❌ Invalid ID Format, Please Use A Number.")
             }
         }
@@ -287,5 +293,4 @@ class SearchMealService(
         }
     }
     // endregion
-
 }

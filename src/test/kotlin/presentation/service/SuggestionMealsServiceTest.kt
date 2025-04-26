@@ -1,12 +1,15 @@
 package presentation.service
 
 import fake.createMeal
+import fake.mealsListWithHighCaloriesMeals
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
-import fake.mealsListWithHighCaloriesMeals
+import kotlinx.datetime.LocalDate
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
+import org.beijing.model.Meal
+import org.beijing.model.Nutrition
 import org.beijing.presentation.ViewMealDetails
 import org.beijing.presentation.service.SuggestionMealsService
 import org.junit.jupiter.api.BeforeEach
@@ -81,6 +84,51 @@ class SuggestionMealsServiceTest {
         }
     }
     //endregion
+
+    // region launch easy meals
+    @Test
+    fun `should show suggested easy meal when available`() {
+        // Given
+        val choiceSearchFeature = "3"
+        val easyMeal = createMeal(
+            name = "Fast Toast",
+            minutes = 5,
+            ingredients = listOf("bread", "cheese"),
+            steps = listOf("toast bread", "add cheese")
+        )
+
+        every { consoleIO.readInput() } returns choiceSearchFeature
+        every { suggestUseCase.suggestEasyPreparedMeal() } returns listOf(easyMeal)
+
+        // When
+        suggestMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("🥗 Easy Meal Suggestions")
+            consoleIO.viewWithLine("------------------------")
+            consoleIO.viewWithLine("✨ These meals are quick (≤30 mints), simple (≤5 ingredients), and easy (≤6 steps)")
+            consoleIO.viewWithLine("\n🍽️ Found 1 meal(s):\n")
+            consoleIO.viewWithLine("1. ${easyMeal.name} • ⏱️ ${easyMeal.minutes} mints • 🧂 ${easyMeal.nIngredients} ingredients • 🔧 ${easyMeal.nSteps} steps")
+        }
+    }
+
+    @Test
+    fun `should show no meals message when no easy meals are found`() {
+        // Given
+        every { consoleIO.readInput() } returns "3"
+        every { suggestUseCase.suggestEasyPreparedMeal() } returns emptyList()
+
+        // When
+        suggestMealService.handleUserChoice()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("😔 Sorry, no meals found for '. Try again later!")
+        }
+    }
+// endregion
+
 
     //region sweets wit no eggs
     @Test
@@ -202,8 +250,8 @@ class SuggestionMealsServiceTest {
             consoleIO.viewWithLine("Try this sweet: ${secondSweet.name}")
         }
     }
-
     //endregion
+
     //region suggest meal have more than seven hundred calories
     @Test
     fun `should call launchSoThinMeals when suggest meal with more than 700 calories selected`() {
@@ -339,4 +387,219 @@ class SuggestionMealsServiceTest {
     }
     //endregion
 
+    //region keto meal test
+    @Test
+    fun `should handle multiple invalid inputs before valid input`() {
+        // Given
+        val ketoMeal = createKetoMeal(1, "Keto Burger")
+        every { suggestUseCase.suggestKetoMeal(any()) } returns ketoMeal
+        every { consoleIO.readInput() } returnsMany listOf("1", "invalid1", "invalid2", "yes", "0")
+
+        // When
+        suggestMealService.showService()
+
+        // Then
+        verifyOrder {
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            viewMealDetails.displayMealDetails(ketoMeal)
+        }
+    }
+
+    @Test
+    fun `should handle null or empty input correctly`() {
+        // Given
+        val ketoMeal = createKetoMeal(1, "Keto Burger")
+        every { suggestUseCase.suggestKetoMeal(any()) } returns ketoMeal
+        every { consoleIO.readInput() } returnsMany listOf("1", "", "exit", "0")
+
+        // When
+        suggestMealService.showService()
+
+        // Then
+        verifyOrder {
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("GoodBye")
+        }
+    }
+
+    @Test
+    fun `should accept uppercase and space input`() {
+        // Given
+        val ketoMeal = createKetoMeal(1, "Keto Burger")
+        every { suggestUseCase.suggestKetoMeal(any()) } returns ketoMeal
+        every { consoleIO.readInput() } returnsMany listOf("1", "  YES  ", "0")
+
+        // When
+        suggestMealService.showService()
+
+        // Then
+        verifyOrder {
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            viewMealDetails.displayMealDetails(ketoMeal)
+        }
+    }
+
+    @Test
+    fun `should show another meal when user input no`() {
+        // Given
+        val ketoMeal1 = createKetoMeal(1, "Keto Salad")
+        val ketoMeal2 = createKetoMeal(2, "Keto Pizza")
+        every { suggestUseCase.suggestKetoMeal(any()) } returnsMany listOf(ketoMeal1, ketoMeal2)
+        every { consoleIO.readInput() } returnsMany listOf("1", "no", "exit", "0")
+
+        // When
+        suggestMealService.showService()
+
+        // Then
+        verifyOrder {
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Salad")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("🔄 Okay! Let's try another one.")
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Pizza")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("GoodBye")
+        }
+    }
+
+    @Test
+    fun `should display keto meal details when user enter yes`() {
+        // Given
+        val ketoMeal = createKetoMeal(1, "Keto Burger")
+        every { suggestUseCase.suggestKetoMeal(any()) } returns ketoMeal
+        every { consoleIO.readInput() } returnsMany listOf("1", "yes", "0")
+
+        // When
+        suggestMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            viewMealDetails.displayMealDetails(ketoMeal)
+        }
+    }
+
+    @Test
+    fun `should return suitable message when no more keto meals are available`() {
+        // Given
+        every { suggestUseCase.suggestKetoMeal(any()) } returns null
+        every { consoleIO.readInput() } returnsMany listOf("1", "0")
+
+        // When
+        suggestMealService.showService()
+
+        // Then
+        verify {
+            consoleIO.viewWithLine("😔 No more keto meals to suggest.")
+        }
+    }
+
+    @Test
+    fun `should not accept null empty and whitespace inputs`() {
+        // Given
+        val ketoMeal = createKetoMeal(1, "Keto Burger")
+        every { suggestUseCase.suggestKetoMeal(any()) } returns ketoMeal
+        every { consoleIO.readInput() } returnsMany listOf("1", "", "   ", "exit", "0")
+
+        // When
+        suggestMealService.showService()
+
+        // Then
+        verifyOrder {
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("⚠️ Please type 'yes' or 'no'")
+            suggestUseCase.suggestKetoMeal(mutableSetOf())
+            consoleIO.viewWithLine("\n🥑 Keto Meal: Keto Burger")
+            consoleIO.viewWithLine("Short Description: A keto-friendly meal")
+            consoleIO.viewWithLine("Do you like it? ❤")
+            consoleIO.view("write 'yes' to get details or 'no' to get another meal (or type 'exit' to quit):")
+            consoleIO.readInput()
+            consoleIO.viewWithLine("GoodBye")
+        }
+    }
+
+    private fun createKetoMeal(id: Int, name: String): Meal {
+        return Meal(
+            name = name,
+            id = id,
+            minutes = 30,
+            contributorId = 1,
+            submitted = LocalDate(2005, 9, 16),
+            tags = listOf("keto"),
+            nutrition = Nutrition(
+                caloriesKcal = 500.0,
+                totalFatGrams = 40.0,
+                sugarGrams = 2.0,
+                sodiumGrams = 1.0,
+                proteinGrams = 20.0,
+                saturatedFatGrams = 15.0,
+                carbohydratesGrams = 10.0
+            ),
+            nSteps = 5,
+            steps = listOf("Step 1", "Step 2"),
+            description = "A keto-friendly meal",
+            ingredients = listOf("Ingredient 1", "Ingredient 2"),
+            nIngredients = 2
+        )
+    }
+    //endregion
 }
