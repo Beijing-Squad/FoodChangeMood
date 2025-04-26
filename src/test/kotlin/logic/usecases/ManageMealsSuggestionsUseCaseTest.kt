@@ -239,8 +239,111 @@ class ManageMealsSuggestionsUseCaseTest {
 
     //region suggest italian large group meals
     @Test
-    fun suggestItalianLargeGroupsMeals() {
+    fun `Suggest Italian Large Groups Meals should Return Meals With Both Tags when Meals Contain Italian And Large Group Tags`() {
+        //Given
+        val meals = listOf(
+            createMeal(id = 1, tags = listOf("italian", "for-large-groups")),
+            createMeal(id = 2, tags = listOf("italian")),
+            createMeal(id = 3, tags = listOf("for-large-groups")),
+            createMeal(id = 4, tags = listOf("dessert"))
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+
+        //When
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        //Then
+        assertThat(result).hasSize(1)
+        assertThat(result.first().id).isEqualTo(1)
+
     }
+
+    @Test
+    fun `Suggest Italian Large Groups Meals should Return Empty List when No Meal Matches Both Tags`() {
+        //Given
+        val meals = listOf(
+            createMeal(id = 1, tags = listOf("italian")),
+            createMeal(id = 2, tags = listOf("for-large-groups")),
+            createMeal(id = 3, tags = listOf("dessert"))
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+
+        //When
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        //Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `Suggest Italian Large Groups Meals should Match Tags Case Insensitively when Tags Have Different Cases`() {
+        //Given
+        val meals = listOf(
+            createMeal(id = 1, tags = listOf("ITALIAN", "FOR-LARGE-GROUPS")),
+            createMeal(id = 2, tags = listOf("Italian", "For-Large-Groups")),
+            createMeal(id = 3, tags = listOf("ITALIAN")),
+            createMeal(id = 4, tags = listOf("for-large-groups"))
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+
+        //When
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        //Then
+        assertThat(result).hasSize(2)
+    }
+
+    @Test
+    fun `Suggest Italian Large Groups Meals should Return Meals With Extra Tags when They Still Contain Required Tags`() {
+        //Given
+        val meals = listOf(
+            createMeal(id = 1, tags = listOf("italian", "for-large-groups", "holiday")),
+            createMeal(id = 2, tags = listOf("italian", "for-large-groups"))
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+
+        //When
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        //Then
+        assertThat(result).hasSize(2)
+    }
+
+    @Test
+    fun `Suggest Italian Large Groups Meals should Not Include Duplicate Meals when Repository Returns Duplicates`() {
+        //Given
+        val meal = createMeal(id = 1, tags = listOf("italian", "for-large-groups"))
+
+        every { mealRepository.getAllMeals() } returns listOf(meal, meal)
+
+        //When
+        val result = useCase.suggestItalianLargeGroupsMeals()
+
+        //Then
+        assertThat(result.distinctBy { it.id }).hasSize(1)
+    }
+
+    @Test
+    fun `Suggest Italian Large Groups Meals should Ignore Meals With Empty Or Null Tags when Filtering For Required Tags`() {
+        //Given
+        val meals = listOf(
+            createMeal(id = 1, tags = listOf("italian", "for-large-groups")),
+            createMeal(id = 2, tags = emptyList()),
+            createMeal(id = 3, tags = listOf())
+        )
+
+        every { mealRepository.getAllMeals() } returns meals
+        //When
+        val result = useCase.suggestItalianLargeGroupsMeals()
+        //Then
+        assertThat(result).hasSize(1)
+        assertThat(result.first().id).isEqualTo(1)
+    }
+    //endregion
 
     //region keto meal
     @Test

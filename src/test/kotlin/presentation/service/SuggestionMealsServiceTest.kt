@@ -293,6 +293,102 @@ class SuggestionMealsServiceTest {
 
     //endregion
 
+    //region Italian Dishes For Large Groups
+    @Test
+    fun `should print Italian large group meals when such meals exist`() {
+        // Given
+        val meals = listOf(
+            createMeal(name = "Italian Pasta", minutes = 40),
+            createMeal(name = "Lasagna", minutes = 60)
+        )
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns meals
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("🍝 Meals from Italy suitable for large groups:\n") }
+        verify { consoleIO.viewWithLine("1. Italian Pasta | 🕒 40 minutes |") }
+        verify { consoleIO.viewWithLine("2. Lasagna | 🕒 60 minutes |") }
+    }
+
+    @Test
+    fun `should print no meals found message when no Italian large group meals exist`() {
+        // Given
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns emptyList()
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("❌ No Italian meals found for large groups.") }
+    }
+
+    @Test
+    fun `should handle meals with empty name`() {
+        // Given
+        val unnamedMeal = createMeal(name = "")
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf(unnamedMeal)
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("1.  | 🕒 ${unnamedMeal.minutes} minutes |") }
+    }
+
+    @Test
+    fun `should only show meals that are both italian and for large groups`() {
+        // Given
+        val meals = listOf(
+            createMeal(name = "Italian Pizza", tags = listOf("italian", "for-large-groups")),
+            createMeal(name = "Solo Spaghetti", tags = listOf("italian")),
+            createMeal(name = "Party Platter", tags = listOf("for-large-groups")),
+            createMeal(name = "Tiramisu", tags = listOf("dessert"))
+        )
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf(meals[0])
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify(exactly = 1) { consoleIO.viewWithLine("1. Italian Pizza | 🕒 ${meals[0].minutes} minutes |") }
+        verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Solo Spaghetti") }) }
+        verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Party Platter") }) }
+    }
+
+    @Test
+    fun `should match tags regardless of casing`() {
+        // Given
+        val meal = createMeal(name = "Caprese", tags = listOf("ITALIAN", "For_Large_Group"))
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf(meal)
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verify { consoleIO.viewWithLine("1. Caprese | 🕒 ${meal.minutes} minutes |") }
+    }
+
+    @Test
+    fun `should correctly number multiple meals`() {
+        // Given
+        val meal1 = createMeal(name = "Gnocchi", minutes = 20)
+        val meal2 = createMeal(name = "Risotto", minutes = 45)
+        every { suggestUseCase.suggestItalianLargeGroupsMeals() } returns listOf(meal1, meal2)
+
+        // When
+        suggestMealService.launchItalianLargeGroupMeals()
+
+        // Then
+        verifyOrder {
+            consoleIO.viewWithLine("🍝 Meals from Italy suitable for large groups:\n")
+            consoleIO.viewWithLine("1. Gnocchi | 🕒 20 minutes |")
+            consoleIO.viewWithLine("2. Risotto | 🕒 45 minutes |")
+        }
+    }
+    //endregion
+
     //region keto meal test
     @Test
     fun `should handle multiple invalid inputs before valid input`() {
