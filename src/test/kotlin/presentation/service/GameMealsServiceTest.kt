@@ -30,7 +30,7 @@ class GameMealsServiceTest {
     }
     //endregion
 
-    //region Preparation Time
+    //region Preparation Time Guess Game
     @Test
     fun `should complete game immediately when user guesses correctly`() {
         // Given
@@ -208,6 +208,5 @@ class GameMealsServiceTest {
             consoleIO.viewWithLine("Correct!! The preparation time is indeed 30 minutes.")
         }
     }
-
     //endregion
 }
