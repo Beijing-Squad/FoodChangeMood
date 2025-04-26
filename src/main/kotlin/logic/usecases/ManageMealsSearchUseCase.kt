@@ -14,15 +14,13 @@ class ManageMealsSearchUseCase(
     fun getMealsByDate(date: String): List<Meal> {
         return mealRepository.getAllMeals()
             .filter { it.submitted == date.parseDate() }
-            .ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
     }
     // endregion
 
     // region search meal by id
-    fun getMealById(id: Int): Meal {
+    fun getMealById(id: Int): Meal? {
         return mealRepository.getAllMeals()
             .find { it.id == id }
-            ?: throw Exception("❌ Meal with ID [$id] Not Found In The Meals List.")
     }
     // endregion
 
@@ -92,12 +90,10 @@ class ManageMealsSearchUseCase(
         return mealRepository.getAllMeals()
             .asSequence()
             .filter { meal ->
-                meal.tags.any {
-                    it.lowercase().contains(query)
-                    meal.tags.joinToString(" ").lowercase().contains(query)
-                }
+                meal.tags.any { it.lowercase().contains(query) } ||
+                        meal.tags.joinToString(" ").lowercase().contains(query)
             }
-            .shuffled()
+            .sortedBy { it.name }
             .take(20)
             .toList()
     }
@@ -106,8 +102,8 @@ class ManageMealsSearchUseCase(
     //region iraqi meals
     fun getIraqiMeals(): List<Meal> {
         return mealRepository.getAllMeals().filter { meal ->
-            meal.tags?.any { it.equals(IRAQI, ignoreCase = true) } ?: false ||
-                    meal.description?.contains(IRAQI, ignoreCase = true) ?: false
+            meal.tags?.any { it.contains(IRAQ, ignoreCase = true) } ?: false ||
+                    meal.description?.contains(IRAQ, ignoreCase = true) ?: false
         }
 
     }
@@ -116,7 +112,7 @@ class ManageMealsSearchUseCase(
     private companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
-        const val IRAQI = "Iraqi"
+        const val IRAQ = "Iraq"
         const val BLANK_SEARCH_EXCEPTION = "Search query must not be blank."
         const val NO_FOOD_DATA = "No food data available to search."
     }

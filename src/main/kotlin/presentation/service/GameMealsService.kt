@@ -56,7 +56,7 @@ class GameMealsService(
 // endregion
 
     // region Ingredient Game
-    private fun launchIngredientGame() {
+     private fun launchIngredientGame() {
         consoleIO.viewWithLine("\uD83D\uDC69\u200D\uD83C\uDF73 Welcome to the Ingredient Game!")
         consoleIO.viewWithLine("Guess the correct ingredient for each meal. One wrong answer ends the game!")
         var ingredientGameState = IngredientGameState()
@@ -73,7 +73,7 @@ class GameMealsService(
                         consoleIO.viewWithLine("${index + 1}. $option")
                     }
                     consoleIO.view("Select an option (1-3): ")
-                    val userChoice = consoleIO.readInput()?.trim()?.toIntOrNull()
+                    val userChoice = consoleIO.readInput()!!.lowercase().trim().toIntOrNull()
 
                     val inputResult = if (userChoice != null && userChoice in 1..3) {
                         Result.success(userChoice)
