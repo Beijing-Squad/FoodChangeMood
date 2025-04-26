@@ -1,5 +1,7 @@
 plugins {
     kotlin("jvm") version "2.1.10"
+    id("jacoco")
+    id("com.github.kt3k.coveralls") version "2.12.0"
 }
 
 group = "org.beijing"
@@ -22,8 +24,28 @@ dependencies {
 
 }
 
+jacoco {
+    toolVersion = "0.8.10"
+}
+
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        csv.required.set(true)
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
+
+    dependsOn(tasks.test)
+}
+
+coveralls {
+    jacocoReportPath = "${layout.buildDirectory}/reports/jacoco/test/jacocoTestReport.xml"
 }
 kotlin {
     jvmToolchain(21)
