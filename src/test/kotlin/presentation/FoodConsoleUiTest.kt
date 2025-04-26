@@ -56,7 +56,7 @@ class FoodConsoleUiTest {
         // Given
         val inputChoice = "1"
         val titleOfFeature = "1. Suggestion Meal 🤔"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns inputChoice andThen "0"
 
         // When
         foodConsoleUi.start()
@@ -71,7 +71,7 @@ class FoodConsoleUiTest {
         // Given
         val inputChoice = "2"
         val titleOfFeature = "2. Search Meal \uD83D\uDD0E"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns inputChoice andThen "0"
 
         // When
         foodConsoleUi.start()
@@ -86,7 +86,7 @@ class FoodConsoleUiTest {
         // Given
         val inputChoice = "3"
         val titleOfFeature = "3. Game Meal \uD83C\uDFAE"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns inputChoice andThen "0"
 
         // When
         foodConsoleUi.start()
@@ -101,7 +101,7 @@ class FoodConsoleUiTest {
         // Given
         val inputChoice = "4"
         val titleOfFeature = "4. View Meal \uD83E\uDD63"
-        every { consoleIO.readInput() } returns inputChoice
+        every { consoleIO.readInput() } returns inputChoice andThen "0"
 
         // When
         foodConsoleUi.start()
