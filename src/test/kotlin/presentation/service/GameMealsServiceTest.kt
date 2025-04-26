@@ -10,9 +10,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import model.GameRound
-import org.beijing.logic.usecases.ManageMealsGamesUseCase
-import org.beijing.presentation.service.GameMealsService
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.view_read.ConsoleIO
 
