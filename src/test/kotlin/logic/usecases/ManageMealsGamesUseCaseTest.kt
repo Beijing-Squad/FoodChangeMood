@@ -4,8 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import fake.createMeal
 import io.mockk.every
 import io.mockk.mockk
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
 import model.GameRound
 import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsGamesUseCase
@@ -245,8 +243,8 @@ class ManageMealsGamesUseCaseTest {
         val result = useCase.makeGuess(round, 10)
 
         // Then
-        assertTrue(result.isCompleted)
-        assertEquals("No Attempts Left, The Actual Preparation Time is: 20 minutes.", result.lastFeedBack)
+        assertThat(result.isCompleted).isTrue()
+        assertThat(result.lastFeedBack).isEqualTo("No Attempts Left, The Actual Preparation Time is: 20 minutes.")
     }
 //endregion
 
