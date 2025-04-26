@@ -13,15 +13,15 @@ import presentation.view_read.ConsoleIO
 
 class GameMealsServiceTest {
 
-    private lateinit var gamesMeals: ManageMealsGamesUseCase
+    private lateinit var gamesMealsUseCase: ManageMealsGamesUseCase
     private lateinit var consoleIO: ConsoleIO
-    private lateinit var service: GameMealsService
+    private lateinit var gameMealsService: GameMealsService
 
     @BeforeEach
     fun setup() {
-        gamesMeals = mockk(relaxed = true)
+        gamesMealsUseCase = mockk(relaxed = true)
         consoleIO = mockk(relaxed = true)
-        service = GameMealsService(gamesMeals, consoleIO)
+        gameMealsService = GameMealsService(gamesMealsUseCase, consoleIO)
     }
 
     //region handle user choice
@@ -42,12 +42,12 @@ class GameMealsServiceTest {
             lastFeedBack = "Correct!! The preparation time is indeed 25 minutes."
         )
 
-        every { gamesMeals.startNewRound() } returns round1
+        every { gamesMealsUseCase.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("25")
-        every { gamesMeals.makeGuess(round1, 25) } returns round2
+        every { gamesMealsUseCase.makeGuess(round1, 25) } returns round2
 
         // When
-        service.launchGuessGame()
+        gameMealsService.launchGuessGame()
 
         // Then
         verify {
@@ -70,12 +70,12 @@ class GameMealsServiceTest {
             lastFeedBack = "Correct!! The preparation time is indeed 15 minutes."
         )
 
-        every { gamesMeals.startNewRound() } returns round1
+        every { gamesMealsUseCase.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("abc", "15")
-        every { gamesMeals.makeGuess(round1, 15) } returns round2
+        every { gamesMealsUseCase.makeGuess(round1, 15) } returns round2
 
         // When
-        service.launchGuessGame()
+        gameMealsService.launchGuessGame()
 
         // Then
         verify {
@@ -98,14 +98,14 @@ class GameMealsServiceTest {
             "Too low! Try a higher number.\nGameOver! The actual preparation time is 10 minutes."
         )
 
-        every { gamesMeals.startNewRound() } returns round1
+        every { gamesMealsUseCase.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("5", "15", "7")
-        every { gamesMeals.makeGuess(round1, 5) } returns round2
-        every { gamesMeals.makeGuess(round2, 15) } returns round3
-        every { gamesMeals.makeGuess(round3, 7) } returns round4
+        every { gamesMealsUseCase.makeGuess(round1, 5) } returns round2
+        every { gamesMealsUseCase.makeGuess(round2, 15) } returns round3
+        every { gamesMealsUseCase.makeGuess(round3, 7) } returns round4
 
         // When
-        service.launchGuessGame()
+        gameMealsService.launchGuessGame()
 
         // Then
         verify {
@@ -124,12 +124,12 @@ class GameMealsServiceTest {
         val round2 =
             round1.copy(isCompleted = true, lastFeedBack = "This round is already Completed, Start A new Round.")
 
-        every { gamesMeals.startNewRound() } returns round1
+        every { gamesMealsUseCase.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("12")
-        every { gamesMeals.makeGuess(round1, 12) } returns round2
+        every { gamesMealsUseCase.makeGuess(round1, 12) } returns round2
 
         // When
-        service.launchGuessGame()
+        gameMealsService.launchGuessGame()
 
         // Then
         verify {
@@ -148,12 +148,12 @@ class GameMealsServiceTest {
             lastFeedBack = "Correct!! The preparation time is indeed 18 minutes."
         )
 
-        every { gamesMeals.startNewRound() } returns round1
+        every { gamesMealsUseCase.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("18")
-        every { gamesMeals.makeGuess(round1, 18) } returns round2
+        every { gamesMealsUseCase.makeGuess(round1, 18) } returns round2
 
         // When
-        service.launchGuessGame()
+        gameMealsService.launchGuessGame()
 
         // Then
         verify {
@@ -173,12 +173,12 @@ class GameMealsServiceTest {
             lastFeedBack = "Too low! Try a higher number."
         )
 
-        every { gamesMeals.startNewRound() } returns round1
+        every { gamesMealsUseCase.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("-5")
-        every { gamesMeals.makeGuess(round1, -5) } returns round2
+        every { gamesMealsUseCase.makeGuess(round1, -5) } returns round2
 
         // When
-        service.launchGuessGame()
+        gameMealsService.launchGuessGame()
 
         // Then
         verify {
@@ -188,6 +188,7 @@ class GameMealsServiceTest {
 
     @Test
     fun `should skip multiple invalid inputs before valid guess`() {
+        //Given
         val meal = createMeal(name = "Curry", minutes = 30)
         val round1 = GameRound(meal, 3, false, null)
         val round2 = round1.copy(
@@ -196,12 +197,12 @@ class GameMealsServiceTest {
             lastFeedBack = "Correct!! The preparation time is indeed 30 minutes."
         )
 
-        every { gamesMeals.startNewRound() } returns round1
+        every { gamesMealsUseCase.startNewRound() } returns round1
         every { consoleIO.readInput() } returnsMany listOf("hello", "?", "30")
-        every { gamesMeals.makeGuess(round1, 30) } returns round2
-
-        service.launchGuessGame()
-
+        every { gamesMealsUseCase.makeGuess(round1, 30) } returns round2
+        //When
+        gameMealsService.launchGuessGame()
+        //Then
         verify {
             consoleIO.viewWithLine("Please enter a valid number.")
             consoleIO.viewWithLine("Correct!! The preparation time is indeed 30 minutes.")
