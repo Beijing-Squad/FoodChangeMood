@@ -342,8 +342,7 @@ class ManageMealsSuggestionsUseCaseTest {
         assertThat(result).hasSize(1)
         assertThat(result.first().id).isEqualTo(1)
     }
-
-//endregion
+    //endregion
 
     //region keto meal
     @Test
