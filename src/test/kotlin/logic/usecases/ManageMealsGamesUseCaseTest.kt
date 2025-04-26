@@ -4,9 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import fake.createMeal
 import io.mockk.every
 import io.mockk.mockk
-import com.google.common.truth.Truth.assertThat
-import fake.createMeal
-import io.mockk.*
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import model.GameRound
