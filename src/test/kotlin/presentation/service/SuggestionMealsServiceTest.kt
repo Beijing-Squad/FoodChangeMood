@@ -356,6 +356,7 @@ class SuggestionMealsServiceTest {
         verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Solo Spaghetti") }) }
         verify(exactly = 0) { consoleIO.viewWithLine(match { it.contains("Party Platter") }) }
     }
+
     @Test
     fun `should match tags regardless of casing`() {
         // Given
@@ -368,6 +369,7 @@ class SuggestionMealsServiceTest {
         // Then
         verify { consoleIO.viewWithLine("1. Caprese | 🕒 ${meal.minutes} minutes |") }
     }
+
     @Test
     fun `should correctly number multiple meals`() {
         // Given
