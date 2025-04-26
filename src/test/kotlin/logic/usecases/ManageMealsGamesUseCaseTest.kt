@@ -252,6 +252,13 @@ class ManageMealsGamesUseCaseTest {
     @Test
     fun `should return successful game round when starting with valid meal`() {
         // Given
+        val meal = createMeal(
+            id = 1,
+            name = "Pizza",
+            ingredients = listOf("Cheese", "Tomato", "Flour")
+        )
+        every { mealRepository.getAllMeals() } returns listOf(meal)
+        useCase = ManageMealsGamesUseCase(mealRepository)
         val initialState = IngredientGameState()
 
         // When
@@ -304,14 +311,10 @@ class ManageMealsGamesUseCaseTest {
     @Test
     fun `should return failure when starting game with all meals already used`() {
         // Given
-        val meal = createMeal(
-            id = 1,
-            name = "Pizza",
-            ingredients = listOf("Cheese", "Tomato", "Flour")
-        )
-
+        val meal = createMeal(id = 1, name = "Pizza", ingredients = listOf("Cheese", "Tomato", "Flour"))
         every { mealRepository.getAllMeals() } returns listOf(meal)
         val usedState = IngredientGameState(usedMeals = setOf(1))
+        useCase = ManageMealsGamesUseCase(mealRepository)
 
         // When
         val result = useCase.startIngredientGame(usedState)
