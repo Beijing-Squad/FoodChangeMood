@@ -1,11 +1,11 @@
 package org.beijing.model
 
 data class Nutrition(
-    val calories: Double,
-    val totalFat: Double,
-    val sugar: Double,
-    val sodium: Double,
-    val protein: Double,
-    val saturatedFat: Double,
-    val carbohydrates: Double
+    val caloriesKcal: Double,
+    val totalFatGrams: Double,
+    val sugarGrams: Double,
+    val sodiumGrams: Double,
+    val proteinGrams: Double,
+    val saturatedFatGrams: Double,
+    val carbohydratesGrams: Double
 )

@@ -1,8 +1,8 @@
 package org.beijing.logic.usecases
 
-import kotlinx.datetime.LocalDate
 import org.beijing.logic.MealRepository
-import org.beijing.logic.usecases.utils.KmpSubstringSearch
+import org.beijing.logic.usecases.utils.KmpSearch
+import org.beijing.logic.usecases.utils.parseDate
 import org.beijing.model.Meal
 import kotlin.math.abs
 
@@ -10,33 +10,40 @@ class ManageMealsSearchUseCase(
     private val mealRepository: MealRepository
 ) {
 
-    // region search meal by date then see meal details by id
-    fun getMealsByDate(date: LocalDate): List<Pair<Int, String>> {
-        val mealsOnDate = mealRepository.getAllMeals()
-            .filter { it.submitted == date }
-            .map { it.id to it.name }
-
-        return mealsOnDate.ifEmpty { throw Exception("❌ No Meals Found For The Date [$date].") }
+    // region search meal by date
+    fun getMealsByDate(date: String): List<Meal> {
+        return mealRepository.getAllMeals()
+            .filter { it.submitted == date.parseDate() }
     }
+    // endregion
 
-    fun getMealByDateAndId(date: LocalDate, id: Int): Meal {
-        val meal = mealRepository.getAllMeals()
-            .find { it.submitted == date && it.id == id }
-
-        return meal ?: throw Exception("❌ No Meal Found With ID [$id] On The Date $date.")
+    // region search meal by id
+    fun getMealById(id: Int): Meal? {
+        return mealRepository.getAllMeals()
+            .find { it.id == id }
     }
     // endregion
 
     //region search meal for gym helper by calories and protein
     fun getGymHelperMealsByCaloriesAndProtein(targetCalories: Double, targetProtein: Double): List<Meal> {
-        return mealRepository.getAllMeals().filter { currentMeal ->
-            isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
-        }
+        checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories, targetProtein)
+        return mealRepository.getAllMeals()
+            .filter { currentMeal ->
+                isMealWithinNutritionTargets(currentMeal, targetCalories, targetProtein)
+            }.ifEmpty { throw Exception("\n⚠️ No meals found!\n🍽️ Try searching again or check your filters.\n") }
+    }
+
+    private fun checkIfTargetCaloriesAndTargetProteinAreInvalid(targetCalories: Double, targetProtein: Double) {
+        if (targetCalories <= 0 || targetProtein <= 0) throw Exception(
+            "\nPlease ensure that both Calories " + "and Protein inputs are positive values."
+        )
     }
 
     private fun isMealWithinNutritionTargets(meal: Meal, targetCalories: Double, targetProtein: Double): Boolean {
-        return calculateNutrition(meal.nutrition.calories, targetCalories) <= MATCH_PERCENTAGE &&
-                calculateNutrition(meal.nutrition.protein, targetProtein) <= MATCH_PERCENTAGE
+        return calculateNutrition(
+            meal.nutrition.caloriesKcal,
+            targetCalories
+        ) <= MATCH_PERCENTAGE && calculateNutrition(meal.nutrition.proteinGrams, targetProtein) <= MATCH_PERCENTAGE
     }
 
     private fun calculateNutrition(currentNutrition: Double, targetNutrition: Double): Double {
@@ -48,28 +55,28 @@ class ManageMealsSearchUseCase(
     fun getMealByName(searchQuery: String): List<Meal> {
         validateSearchQuery(searchQuery)
 
-        val allMeals = getAllMealsOrThrow()
+        val allMeals = fetchAllMeals()
 
         return filterMealsByName(allMeals, searchQuery)
     }
 
     private fun validateSearchQuery(query: String) {
         if (query.isBlank()) {
-            throw IllegalArgumentException("Search query must not be blank.")
+            throw IllegalArgumentException(BLANK_SEARCH_EXCEPTION)
         }
     }
 
-    private fun getAllMealsOrThrow(): List<Meal> {
+    private fun fetchAllMeals(): List<Meal> {
         val meals = mealRepository.getAllMeals()
         if (meals.isEmpty()) {
-            throw IllegalStateException("No food data available to search.")
+            throw IllegalStateException(NO_FOOD_DATA)
         }
         return meals
     }
 
     private fun filterMealsByName(meals: List<Meal>, query: String): List<Meal> {
         return meals.filter { meal ->
-            KmpSubstringSearch.doesTextContainPattern(
+            KmpSearch.containsPattern(
                 meal.name.lowercase(),
                 query.lowercase()
             )
@@ -83,34 +90,30 @@ class ManageMealsSearchUseCase(
         return mealRepository.getAllMeals()
             .asSequence()
             .filter { meal ->
-                meal.tags.any {
-                    it.lowercase().contains(query)
-                    meal.tags.joinToString(" ").lowercase().contains(query)
-                }
+                meal.tags.any { it.lowercase().contains(query) } ||
+                        meal.tags.joinToString(" ").lowercase().contains(query)
             }
-            .shuffled()
+            .sortedBy { it.name }
             .take(20)
             .toList()
     }
     // endregion search meal by country
 
-    // end search meal by country
-
     //region iraqi meals
     fun getIraqiMeals(): List<Meal> {
-        val allMeals = mealRepository.getAllMeals()
-
-        return allMeals.filter { meal ->
-            (meal.tags?.any { tag -> tag.equals("Iraqi", ignoreCase = true) } == true) ||
-                    meal.description?.contains("Iraq", ignoreCase = true) == true
+        return mealRepository.getAllMeals().filter { meal ->
+            meal.tags?.any { it.contains(IRAQ, ignoreCase = true) } ?: false ||
+                    meal.description?.contains(IRAQ, ignoreCase = true) ?: false
         }
+
     }
     //endregion
 
-    companion object {
+    private companion object {
         const val MATCH_PERCENTAGE = 0.5
         const val RATIO = 0.15
-        const val ERROR_MESSAGE = "\nPlease ensure that both Calories " +
-                "and Protein inputs are positive values."
+        const val IRAQ = "Iraq"
+        const val BLANK_SEARCH_EXCEPTION = "Search query must not be blank."
+        const val NO_FOOD_DATA = "No food data available to search."
     }
 }

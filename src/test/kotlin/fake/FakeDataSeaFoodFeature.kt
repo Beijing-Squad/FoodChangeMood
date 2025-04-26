@@ -1,0 +1,296 @@
+package fake
+
+import kotlinx.datetime.LocalDate
+import org.beijing.model.Meal
+import org.beijing.model.Nutrition
+
+val mealsListWithSeaFood = listOf(
+    Meal(
+        name = "Grilled Salmon",
+        id = 1,
+        minutes = 25,
+        contributorId = 101,
+        submitted = LocalDate(2023, 6, 12),
+        tags = listOf("seafood", "salmon", "grilled", "healthy"),
+        nutrition = Nutrition(450.0, 35.0, 20.0, 600.0, 10.0, 5.0, 50.0),
+        nSteps = 4,
+        steps = listOf("Season salmon", "Preheat grill", "Grill salmon", "Serve with lemon"),
+        description = "Delicious grilled salmon with a smoky flavor.",
+        ingredients = listOf("salmon fillet", "olive oil", "lemon", "salt", "pepper"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Shrimp Scampi",
+        id = 2,
+        minutes = 20,
+        contributorId = 102,
+        submitted = LocalDate(2023, 7, 3),
+        tags = listOf("seafood", "shrimp", "pasta", "garlic"),
+        nutrition = Nutrition(520.0, 30.0, 15.0, 800.0, 35.0, 3.0, 45.0),
+        nSteps = 5,
+        steps = listOf("Cook pasta", "Sauté garlic", "Add shrimp", "Add lemon juice", "Mix with pasta"),
+        description = "Garlicky shrimp tossed in buttery pasta.",
+        ingredients = listOf("shrimp", "spaghetti", "garlic", "butter", "lemon juice"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Baked Cod",
+        id = 3,
+        minutes = 35,
+        contributorId = 103,
+        submitted = LocalDate(2023, 5, 15),
+        tags = listOf("seafood", "baked", "cod", "low-fat"),
+        nutrition = Nutrition(390.0, 40.0, 12.0, 550.0, 5.0, 2.0, 35.0),
+        nSteps = 4,
+        steps = listOf("Preheat oven", "Season cod", "Bake for 20 min", "Garnish with herbs"),
+        description = "Light and flaky baked cod with herbs.",
+        ingredients = listOf("cod fillet", "olive oil", "paprika", "parsley", "lemon zest"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Seafood Paella",
+        id = 4,
+        minutes = 60,
+        contributorId = 104,
+        submitted = LocalDate(2023, 3, 20),
+        tags = listOf("seafood", "paella", "rice", "mixed seafood"),
+        nutrition = Nutrition(700.0, 45.0, 25.0, 1000.0, 60.0, 4.0, 55.0),
+        nSteps = 6,
+        steps = listOf("Cook sofrito", "Add rice", "Add broth", "Add seafood", "Simmer", "Serve hot"),
+        description = "Spanish rice dish packed with seafood.",
+        ingredients = listOf("shrimp", "mussels", "squid", "rice", "bell pepper"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Tuna Salad",
+        id = 5,
+        minutes = 10,
+        contributorId = 105,
+        submitted = LocalDate(2023, 9, 1),
+        tags = listOf("seafood", "salad", "tuna", "quick"),
+        nutrition = Nutrition(300.0, 20.0, 18.0, 400.0, 8.0, 6.0, 25.0),
+        nSteps = 3,
+        steps = listOf("Mix tuna", "Add veggies", "Dress and serve"),
+        description = "Quick tuna salad with crunchy veggies.",
+        ingredients = listOf("canned tuna", "mayonnaise", "celery", "onion", "lettuce"),
+        nIngredients = 5
+    ),
+
+//no seafood
+    Meal(
+        name = "Grilled Chicken Breast",
+        id = 6,
+        minutes = 30,
+        contributorId = 201,
+        submitted = LocalDate(2023, 6, 5),
+        tags = listOf("chicken", "grilled", "healthy", "protein"),
+        nutrition = Nutrition(400.0, 45.0, 10.0, 500.0, 3.0, 1.0, 42.0),
+        nSteps = 4,
+        steps = listOf("Season chicken", "Preheat grill", "Grill chicken", "Rest and serve"),
+        description = "Simple and juicy grilled chicken breast.",
+        ingredients = listOf("chicken breast", "olive oil", "salt", "pepper"),
+        nIngredients = 4
+    ),
+    Meal(
+        name = "Beef Tacos",
+        id = 7,
+        minutes = 25,
+        contributorId = 202,
+        submitted = LocalDate(2023, 7, 8),
+        tags = listOf("beef", "tacos", "mexican", "spicy"),
+        nutrition = Nutrition(550.0, 30.0, 20.0, 750.0, 45.0, 4.0, 38.0),
+        nSteps = 5,
+        steps = listOf("Cook beef", "Season", "Warm tortillas", "Assemble tacos", "Serve"),
+        description = "Spicy and savory beef tacos with fresh toppings.",
+        ingredients = listOf("ground beef", "taco seasoning", "tortillas", "lettuce", "cheddar"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Vegetable Stir-Fry",
+        id = 8,
+        minutes = 20,
+        contributorId = 203,
+        submitted = LocalDate(2023, 4, 10),
+        tags = listOf("vegetarian", "stir-fry", "asian", "quick"),
+        nutrition = Nutrition(320.0, 10.0, 15.0, 400.0, 30.0, 6.0, 20.0),
+        nSteps = 4,
+        steps = listOf("Chop veggies", "Heat wok", "Stir-fry veggies", "Add sauce"),
+        description = "Colorful vegetables in a savory stir-fry sauce.",
+        ingredients = listOf("broccoli", "carrot", "bell pepper", "soy sauce", "garlic"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Spaghetti Bolognese",
+        id = 9,
+        minutes = 45,
+        contributorId = 204,
+        submitted = LocalDate(2023, 3, 3),
+        tags = listOf("pasta", "beef", "italian", "classic"),
+        nutrition = Nutrition(620.0, 35.0, 18.0, 900.0, 50.0, 5.0, 40.0),
+        nSteps = 6,
+        steps = listOf("Cook pasta", "Sauté beef", "Add sauce", "Simmer", "Combine", "Serve"),
+        description = "Traditional Italian pasta with rich beef sauce.",
+        ingredients = listOf("spaghetti", "ground beef", "tomato sauce", "onion", "garlic"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Quinoa Salad",
+        id = 10,
+        minutes = 15,
+        contributorId = 205,
+        submitted = LocalDate(2023, 5, 18),
+        tags = listOf("vegan", "salad", "quinoa", "healthy"),
+        nutrition = Nutrition(280.0, 8.0, 12.0, 350.0, 25.0, 4.0, 15.0),
+        nSteps = 3,
+        steps = listOf("Cook quinoa", "Chop veggies", "Toss and serve"),
+        description = "Light and fresh quinoa salad packed with nutrients.",
+        ingredients = listOf("quinoa", "cucumber", "cherry tomatoes", "olive oil", "lemon"),
+        nIngredients = 5
+    )
+)
+
+val seafoodMealOrders = listOf(
+    Meal(
+        name = "Seafood Paella",
+        id = 4,
+        minutes = 60,
+        contributorId = 104,
+        submitted = LocalDate(2023, 3, 20),
+        tags = listOf("seafood", "paella", "rice", "mixed seafood"),
+        nutrition = Nutrition(700.0, 45.0, 25.0, 1000.0, 60.0, 4.0, 55.0),
+        nSteps = 6,
+        steps = listOf("Cook sofrito", "Add rice", "Add broth", "Add seafood", "Simmer", "Serve hot"),
+        description = "Spanish rice dish packed with seafood.",
+        ingredients = listOf("shrimp", "mussels", "squid", "rice", "bell pepper"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Shrimp Scampi",
+        id = 2,
+        minutes = 20,
+        contributorId = 102,
+        submitted = LocalDate(2023, 7, 3),
+        tags = listOf("seafood", "shrimp", "pasta", "garlic"),
+        nutrition = Nutrition(520.0, 30.0, 15.0, 800.0, 35.0, 3.0, 45.0),
+        nSteps = 5,
+        steps = listOf("Cook pasta", "Sauté garlic", "Add shrimp", "Add lemon juice", "Mix with pasta"),
+        description = "Garlicky shrimp tossed in buttery pasta.",
+        ingredients = listOf("shrimp", "spaghetti", "garlic", "butter", "lemon juice"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Grilled Salmon",
+        id = 1,
+        minutes = 25,
+        contributorId = 101,
+        submitted = LocalDate(2023, 6, 12),
+        tags = listOf("seafood", "salmon", "grilled", "healthy"),
+        nutrition = Nutrition(450.0, 35.0, 20.0, 600.0, 10.0, 5.0, 50.0),
+        nSteps = 4,
+        steps = listOf("Season salmon", "Preheat grill", "Grill salmon", "Serve with lemon"),
+        description = "Delicious grilled salmon with a smoky flavor.",
+        ingredients = listOf("salmon fillet", "olive oil", "lemon", "salt", "pepper"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Tuna Salad",
+        id = 5,
+        minutes = 10,
+        contributorId = 105,
+        submitted = LocalDate(2023, 9, 1),
+        tags = listOf("seafood", "salad", "tuna", "quick"),
+        nutrition = Nutrition(300.0, 20.0, 18.0, 400.0, 8.0, 6.0, 25.0),
+        nSteps = 3,
+        steps = listOf("Mix tuna", "Add veggies", "Dress and serve"),
+        description = "Quick tuna salad with crunchy veggies.",
+        ingredients = listOf("canned tuna", "mayonnaise", "celery", "onion", "lettuce"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Baked Cod",
+        id = 3,
+        minutes = 35,
+        contributorId = 103,
+        submitted = LocalDate(2023, 5, 15),
+        tags = listOf("seafood", "baked", "cod", "low-fat"),
+        nutrition = Nutrition(390.0, 40.0, 12.0, 550.0, 5.0, 2.0, 35.0),
+        nSteps = 4,
+        steps = listOf("Preheat oven", "Season cod", "Bake for 20 min", "Garnish with herbs"),
+        description = "Light and flaky baked cod with herbs.",
+        ingredients = listOf("cod fillet", "olive oil", "paprika", "parsley", "lemon zest"),
+        nIngredients = 5
+    ),
+    )
+
+val mealsWithNoSeaFood = listOf(
+    Meal(
+        name = "Grilled Chicken Breast",
+        id = 6,
+        minutes = 30,
+        contributorId = 201,
+        submitted = LocalDate(2023, 6, 5),
+        tags = listOf("chicken", "grilled", "healthy", "protein"),
+        nutrition = Nutrition(400.0, 45.0, 10.0, 500.0, 3.0, 1.0, 42.0),
+        nSteps = 4,
+        steps = listOf("Season chicken", "Preheat grill", "Grill chicken", "Rest and serve"),
+        description = "Simple and juicy grilled chicken breast.",
+        ingredients = listOf("chicken breast", "olive oil", "salt", "pepper"),
+        nIngredients = 4
+    ),
+    Meal(
+        name = "Beef Tacos",
+        id = 7,
+        minutes = 25,
+        contributorId = 202,
+        submitted = LocalDate(2023, 7, 8),
+        tags = listOf("beef", "tacos", "mexican", "spicy"),
+        nutrition = Nutrition(550.0, 30.0, 20.0, 750.0, 45.0, 4.0, 38.0),
+        nSteps = 5,
+        steps = listOf("Cook beef", "Season", "Warm tortillas", "Assemble tacos", "Serve"),
+        description = "Spicy and savory beef tacos with fresh toppings.",
+        ingredients = listOf("ground beef", "taco seasoning", "tortillas", "lettuce", "cheddar"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Vegetable Stir-Fry",
+        id = 8,
+        minutes = 20,
+        contributorId = 203,
+        submitted = LocalDate(2023, 4, 10),
+        tags = listOf("vegetarian", "stir-fry", "asian", "quick"),
+        nutrition = Nutrition(320.0, 10.0, 15.0, 400.0, 30.0, 6.0, 20.0),
+        nSteps = 4,
+        steps = listOf("Chop veggies", "Heat wok", "Stir-fry veggies", "Add sauce"),
+        description = "Colorful vegetables in a savory stir-fry sauce.",
+        ingredients = listOf("broccoli", "carrot", "bell pepper", "soy sauce", "garlic"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Spaghetti Bolognese",
+        id = 9,
+        minutes = 45,
+        contributorId = 204,
+        submitted = LocalDate(2023, 3, 3),
+        tags = listOf("pasta", "beef", "italian", "classic"),
+        nutrition = Nutrition(620.0, 35.0, 18.0, 900.0, 50.0, 5.0, 40.0),
+        nSteps = 6,
+        steps = listOf("Cook pasta", "Sauté beef", "Add sauce", "Simmer", "Combine", "Serve"),
+        description = "Traditional Italian pasta with rich beef sauce.",
+        ingredients = listOf("spaghetti", "ground beef", "tomato sauce", "onion", "garlic"),
+        nIngredients = 5
+    ),
+    Meal(
+        name = "Quinoa Salad",
+        id = 10,
+        minutes = 15,
+        contributorId = 205,
+        submitted = LocalDate(2023, 5, 18),
+        tags = listOf("vegan", "salad", "quinoa", "healthy"),
+        nutrition = Nutrition(280.0, 8.0, 12.0, 350.0, 25.0, 4.0, 15.0),
+        nSteps = 3,
+        steps = listOf("Cook quinoa", "Chop veggies", "Toss and serve"),
+        description = "Light and fresh quinoa salad packed with nutrients.",
+        ingredients = listOf("quinoa", "cucumber", "cherry tomatoes", "olive oil", "lemon"),
+        nIngredients = 5
+    )
+)
