@@ -11,6 +11,7 @@ import org.beijing.logic.MealRepository
 import org.beijing.logic.usecases.ManageMealsSuggestionsUseCase
 import org.beijing.model.Meal
 import org.beijing.model.Nutrition
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
